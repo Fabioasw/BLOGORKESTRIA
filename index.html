@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Orkestria Consult — Inteligência Operacional</title>
-<meta name="description" content="Transformamos dados, sistemas e processos em poder de decisão. Consultoria especializada em operações educacionais, ERP, BI e automação." />
+<title>ORKESTRIA CONSULT — Inteligência operacional para decisões executivas</title>
+<meta name="description" content="A ORKESTRIA CONSULT transforma dados, sistemas e processos em poder de decisão. Diagnóstico de Eficiência Operacional para instituições de ensino e empresas." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
@@ -13,13 +13,16 @@
   :root {
     --ink: #0A0E14;
     --marine: #0E1726;
-    --paper: #F5F2EB;
-    --paper-2: #EDE8DC;
+    --graphite: #1A2030;
     --line: rgba(245, 242, 235, 0.10);
     --line-dark: rgba(10, 14, 20, 0.10);
+    --paper: #F5F2EB;
+    --paper-2: #EDE8DC;
+    --mist: #E2DCCE;
     --gold: #B89968;
     --gold-soft: #C9AC7D;
     --signal: #2E6BFF;
+    --signal-soft: #6E92FF;
     --fg: #F5F2EB;
     --fg-mute: rgba(245, 242, 235, 0.62);
     --fg-faint: rgba(245, 242, 235, 0.42);
@@ -27,178 +30,1217 @@
     --sans: "Geist", "Helvetica Neue", Arial, sans-serif;
     --mono: "Geist Mono", ui-monospace, "SF Mono", Menlo, monospace;
   }
+
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
-  body { font-family: var(--sans); background: var(--ink); color: var(--fg); font-size: 16px; line-height: 1.55; text-wrap: pretty; }
+  html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+  body {
+    font-family: var(--sans);
+    background: var(--ink);
+    color: var(--fg);
+    font-size: 16px;
+    line-height: 1.55;
+    font-weight: 400;
+    text-wrap: pretty;
+  }
+
   a { color: inherit; text-decoration: none; }
-  .wrap { max-width: 1320px; margin: 0 auto; padding: 0 40px; }
-  .display { font-family: var(--serif); font-weight: 400; letter-spacing: -0.02em; line-height: 1.05; }
-  .eyebrow { font-family: var(--mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--fg-mute); }
-  .eyebrow .dot { display: inline-block; width: 6px; height: 6px; background: var(--gold); border-radius: 50%; vertical-align: middle; margin: 0 10px 2px 0; }
+  img { max-width: 100%; display: block; }
 
-  /* ── NAV ── */
-  .nav { position: fixed; top: 0; left: 0; right: 0; z-index: 50; background: rgba(10,14,20,0.80); backdrop-filter: blur(16px) saturate(180%); -webkit-backdrop-filter: blur(16px) saturate(180%); border-bottom: 1px solid var(--line); }
-  .nav-inner { display: flex; align-items: center; justify-content: space-between; gap: 32px; height: 72px; }
-  .brand { display: flex; align-items: center; gap: 14px; }
-  .brand-mark { width: 26px; height: 26px; }
-  .brand-name { font-weight: 500; font-size: 14px; letter-spacing: 0.22em; text-transform: uppercase; }
+  /* ---------- TYPOGRAPHY ---------- */
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--fg-mute);
+    font-weight: 400;
+  }
+  .eyebrow .dot {
+    display: inline-block;
+    width: 6px; height: 6px;
+    background: var(--gold);
+    border-radius: 50%;
+    vertical-align: middle;
+    margin: 0 10px 2px 0;
+  }
+  .display {
+    font-family: var(--serif);
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 1.02;
+  }
+  .italic { font-style: italic; }
+  .num {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--fg-faint);
+    letter-spacing: 0.1em;
+  }
+
+  /* ---------- LAYOUT ---------- */
+  .wrap {
+    width: 100%;
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 0 40px;
+  }
+  @media (max-width: 640px) {
+    .wrap { padding: 0 20px; }
+    .section-pad { padding: 96px 0; }
+  }
+  section { position: relative; }
+  .section-pad { padding: 140px 0; }
+  .rule { height: 1px; background: var(--line); width: 100%; }
+  .rule-dark { height: 1px; background: var(--line-dark); width: 100%; }
+
+  /* ---------- NAV ---------- */
+  .nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 50;
+    background: rgba(10, 14, 20, 0.72);
+    backdrop-filter: saturate(180%) blur(14px);
+    -webkit-backdrop-filter: saturate(180%) blur(14px);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 32px;
+    height: 72px;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .brand-mark {
+    width: 26px; height: 26px;
+    position: relative;
+  }
+  .brand-mark svg { width: 100%; height: 100%; display: block; }
+  .brand-name {
+    font-family: var(--sans);
+    font-weight: 500;
+    font-size: 14px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+  }
   .brand-name span { color: var(--gold); font-weight: 400; margin-left: 4px; }
-  .nav-links { display: flex; gap: 28px; font-size: 13.5px; color: var(--fg-mute); flex-wrap: nowrap; }
+  .nav-links {
+    display: flex; gap: 28px;
+    font-size: 13.5px;
+    color: var(--fg-mute);
+    flex-wrap: nowrap;
+  }
   .nav-links a:hover { color: var(--fg); }
-  .nav-cta { display: inline-flex; align-items: center; gap: 10px; font-size: 13px; padding: 10px 18px; border: 1px solid var(--line); border-radius: 999px; white-space: nowrap; transition: border-color .2s, background .2s; }
+  .nav-cta {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-size: 13px;
+    padding: 10px 18px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    color: var(--fg);
+    white-space: nowrap;
+    transition: border-color .2s, background .2s;
+  }
   .nav-cta:hover { border-color: var(--gold); background: rgba(184,153,104,0.06); }
-  .nav-cta .arrow { transition: transform .25s; }
+  .nav-cta .arrow { display: inline-block; transition: transform .25s ease; }
   .nav-cta:hover .arrow { transform: translateX(3px); }
-  @media (max-width: 1100px) { .nav-links { display: none; } }
 
-  /* ── HERO ── */
-  .hero { min-height: 100vh; display: flex; flex-direction: column; position: relative; overflow: hidden; border-bottom: 1px solid var(--line); background: var(--ink); }
-  .hero-topbar { display: flex; justify-content: space-between; align-items: center; padding: 100px 40px 0; max-width: 1320px; margin: 0 auto; width: 100%; }
-  .hero-meta { font-family: var(--mono); font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--fg-faint); display: flex; gap: 32px; }
-  .hero-body { flex: 1; display: grid; grid-template-columns: 1fr 1fr; align-items: center; max-width: 1320px; margin: 0 auto; width: 100%; padding: 0 40px; }
-  .hero-left { padding: 60px 0; }
-  .hero-h1 { font-family: var(--serif); font-size: clamp(56px, 7.5vw, 120px); letter-spacing: -0.025em; line-height: 1.0; margin-bottom: 48px; }
-  .hero-h1 .em { color: var(--gold-soft); font-style: italic; }
-  .hero-bottom { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; }
-  .hero-sub { color: var(--fg-mute); font-size: 15px; line-height: 1.7; max-width: 42ch; }
-  .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; justify-content: flex-end; }
-  .btn { display: inline-flex; align-items: center; gap: 12px; padding: 15px 24px; border-radius: 999px; font-size: 13.5px; font-weight: 500; border: 1px solid transparent; transition: .2s; cursor: pointer; text-decoration: none; white-space: nowrap; }
-  .btn-primary { background: var(--paper); color: var(--ink); }
+  @media (max-width: 1100px) {
+    .nav-links { display: none; }
+  }
+  @media (max-width: 520px) {
+    .nav-inner { gap: 16px; }
+    .nav-cta { display: none; }
+    .brand-name { font-size: 12px; letter-spacing: 0.18em; }
+  }
+
+  /* ---------- BUTTONS ---------- */
+  .btn {
+    display: inline-flex; align-items: center; gap: 12px;
+    padding: 16px 26px;
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.005em;
+    transition: transform .2s ease, background .2s, border-color .2s, color .2s;
+    cursor: pointer;
+    border: 1px solid transparent;
+    font-family: var(--sans);
+  }
+  .btn-primary {
+    background: var(--paper);
+    color: var(--ink);
+  }
   .btn-primary:hover { background: #fff; }
-  .btn-ghost { background: transparent; color: var(--fg-mute); border-color: transparent; }
-  .btn-ghost:hover { color: var(--fg); }
-  .btn .arrow { transition: transform .25s; }
+  .btn-ghost {
+    background: transparent;
+    color: var(--fg);
+    border-color: var(--line);
+  }
+  .btn-ghost:hover { border-color: var(--gold); color: var(--gold-soft); }
+  .btn .arrow {
+    display: inline-block;
+    transition: transform .25s ease;
+  }
   .btn:hover .arrow { transform: translateX(4px); }
-  .hero-right { display: flex; align-items: center; justify-content: flex-end; padding: 60px 0; }
-  .radar-wrap { position: relative; width: 520px; height: 520px; flex-shrink: 0; }
-  @media (max-width: 1000px) { .hero-body { grid-template-columns: 1fr; } .hero-right { display: none; } .hero-bottom { grid-template-columns: 1fr; } .hero-actions { justify-content: flex-start; } }
-  @media (max-width: 600px) { .hero-topbar, .hero-body { padding-left: 20px; padding-right: 20px; } .wrap { padding: 0 20px; } }
 
-  /* ── RADAR SVG ── */
-  .radar-svg { width: 100%; height: 100%; overflow: visible; }
-  @keyframes spin-slow { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-  @keyframes spin-rev  { from { transform: rotate(0deg); } to { transform: rotate(-360deg); } }
-  @keyframes pulse { 0%,100% { opacity:.7; } 50% { opacity:1; } }
-  @keyframes arc-draw { 0% { stroke-dashoffset: 900; } 100% { stroke-dashoffset: 0; } }
-  @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: .3; } }
-  .ring-1 { animation: spin-slow 60s linear infinite; transform-origin: 260px 260px; }
-  .ring-2 { animation: spin-rev 40s linear infinite; transform-origin: 260px 260px; }
-  .arc-signal { stroke-dasharray: 380 900; animation: arc-draw 4s ease-out forwards; }
-  .dot-pulse { animation: pulse 3s ease-in-out infinite; }
-  .dot-pulse-2 { animation: pulse 4.5s ease-in-out infinite; }
-  .label-blink { animation: blink 2s ease-in-out infinite; }
+  /* ---------- HERO ---------- */
+  .hero {
+    padding: 180px 0 130px;
+    position: relative;
+    overflow: hidden;
+    border-bottom: 1px solid var(--line);
+  }
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .hero-bg svg {
+    position: absolute;
+    inset: 0;
+    width: 100%; height: 100%;
+  }
+  .hero-grid-fade {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 60% 50% at 80% 30%, rgba(46,107,255,0.08), transparent 70%),
+                radial-gradient(ellipse 50% 40% at 10% 100%, rgba(184,153,104,0.06), transparent 70%);
+  }
+  .hero-inner {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 48px;
+  }
+  .hero-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 40px;
+    flex-wrap: wrap;
+    padding-bottom: 8px;
+  }
+  .hero-top .meta {
+    display: flex;
+    gap: 36px;
+    color: var(--fg-faint);
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+  .hero h1.display {
+    font-size: clamp(54px, 8.2vw, 128px);
+    max-width: 14ch;
+    letter-spacing: -0.025em;
+  }
+  .hero h1 .em {
+    color: var(--gold-soft);
+    font-style: italic;
+  }
+  .hero-foot {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 80px;
+    margin-top: 24px;
+    padding-top: 48px;
+    border-top: 1px solid var(--line);
+    align-items: start;
+  }
+  .hero-sub {
+    font-size: 18px;
+    line-height: 1.55;
+    color: var(--fg-mute);
+    max-width: 52ch;
+  }
+  .hero-ctas {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+  @media (max-width: 860px) {
+    .hero { padding: 140px 0 90px; }
+    .hero-foot { grid-template-columns: 1fr; gap: 32px; }
+  }
+  @media (max-width: 640px) {
+    .hero-top .meta { flex-wrap: wrap; gap: 12px 20px; }
+    .hero-ctas .btn { width: 100%; justify-content: center; }
+  }
 
-  /* ── SECTIONS COMMON ── */
-  section { padding: 120px 0; }
-  .section-head { margin-bottom: 72px; }
-  .section-head h2 { font-size: clamp(36px, 4.5vw, 72px); letter-spacing: -0.02em; margin-top: 16px; }
-  .section-head .sub { color: var(--fg-mute); font-size: 17px; max-width: 52ch; margin-top: 20px; line-height: 1.65; }
+  /* SVG decorative panel in hero */
+  .instrument-panel {
+    position: absolute;
+    right: -60px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 720px;
+    max-width: 60vw;
+    opacity: 0.65;
+    pointer-events: none;
+  }
+  @media (max-width: 1100px) { .instrument-panel { opacity: 0.25; right: -180px; } }
+  @media (max-width: 700px) { .instrument-panel { display: none; } }
 
-  /* ── MANIFESTO ── */
-  .manifesto { border-bottom: 1px solid var(--line); }
-  .manifesto-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; }
-  .manifesto-left h2 { font-size: clamp(36px, 4.5vw, 64px); letter-spacing: -0.02em; margin-top: 16px; }
-  .manifesto-left h2 .em { color: var(--gold-soft); font-style: italic; }
-  .beliefs { display: flex; flex-direction: column; gap: 32px; }
-  .belief { border-left: 1px solid var(--gold); padding-left: 24px; }
-  .belief-num { font-family: var(--mono); font-size: 11px; letter-spacing: 0.18em; color: var(--gold); margin-bottom: 10px; }
-  .belief p { color: var(--fg-mute); font-size: 15px; line-height: 1.7; }
-  .belief p strong { color: var(--fg); font-weight: 500; }
-  @media (max-width: 900px) { .manifesto-inner { grid-template-columns: 1fr; gap: 48px; } }
+  /* ---------- TICKER ---------- */
+  .ticker {
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    overflow: hidden;
+    background: rgba(255,255,255,0.01);
+  }
+  .ticker-track {
+    display: flex;
+    gap: 64px;
+    padding: 18px 0;
+    animation: ticker 60s linear infinite;
+    white-space: nowrap;
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--fg-mute);
+  }
+  .ticker-track span { display: inline-flex; gap: 12px; align-items: center; }
+  .ticker-track .sep {
+    color: var(--gold);
+    font-size: 8px;
+  }
+  @keyframes ticker {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
 
-  /* ── METODOLOGIA ── */
-  .metodologia { border-bottom: 1px solid var(--line); }
-  .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; }
-  .step { background: rgba(245,242,235,0.02); border: 1px solid var(--line); padding: 40px 32px; transition: background .2s; }
-  .step:hover { background: rgba(184,153,104,0.04); }
-  .step-num { font-family: var(--mono); font-size: 11px; letter-spacing: 0.18em; color: var(--gold); margin-bottom: 24px; }
-  .step h3 { font-family: var(--serif); font-size: 26px; letter-spacing: -0.01em; line-height: 1.15; margin-bottom: 16px; }
-  .step p { color: var(--fg-mute); font-size: 14px; line-height: 1.7; }
-  @media (max-width: 900px) { .steps { grid-template-columns: 1fr 1fr; } }
-  @media (max-width: 560px) { .steps { grid-template-columns: 1fr; } }
+  /* ---------- SECTION: QUEBRA ---------- */
+  .quebra {
+    background: var(--marine);
+    border-bottom: 1px solid var(--line);
+  }
+  .quebra-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 100px;
+    align-items: start;
+  }
+  .quebra h2 {
+    font-size: clamp(36px, 4.4vw, 64px);
+    max-width: 14ch;
+  }
+  .quebra .body {
+    color: var(--fg-mute);
+    font-size: 18px;
+    line-height: 1.7;
+    max-width: 56ch;
+  }
+  .quebra .pull {
+    margin-top: 56px;
+    padding: 32px 0;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: clamp(28px, 3.2vw, 44px);
+    line-height: 1.25;
+    color: var(--fg);
+    max-width: 22ch;
+    letter-spacing: -0.01em;
+  }
+  .quebra .pull .accent { color: var(--gold-soft); }
+  @media (max-width: 860px) { .quebra-grid { grid-template-columns: 1fr; gap: 40px; } }
 
-  /* ── PROCESSO / VALOR PERCEBIDO ── */
-  .processo { background: var(--paper); color: var(--ink); border-top: 1px solid var(--line-dark); border-bottom: 1px solid var(--line-dark); }
-  .processo .eyebrow { color: rgba(10,14,20,0.45); }
-  .processo .eyebrow .dot { background: var(--gold); }
-  .processo-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; }
-  .processo-left h2 { font-size: clamp(32px, 4vw, 60px); letter-spacing: -0.02em; line-height: 1.1; margin-top: 20px; color: var(--ink); }
-  .processo-left h2 .em { color: var(--gold); font-style: italic; }
-  .processo-left .desc { color: rgba(10,14,20,0.62); font-size: 16px; line-height: 1.7; margin-top: 28px; max-width: 36ch; }
-  .benefit-list { display: flex; flex-direction: column; padding-top: 8px; }
-  .benefit-item { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 20px 0; border-bottom: 1px solid rgba(10,14,20,0.10); transition: background .15s; }
-  .benefit-item:first-child { border-top: 1px solid rgba(10,14,20,0.10); }
-  .benefit-left { display: flex; align-items: center; gap: 20px; }
-  .benefit-code { font-family: var(--mono); font-size: 10px; letter-spacing: 0.16em; color: var(--gold); min-width: 36px; }
-  .benefit-text { font-size: 15px; color: var(--ink); font-weight: 400; }
-  .benefit-tag { font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(10,14,20,0.45); background: rgba(10,14,20,0.06); padding: 4px 10px; border-radius: 999px; white-space: nowrap; }
-  @media (max-width: 900px) { .processo-inner { grid-template-columns: 1fr; gap: 48px; } }
+  /* ---------- SECTION: EDUCACAO ---------- */
+  .edu { background: var(--ink); }
+  .edu-head {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: end;
+    margin-bottom: 90px;
+  }
+  .edu-head h2 {
+    font-size: clamp(40px, 5vw, 80px);
+    max-width: 16ch;
+  }
+  .edu-head p {
+    color: var(--fg-mute);
+    font-size: 18px;
+    line-height: 1.7;
+    max-width: 48ch;
+  }
+  .pain-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    border-top: 1px solid var(--line);
+    border-left: 1px solid var(--line);
+  }
+  .pain-cell {
+    padding: 40px 32px;
+    border-right: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    min-height: 220px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 24px;
+    background: rgba(255,255,255,0.005);
+    transition: background .25s ease;
+  }
+  .pain-cell:hover { background: rgba(184,153,104,0.04); }
+  .pain-cell .num { display: block; }
+  .pain-cell h3 {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: 28px;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    max-width: 14ch;
+  }
+  .pain-cell p {
+    color: var(--fg-mute);
+    font-size: 14px;
+    line-height: 1.55;
+  }
+  @media (max-width: 980px) { .pain-grid { grid-template-columns: repeat(2, 1fr); } .edu-head { grid-template-columns: 1fr; gap: 32px; } }
+  @media (max-width: 600px) { .pain-grid { grid-template-columns: 1fr; } }
 
-  /* ── DIAGNÓSTICO CTA ── */
-  .diagnostico { background: var(--marine); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
-  .diag-inner { display: grid; grid-template-columns: 1fr auto; gap: 64px; align-items: center; }
-  .diag-label { font-family: var(--mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); margin-bottom: 20px; }
-  .diag-inner h2 { font-size: clamp(32px, 4vw, 56px); letter-spacing: -0.02em; line-height: 1.1; }
-  .diag-inner h2 .em { color: var(--gold-soft); font-style: italic; }
-  .diag-inner p { color: var(--fg-mute); font-size: 16px; max-width: 44ch; margin-top: 20px; line-height: 1.65; }
-  @media (max-width: 860px) { .diag-inner { grid-template-columns: 1fr; gap: 40px; } }
+  /* ---------- SECTION: VALOR (paper) ---------- */
+  .valor {
+    background: var(--paper);
+    color: var(--ink);
+  }
+  .valor h2 {
+    font-size: clamp(40px, 5vw, 80px);
+    max-width: 18ch;
+    color: var(--ink);
+  }
+  .valor .eyebrow { color: rgba(10,14,20,0.55); }
+  .valor .eyebrow .dot { background: var(--gold); }
+  .valor-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 100px;
+    margin-top: 80px;
+    align-items: start;
+  }
+  .valor-lead {
+    font-size: 22px;
+    line-height: 1.5;
+    color: var(--ink);
+    max-width: 26ch;
+    font-family: var(--serif);
+    letter-spacing: -0.005em;
+  }
+  .benefit-list {
+    list-style: none;
+    border-top: 1px solid var(--line-dark);
+  }
+  .benefit-list li {
+    display: grid;
+    grid-template-columns: 60px 1fr auto;
+    gap: 24px;
+    align-items: center;
+    padding: 22px 0;
+    border-bottom: 1px solid var(--line-dark);
+    font-size: 17px;
+    color: var(--ink);
+  }
+  .benefit-list li .num {
+    color: rgba(10,14,20,0.45);
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+  }
+  .benefit-list li .tag {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--gold);
+    background: rgba(184,153,104,0.10);
+    padding: 5px 10px;
+    border-radius: 999px;
+  }
+  @media (max-width: 860px) { .valor-grid { grid-template-columns: 1fr; gap: 32px; } }
 
-  /* ── CAPACIDADES ── */
-  .autoridade { border-bottom: 1px solid var(--line); }
-  .caps-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; }
-  .cap { border: 1px solid var(--line); padding: 40px 36px; transition: background .2s; }
-  .cap:hover { background: rgba(184,153,104,0.03); }
-  .cap-icon { font-family: var(--mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); margin-bottom: 20px; }
-  .cap h3 { font-family: var(--serif); font-size: 22px; letter-spacing: -0.01em; line-height: 1.2; margin-bottom: 12px; }
-  .cap p { color: var(--fg-mute); font-size: 14px; line-height: 1.7; }
-  @media (max-width: 900px) { .caps-grid { grid-template-columns: 1fr 1fr; } }
-  @media (max-width: 560px) { .caps-grid { grid-template-columns: 1fr; } }
+  /* ---------- SECTION: METODOLOGIA ---------- */
+  .meto { background: var(--ink); }
+  .meto-head {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: end;
+    margin-bottom: 80px;
+  }
+  .meto-head h2 {
+    font-size: clamp(40px, 5vw, 80px);
+    max-width: 14ch;
+  }
+  .meto-head p {
+    color: var(--fg-mute);
+    max-width: 44ch;
+  }
+  .steps {
+    border-top: 1px solid var(--line);
+  }
+  .step {
+    display: grid;
+    grid-template-columns: 90px 1fr 1.4fr;
+    gap: 48px;
+    padding: 36px 0;
+    border-bottom: 1px solid var(--line);
+    align-items: baseline;
+    transition: background .25s ease, padding .25s ease;
+  }
+  .step:hover { background: rgba(184,153,104,0.025); }
+  .step .num {
+    color: var(--gold);
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.14em;
+  }
+  .step h3 {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(24px, 2.4vw, 36px);
+    letter-spacing: -0.01em;
+    line-height: 1.1;
+  }
+  .step p {
+    color: var(--fg-mute);
+    font-size: 15px;
+    line-height: 1.65;
+    max-width: 56ch;
+  }
+  @media (max-width: 860px) {
+    .meto-head { grid-template-columns: 1fr; gap: 24px; }
+    .step { grid-template-columns: 1fr; gap: 12px; padding: 28px 0; }
+  }
 
-  /* ── BLOG STRIP ── */
-  .blog-strip { border-bottom: 1px solid var(--line); }
-  .blog-strip-inner { display: flex; justify-content: space-between; align-items: flex-end; gap: 40px; flex-wrap: wrap; }
-  .blog-strip h2 { font-size: clamp(28px, 3.5vw, 52px); letter-spacing: -0.02em; }
-  .blog-strip h2 .em { color: var(--gold-soft); font-style: italic; }
-  .blog-strip .sub { color: var(--fg-mute); font-size: 16px; max-width: 44ch; margin-top: 16px; line-height: 1.65; }
-  .btn-outline { background: transparent; color: var(--fg); border-color: var(--line); }
-  .btn-outline:hover { border-color: var(--gold); background: rgba(184,153,104,0.06); }
+  /* ---------- SECTION: DIAGNOSTICO ---------- */
+  .diag {
+    background: var(--marine);
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+  .diag-card {
+    display: grid;
+    grid-template-columns: 1.15fr 1fr;
+    gap: 80px;
+    align-items: stretch;
+    border: 1px solid var(--line);
+    background: linear-gradient(180deg, rgba(46,107,255,0.04), rgba(184,153,104,0.03));
+    padding: 64px;
+    position: relative;
+    overflow: hidden;
+  }
+  .diag-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(135deg, transparent 60%, rgba(184,153,104,0.05) 100%);
+    pointer-events: none;
+  }
+  .diag-card h2 {
+    font-size: clamp(40px, 4.6vw, 68px);
+    max-width: 12ch;
+    margin: 18px 0 28px;
+  }
+  .diag-card .lead {
+    color: var(--fg-mute);
+    font-size: 18px;
+    line-height: 1.6;
+    max-width: 46ch;
+    margin-bottom: 32px;
+  }
+  .diag-card .seal {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold);
+    border: 1px solid rgba(184,153,104,0.4);
+    padding: 8px 14px;
+    border-radius: 999px;
+    margin-bottom: 6px;
+  }
+  .diag-list {
+    list-style: none;
+    border-top: 1px solid var(--line);
+    align-self: start;
+  }
+  .diag-list li {
+    display: grid;
+    grid-template-columns: 28px 1fr;
+    gap: 16px;
+    padding: 18px 0;
+    border-bottom: 1px solid var(--line);
+    font-size: 15.5px;
+    color: var(--fg);
+    align-items: center;
+  }
+  .diag-list li .check {
+    width: 18px; height: 18px;
+    border: 1px solid var(--gold);
+    border-radius: 50%;
+    position: relative;
+  }
+  .diag-list li .check::after {
+    content: "";
+    position: absolute;
+    inset: 4px;
+    background: var(--gold);
+    border-radius: 50%;
+  }
+  .diag-cta {
+    margin-top: 36px;
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+  @media (max-width: 980px) {
+    .diag-card { grid-template-columns: 1fr; padding: 40px 28px; gap: 40px; }
+  }
 
-  /* ── CONTATO ── */
-  .contato-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; }
-  .contato-left h2 { font-size: clamp(32px, 4vw, 56px); letter-spacing: -0.02em; margin-top: 16px; }
-  .contato-left h2 .em { color: var(--gold-soft); font-style: italic; }
-  .contato-left .sub { color: var(--fg-mute); font-size: 16px; margin-top: 20px; line-height: 1.65; max-width: 40ch; }
-  .contact-info { margin-top: 48px; display: flex; flex-direction: column; gap: 20px; }
-  .contact-item { display: flex; gap: 20px; align-items: flex-start; }
-  .contact-label { font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--gold); min-width: 88px; padding-top: 2px; }
-  .contact-value { font-size: 15px; color: var(--fg-mute); }
-  .contact-value a:hover { color: var(--fg); }
-  .contact-form { background: rgba(245,242,235,0.03); border: 1px solid var(--line); padding: 48px 40px; }
-  .form-group { margin-bottom: 24px; }
-  .form-group label { display: block; font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--fg-mute); margin-bottom: 10px; }
-  .form-group input, .form-group textarea { width: 100%; background: transparent; border: 1px solid var(--line); color: var(--fg); font-family: var(--sans); font-size: 15px; padding: 14px 16px; outline: none; transition: border-color .2s; border-radius: 0; -webkit-appearance: none; }
-  .form-group input:focus, .form-group textarea:focus { border-color: var(--gold); }
-  .form-group textarea { resize: vertical; min-height: 120px; }
-  .form-submit { width: 100%; margin-top: 8px; justify-content: center; border-radius: 4px; }
-  @media (max-width: 900px) { .contato-inner { grid-template-columns: 1fr; } }
+  /* ---------- SECTION: AUTORIDADE ---------- */
+  .auth { background: var(--ink); }
+  .auth-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 100px;
+    align-items: start;
+  }
+  .auth h2 {
+    font-size: clamp(40px, 5vw, 76px);
+    max-width: 12ch;
+  }
+  .auth p.lead {
+    color: var(--fg-mute);
+    font-size: 18px;
+    line-height: 1.65;
+    max-width: 48ch;
+    margin-top: 28px;
+  }
+  .stack {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px 24px;
+    margin-top: 40px;
+  }
+  .stack .chip {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--fg-mute);
+    padding: 10px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .stack .chip span { color: var(--gold); margin-right: 10px; }
+  .capabilities {
+    border-top: 1px solid var(--line);
+  }
+  .cap {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 24px;
+    padding: 22px 0;
+    border-bottom: 1px solid var(--line);
+    align-items: center;
+  }
+  .cap .label {
+    font-family: var(--serif);
+    font-size: 24px;
+    letter-spacing: -0.005em;
+  }
+  .cap .meta {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--fg-faint);
+  }
+  @media (max-width: 860px) { .auth-grid { grid-template-columns: 1fr; gap: 40px; } }
 
-  /* ── FOOTER ── */
-  footer { padding: 56px 0 28px; border-top: 1px solid var(--line); }
-  .foot-inner { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 16px; align-items: center; }
-  .foot-brand { font-family: var(--mono); font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--fg-mute); }
-  .foot-brand span { color: var(--gold); }
-  .foot-links { display: flex; gap: 24px; flex-wrap: wrap; }
-  .foot-links a { font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--fg-mute); transition: color .2s; }
-  .foot-links a:hover { color: var(--fg); }
-  .foot-copy { font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--fg-faint); }
+  /* ---------- SECTION: BLOG ---------- */
+  .blog {
+    background: var(--paper);
+    color: var(--ink);
+    border-top: 1px solid var(--line);
+  }
+  .blog .eyebrow { color: rgba(10,14,20,0.55); }
+  .blog-head {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 80px;
+    align-items: end;
+    margin-bottom: 70px;
+  }
+  .blog-head h2 {
+    font-size: clamp(40px, 5vw, 78px);
+    color: var(--ink);
+    max-width: 14ch;
+  }
+  .blog-head p {
+    color: rgba(10,14,20,0.62);
+    max-width: 44ch;
+    font-size: 17px;
+    line-height: 1.6;
+  }
+  .blog-cats {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin: 24px 0 56px;
+  }
+  .cat {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    padding: 8px 14px;
+    border: 1px solid rgba(10,14,20,0.18);
+    border-radius: 999px;
+    color: rgba(10,14,20,0.72);
+    background: transparent;
+    transition: background .2s, color .2s, border-color .2s;
+    cursor: pointer;
+  }
+  .cat:hover, .cat.active { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+
+  .articles {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr;
+    gap: 0;
+    border-top: 1px solid var(--line-dark);
+  }
+  .article {
+    padding: 36px 32px 36px 0;
+    border-bottom: 1px solid var(--line-dark);
+    border-right: 1px solid var(--line-dark);
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    transition: background .25s ease;
+    cursor: pointer;
+  }
+  .article:last-child { border-right: none; }
+  .article:hover { background: rgba(10,14,20,0.03); }
+  .article-feat {
+    grid-row: span 2;
+    padding-right: 60px;
+  }
+  .article-thumb {
+    aspect-ratio: 16 / 10;
+    background: linear-gradient(135deg, var(--marine), var(--graphite));
+    position: relative;
+    overflow: hidden;
+  }
+  .article-feat .article-thumb { aspect-ratio: 16 / 9; }
+  .article-thumb svg {
+    position: absolute;
+    inset: 0;
+    width: 100%; height: 100%;
+  }
+  .article-meta {
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(10,14,20,0.55);
+  }
+  .article-meta .cat-tag { color: var(--gold); }
+  .article h3 {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: 26px;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+  }
+  .article-feat h3 { font-size: 42px; }
+  .article .excerpt {
+    font-size: 14.5px;
+    line-height: 1.6;
+    color: rgba(10,14,20,0.65);
+    max-width: 52ch;
+  }
+  .article .read {
+    margin-top: auto;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink);
+    display: inline-flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .article .read .arrow { transition: transform .25s ease; }
+  .article:hover .read .arrow { transform: translateX(4px); }
+  @media (max-width: 980px) {
+    .articles { grid-template-columns: 1fr 1fr; }
+    .article-feat { grid-row: auto; padding-right: 32px; }
+    .blog-head { grid-template-columns: 1fr; gap: 24px; }
+  }
+  @media (max-width: 640px) { .articles { grid-template-columns: 1fr; } }
+
+  /* ---------- SECTION: FINAL CTA ---------- */
+  .final {
+    background: var(--ink);
+    padding: 160px 0;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    position: relative;
+    overflow: hidden;
+  }
+  .final-bg {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+  .final h2 {
+    font-size: clamp(44px, 6.8vw, 108px);
+    max-width: 18ch;
+    letter-spacing: -0.025em;
+    line-height: 1.02;
+  }
+  .final h2 .em { color: var(--gold-soft); font-style: italic; }
+  .final p {
+    max-width: 50ch;
+    color: var(--fg-mute);
+    font-size: 18px;
+    margin-top: 40px;
+    line-height: 1.6;
+  }
+  .final .actions {
+    margin-top: 56px;
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+
+  /* ---------- FORM ---------- */
+  .contact {
+    background: var(--marine);
+    border-top: 1px solid var(--line);
+  }
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.3fr;
+    gap: 100px;
+  }
+  .contact h2 {
+    font-size: clamp(36px, 4.4vw, 64px);
+    max-width: 14ch;
+  }
+  .contact .meta {
+    margin-top: 32px;
+    color: var(--fg-mute);
+    font-size: 16px;
+    line-height: 1.65;
+    max-width: 42ch;
+  }
+  .contact-info {
+    margin-top: 48px;
+    display: grid;
+    gap: 18px;
+  }
+  .contact-info .row {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 16px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--line);
+    font-size: 14px;
+  }
+  .contact-info .row .k {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--fg-faint);
+  }
+  .contact-info .row a {
+    transition: color .2s;
+    border-bottom: 1px solid transparent;
+  }
+  .contact-info .row a:hover {
+    color: var(--gold-soft);
+    border-bottom-color: rgba(184,153,104,0.4);
+  }
+
+  form { display: grid; gap: 20px; }
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  .field { display: grid; gap: 8px; }
+  .field label {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--fg-faint);
+  }
+  .field input, .field select, .field textarea {
+    width: 100%;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--line);
+    color: var(--fg);
+    font-family: var(--sans);
+    font-size: 16px;
+    padding: 12px 0;
+    outline: none;
+    transition: border-color .2s;
+  }
+  .field input:focus, .field select:focus, .field textarea:focus {
+    border-color: var(--gold);
+  }
+  .field select { appearance: none; background-image: linear-gradient(45deg, transparent 50%, var(--fg-mute) 50%), linear-gradient(135deg, var(--fg-mute) 50%, transparent 50%); background-position: calc(100% - 14px) center, calc(100% - 8px) center; background-size: 6px 6px, 6px 6px; background-repeat: no-repeat; padding-right: 28px; }
+  .field select option { background: var(--ink); color: var(--fg); }
+  .field textarea { resize: vertical; min-height: 80px; }
+  .submit {
+    justify-self: start;
+    margin-top: 16px;
+  }
+  @media (max-width: 860px) {
+    .contact-grid { grid-template-columns: 1fr; gap: 48px; }
+    .form-row { grid-template-columns: 1fr; }
+  }
+
+  /* ---------- FOOTER ---------- */
+  footer {
+    background: var(--ink);
+    padding: 80px 0 36px;
+    color: var(--fg-mute);
+  }
+  .foot-top {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr 1fr;
+    gap: 40px;
+    padding-bottom: 64px;
+    border-bottom: 1px solid var(--line);
+  }
+  .foot-top h4 {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--fg-faint);
+    margin-bottom: 20px;
+    font-weight: 500;
+  }
+  .foot-top ul { list-style: none; display: grid; gap: 12px; }
+  .foot-top a { font-size: 14px; color: var(--fg-mute); }
+  .foot-top a:hover { color: var(--fg); }
+  .foot-brand { max-width: 36ch; }
+  .foot-brand p { margin-top: 18px; font-size: 14px; line-height: 1.6; }
+  .foot-bottom {
+    margin-top: 32px;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--fg-faint);
+  }
+  @media (max-width: 860px) { .foot-top { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 540px) { .foot-top { grid-template-columns: 1fr; } }
+
+  /* Subtle entry animation */
+  .reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 1s ease, transform 1s cubic-bezier(.2,.6,.2,1);
+  }
+  .reveal.in { opacity: 1; transform: none; }
+
+  /* ---------- SECTION: MANIFESTO ---------- */
+  .manifesto {
+    background: var(--marine);
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    position: relative;
+    overflow: hidden;
+  }
+  .manifesto-bg {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.4;
+  }
+  .manifesto-bg svg { width: 100%; height: 100%; }
+  .manifesto-inner {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: 0.7fr 2fr;
+    gap: 100px;
+    align-items: start;
+  }
+  .manifesto-side {
+    position: sticky;
+    top: 120px;
+    align-self: start;
+  }
+  .manifesto-side .mark {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 120px;
+    line-height: 1;
+    color: var(--gold-soft);
+    margin-bottom: 32px;
+    letter-spacing: -0.04em;
+  }
+  .manifesto-side .meta {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--fg-faint);
+    line-height: 1.8;
+  }
+  .manifesto-body {
+    font-family: var(--serif);
+    font-size: clamp(28px, 3vw, 44px);
+    line-height: 1.25;
+    letter-spacing: -0.015em;
+    color: var(--fg);
+  }
+  .manifesto-body .stanza {
+    padding: 28px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .manifesto-body .stanza:last-child { border-bottom: none; }
+  .manifesto-body .stanza p { margin: 8px 0; }
+  .manifesto-body .stanza .quiet { color: var(--fg-mute); font-style: italic; }
+  .manifesto-body .stanza .gold { color: var(--gold-soft); }
+  .manifesto-body .stanza .small {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--fg-faint);
+    margin-bottom: 14px;
+  }
+  .manifesto-body .closing {
+    margin-top: 56px;
+    padding-top: 28px;
+    border-top: 1px solid var(--gold);
+    font-style: italic;
+    font-size: clamp(32px, 3.6vw, 56px);
+    color: var(--gold-soft);
+    line-height: 1.15;
+  }
+  @media (max-width: 980px) {
+    .manifesto-inner { grid-template-columns: 1fr; gap: 40px; }
+    .manifesto-side { position: static; }
+    .manifesto-side .mark { font-size: 80px; margin-bottom: 16px; }
+  }
+
+  /* ---------- SECTION: HISTORIAS DE PROCESSO / XML AO ERP ---------- */
+  .processo {
+    background: var(--ink);
+    border-top: 1px solid var(--line);
+  }
+  .processo-head {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: end;
+    margin-bottom: 80px;
+  }
+  .processo-head h2 {
+    font-size: clamp(40px, 5vw, 78px);
+    max-width: 16ch;
+  }
+  .processo-head .label {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 16px;
+  }
+  .processo-head p {
+    color: var(--fg-mute);
+    max-width: 48ch;
+    font-size: 17px;
+    line-height: 1.65;
+  }
+
+  .flow {
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    padding: 56px 0;
+    margin-bottom: 56px;
+  }
+  .flow-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 36px;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  .flow-title .name {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 24px;
+    color: var(--fg);
+    letter-spacing: -0.005em;
+  }
+  .flow-title .name .gold { color: var(--gold-soft); }
+  .flow-title .meta {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--fg-faint);
+  }
+  .flow-steps {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 0;
+    position: relative;
+  }
+  .flow-steps::before {
+    content: "";
+    position: absolute;
+    top: 22px;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: var(--line);
+  }
+  .fstep {
+    position: relative;
+    padding: 0 18px 0 0;
+    padding-top: 0;
+  }
+  .fstep .node {
+    width: 44px; height: 44px;
+    border: 1px solid var(--line);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--ink);
+    position: relative;
+    z-index: 1;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--fg-mute);
+    letter-spacing: 0.08em;
+    margin-bottom: 18px;
+  }
+  .flow.manual .node { color: var(--fg-mute); border-color: var(--line); }
+  .flow.smart .node { color: var(--gold); border-color: var(--gold); background: var(--ink); }
+  .flow.smart .node::after {
+    content: "";
+    position: absolute;
+    inset: -4px;
+    border: 1px solid rgba(184,153,104,0.18);
+    border-radius: 50%;
+  }
+  .fstep .lbl {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--fg-faint);
+    margin-bottom: 6px;
+  }
+  .fstep .txt {
+    font-family: var(--serif);
+    font-size: 19px;
+    line-height: 1.2;
+    color: var(--fg);
+    letter-spacing: -0.005em;
+    max-width: 16ch;
+  }
+  .flow.manual .fstep .txt { color: rgba(245,242,235,0.78); }
+  @media (max-width: 1100px) {
+    .flow-steps { grid-template-columns: repeat(3, 1fr); row-gap: 36px; }
+    .flow-steps::before { display: none; }
+  }
+  @media (max-width: 640px) { .flow-steps { grid-template-columns: 1fr 1fr; } }
+
+  .processo-foot {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: end;
+    margin-top: 40px;
+  }
+  .processo-foot .pull {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: clamp(26px, 3vw, 40px);
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    color: var(--fg);
+    max-width: 22ch;
+  }
+  .processo-foot .pull .gold { color: var(--gold-soft); }
+  .processo-foot .right p {
+    color: var(--fg-mute);
+    font-size: 17px;
+    line-height: 1.65;
+    margin-bottom: 28px;
+    max-width: 48ch;
+  }
+  @media (max-width: 860px) {
+    .processo-head, .processo-foot { grid-template-columns: 1fr; gap: 32px; }
+  }
+
+  /* In-page CTA strip */
+  .strip-cta {
+    background: var(--ink);
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    padding: 36px 0;
+  }
+  .strip-cta-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  .strip-cta .label {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: clamp(20px, 2.2vw, 28px);
+    max-width: 36ch;
+    line-height: 1.2;
+  }
+
 </style>
 </head>
 <body>
 
-<!-- ══ NAV ══ -->
+<!-- ============== NAV ============== -->
 <nav class="nav">
   <div class="wrap nav-inner">
-    <a href="/" class="brand">
+    <a href="#" class="brand" aria-label="Orkestria Consult">
       <span class="brand-mark" aria-hidden="true">
         <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
           <circle cx="14" cy="14" r="13" stroke="#F5F2EB" stroke-width="1"/>
@@ -217,392 +1259,819 @@
       <a href="#metodologia">Metodologia</a>
       <a href="#processo">Processo</a>
       <a href="#diagnostico">Diagnóstico</a>
-      <a href="/blog/">Inteligência</a>
+      <a href="#inteligencia">Inteligência</a>
       <a href="#contato">Contato</a>
     </div>
-    <a href="#diagnostico" class="nav-cta">Solicitar diagnóstico <span class="arrow">→</span></a>
+    <a href="#diagnostico" class="nav-cta">
+      Solicitar diagnóstico
+      <span class="arrow">→</span>
+    </a>
   </div>
 </nav>
 
-<!-- ══ HERO ══ -->
-<section class="hero" id="inicio">
-
-  <div class="hero-topbar">
-    <div class="eyebrow"><span class="dot"></span>Consultoria Estratégica · IA, Dados e Integrações</div>
-    <div class="hero-meta">
-      <span>BR · 2026</span>
-      <span>Edição 01</span>
-      <span>Orkestria · Consult</span>
-    </div>
+<!-- ============== HERO ============== -->
+<header class="hero">
+  <div class="hero-bg" aria-hidden="true">
+    <!-- subtle grid -->
+    <svg viewBox="0 0 1440 900" preserveAspectRatio="none">
+      <defs>
+        <pattern id="grid" width="80" height="80" patternUnits="userSpaceOnUse">
+          <path d="M 80 0 L 0 0 0 80" fill="none" stroke="rgba(245,242,235,0.04)" stroke-width="1"/>
+        </pattern>
+        <radialGradient id="vfade" cx="50%" cy="0%" r="80%">
+          <stop offset="0%" stop-color="rgba(10,14,20,0)"/>
+          <stop offset="100%" stop-color="rgba(10,14,20,1)"/>
+        </radialGradient>
+      </defs>
+      <rect width="1440" height="900" fill="url(#grid)"/>
+      <rect width="1440" height="900" fill="url(#vfade)"/>
+    </svg>
+    <div class="hero-grid-fade"></div>
   </div>
 
-  <div class="hero-body">
-    <div class="hero-left">
-      <h1 class="hero-h1">Transformamos dados, sistemas e processos em <span class="em">poder de decisão.</span></h1>
-      <div class="hero-bottom">
-        <p class="hero-sub">A Orkestria Consult ajuda instituições e empresas a integrar operações, automatizar rotinas e enxergar com clareza onde produtividade, controle e resultado estão sendo perdidos.</p>
-        <div class="hero-actions">
+  <!-- Decorative instrument / dashboard panel -->
+  <svg class="instrument-panel" viewBox="0 0 600 600" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <!-- outer dial -->
+    <circle cx="300" cy="300" r="280" stroke="rgba(245,242,235,0.06)" stroke-width="1"/>
+    <circle cx="300" cy="300" r="240" stroke="rgba(245,242,235,0.08)" stroke-width="1"/>
+    <circle cx="300" cy="300" r="200" stroke="rgba(184,153,104,0.18)" stroke-width="1"/>
+    <circle cx="300" cy="300" r="120" stroke="rgba(245,242,235,0.10)" stroke-width="1"/>
+    <!-- tick marks -->
+    <g stroke="rgba(245,242,235,0.16)" stroke-width="1">
+      <line x1="300" y1="20" x2="300" y2="38"/>
+      <line x1="300" y1="562" x2="300" y2="580"/>
+      <line x1="20"  y1="300" x2="38" y2="300"/>
+      <line x1="562" y1="300" x2="580" y2="300"/>
+    </g>
+    <!-- minor ticks ring -->
+    <g stroke="rgba(245,242,235,0.10)" stroke-width="1">
+      <g transform="rotate(15 300 300)"><line x1="300" y1="22" x2="300" y2="34"/></g>
+      <g transform="rotate(30 300 300)"><line x1="300" y1="22" x2="300" y2="34"/></g>
+      <g transform="rotate(45 300 300)"><line x1="300" y1="22" x2="300" y2="34"/></g>
+      <g transform="rotate(60 300 300)"><line x1="300" y1="22" x2="300" y2="34"/></g>
+      <g transform="rotate(75 300 300)"><line x1="300" y1="22" x2="300" y2="34"/></g>
+      <g transform="rotate(105 300 300)"><line x1="300" y1="22" x2="300" y2="34"/></g>
+      <g transform="rotate(120 300 300)"><line x1="300" y1="22" x2="300" y2="34"/></g>
+      <g transform="rotate(135 300 300)"><line x1="300" y1="22" x2="300" y2="34"/></g>
+      <g transform="rotate(150 300 300)"><line x1="300" y1="22" x2="300" y2="34"/></g>
+      <g transform="rotate(165 300 300)"><line x1="300" y1="22" x2="300" y2="34"/></g>
+      <g transform="rotate(195 300 300)"><line x1="300" y1="22" x2="300" y2="34"/></g>
+      <g transform="rotate(210 300 300)"><line x1="300" y1="22" x2="300" y2="34"/></g>
+      <g transform="rotate(225 300 300)"><line x1="300" y1="22" x2="300" y2="34"/></g>
+      <g transform="rotate(240 300 300)"><line x1="300" y1="22" x2="300" y2="34"/></g>
+      <g transform="rotate(255 300 300)"><line x1="300" y1="22" x2="300" y2="34"/></g>
+      <g transform="rotate(285 300 300)"><line x1="300" y1="22" x2="300" y2="34"/></g>
+      <g transform="rotate(300 300 300)"><line x1="300" y1="22" x2="300" y2="34"/></g>
+      <g transform="rotate(315 300 300)"><line x1="300" y1="22" x2="300" y2="34"/></g>
+      <g transform="rotate(330 300 300)"><line x1="300" y1="22" x2="300" y2="34"/></g>
+      <g transform="rotate(345 300 300)"><line x1="300" y1="22" x2="300" y2="34"/></g>
+    </g>
+    <!-- crosshair -->
+    <line x1="300" y1="100" x2="300" y2="500" stroke="rgba(245,242,235,0.06)" stroke-width="1"/>
+    <line x1="100" y1="300" x2="500" y2="300" stroke="rgba(245,242,235,0.06)" stroke-width="1"/>
+    <!-- arc highlight (kpi) -->
+    <path d="M 300 80 A 220 220 0 0 1 506.6 419" stroke="#B89968" stroke-width="1.4" fill="none" opacity="0.7"/>
+    <path d="M 300 80 A 220 220 0 0 1 446 134" stroke="#2E6BFF" stroke-width="1.4" fill="none" opacity="0.8"/>
+    <!-- inner data dots -->
+    <g fill="rgba(184,153,104,0.7)">
+      <circle cx="300" cy="80" r="3"/>
+      <circle cx="506.6" cy="419" r="3"/>
+    </g>
+    <g fill="rgba(46,107,255,0.85)">
+      <circle cx="446" cy="134" r="3"/>
+    </g>
+    <!-- center -->
+    <circle cx="300" cy="300" r="4" fill="#B89968"/>
+    <!-- side readouts -->
+    <g font-family="Geist Mono, monospace" font-size="9" fill="rgba(245,242,235,0.55)" letter-spacing="2">
+      <text x="20" y="60">SYS · 01</text>
+      <text x="500" y="60">ORK / 2026</text>
+      <text x="20" y="560">SIGNAL 04 — STABLE</text>
+      <text x="470" y="560">DRIFT 0.012</text>
+    </g>
+    <!-- mini bar -->
+    <g transform="translate(140 480)">
+      <rect width="320" height="1" fill="rgba(245,242,235,0.18)"/>
+      <rect width="220" height="1" y="0" fill="#B89968"/>
+      <text x="0" y="-8" font-family="Geist Mono, monospace" font-size="8" fill="rgba(245,242,235,0.5)" letter-spacing="2">OPERATIONAL ALIGNMENT</text>
+      <text x="290" y="-8" font-family="Geist Mono, monospace" font-size="8" fill="#B89968" letter-spacing="2">68%</text>
+    </g>
+  </svg>
+
+  <div class="wrap hero-inner">
+    <div class="hero-top">
+      <div class="eyebrow"><span class="dot"></span>Consultoria estratégica · IA, dados e integrações</div>
+      <div class="meta">
+        <span>BR · 2026</span>
+        <span>Edição 01</span>
+        <span>Orkestria · Consult</span>
+      </div>
+    </div>
+
+    <h1 class="display">
+      Transformamos<br/>dados, sistemas e processos<br/>em <span class="em">poder de decisão.</span>
+    </h1>
+
+    <div class="hero-foot">
+      <p class="hero-sub">
+        A ORKESTRIA CONSULT ajuda instituições e empresas a integrar operações, automatizar rotinas e enxergar com clareza onde produtividade, controle e resultado estão sendo perdidos.
+      </p>
+      <div>
+        <div class="hero-ctas">
           <a href="#diagnostico" class="btn btn-primary">Solicitar diagnóstico operacional <span class="arrow">→</span></a>
           <a href="#metodologia" class="btn btn-ghost">Entender a metodologia</a>
         </div>
       </div>
     </div>
-
-    <div class="hero-right" aria-hidden="true">
-      <div class="radar-wrap">
-        <svg class="radar-svg" viewBox="0 0 520 520" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <!-- outer rings -->
-          <circle cx="260" cy="260" r="240" stroke="rgba(245,242,235,0.06)" stroke-width="1"/>
-          <circle cx="260" cy="260" r="190" stroke="rgba(245,242,235,0.06)" stroke-width="1"/>
-
-          <!-- spinning ring 1 -->
-          <g class="ring-1">
-            <circle cx="260" cy="260" r="155" stroke="rgba(184,153,104,0.18)" stroke-width="1" stroke-dasharray="6 14"/>
-            <!-- orbit dots ring 1 -->
-            <circle cx="260" cy="105" r="4" fill="#B89968" opacity="0.7" class="dot-pulse"/>
-            <circle cx="395" cy="330" r="3" fill="#B89968" opacity="0.5" class="dot-pulse-2"/>
-            <circle cx="145" cy="355" r="3" fill="rgba(245,242,235,0.4)"/>
-          </g>
-
-          <!-- spinning ring 2 -->
-          <g class="ring-2">
-            <circle cx="260" cy="260" r="105" stroke="rgba(184,153,104,0.25)" stroke-width="1" stroke-dasharray="4 10"/>
-            <!-- orbit dots ring 2 -->
-            <circle cx="260" cy="155" r="3.5" fill="rgba(184,153,104,0.8)" class="dot-pulse"/>
-            <circle cx="355" cy="290" r="2.5" fill="rgba(46,107,255,0.8)"/>
-          </g>
-
-          <!-- signal arc (blue) -->
-          <circle cx="260" cy="260" r="190"
-            stroke="#2E6BFF"
-            stroke-width="1.5"
-            stroke-dasharray="220 1200"
-            stroke-dashoffset="-80"
-            opacity="0.7"
-            class="arc-signal"/>
-
-          <!-- gold arc -->
-          <circle cx="260" cy="260" r="240"
-            stroke="#B89968"
-            stroke-width="1"
-            stroke-dasharray="80 1600"
-            stroke-dashoffset="-320"
-            opacity="0.5"/>
-
-          <!-- core -->
-          <circle cx="260" cy="260" r="6" fill="#B89968" opacity="0.9"/>
-          <circle cx="260" cy="260" r="14" stroke="#B89968" stroke-width="0.5" opacity="0.4"/>
-          <circle cx="260" cy="260" r="28" stroke="#B89968" stroke-width="0.5" opacity="0.15"/>
-
-          <!-- connector lines -->
-          <line x1="260" y1="105" x2="260" y2="260" stroke="rgba(184,153,104,0.15)" stroke-width="1"/>
-          <line x1="355" y1="290" x2="260" y2="260" stroke="rgba(46,107,255,0.2)" stroke-width="1"/>
-
-          <!-- stat labels -->
-          <text x="280" y="96" font-family="'Geist Mono',monospace" font-size="9" fill="rgba(245,242,235,0.4)" letter-spacing="2">SYS · 01</text>
-          <text x="408" y="246" font-family="'Geist Mono',monospace" font-size="9" fill="rgba(245,242,235,0.35)" letter-spacing="1">ORK / ·</text>
-
-          <!-- alignment indicator -->
-          <line x1="340" y1="360" x2="440" y2="360" stroke="rgba(245,242,235,0.12)" stroke-width="1"/>
-          <line x1="340" y1="360" x2="378" y2="360" stroke="#B89968" stroke-width="1.5" opacity="0.7"/>
-          <text x="340" y="374" font-family="'Geist Mono',monospace" font-size="8" fill="rgba(245,242,235,0.35)" letter-spacing="1.5">OPERATIONAL ALIGNMENT</text>
-          <text x="430" y="374" font-family="'Geist Mono',monospace" font-size="8" fill="#B89968" opacity="0.8">68%</text>
-
-          <!-- signal status -->
-          <text x="60" y="420" font-family="'Geist Mono',monospace" font-size="8" fill="rgba(245,242,235,0.3)" letter-spacing="1.5">SIGNAL 04 — STABLE</text>
-          <circle cx="53" cy="416" r="3" fill="#2E6BFF" opacity="0.7" class="label-blink"/>
-
-          <!-- drift -->
-          <text x="370" y="420" font-family="'Geist Mono',monospace" font-size="8" fill="rgba(245,242,235,0.25)" letter-spacing="1.5">DRIFT Ø · 01</text>
-
-          <!-- cross lines -->
-          <line x1="260" y1="20" x2="260" y2="60" stroke="rgba(245,242,235,0.08)" stroke-width="1"/>
-          <line x1="260" y1="460" x2="260" y2="500" stroke="rgba(245,242,235,0.08)" stroke-width="1"/>
-          <line x1="20" y1="260" x2="60" y2="260" stroke="rgba(245,242,235,0.08)" stroke-width="1"/>
-          <line x1="460" y1="260" x2="500" y2="260" stroke="rgba(245,242,235,0.08)" stroke-width="1"/>
-        </svg>
-      </div>
-    </div>
   </div>
+</header>
 
-</section>
+<!-- ============== TICKER ============== -->
+<div class="ticker" aria-hidden="true">
+  <div class="ticker-track">
+    <span>Integração de Sistemas</span><span class="sep">◆</span>
+    <span>Inteligência Operacional</span><span class="sep">◆</span>
+    <span>BI Executivo</span><span class="sep">◆</span>
+    <span>Automação de Processos</span><span class="sep">◆</span>
+    <span>IA Aplicada</span><span class="sep">◆</span>
+    <span>Modelagem de Dados</span><span class="sep">◆</span>
+    <span>TOTVS RM · SQL Server</span><span class="sep">◆</span>
+    <span>Eficiência Operacional</span><span class="sep">◆</span>
+    <!-- duplicate for seamless loop -->
+    <span>Integração de Sistemas</span><span class="sep">◆</span>
+    <span>Inteligência Operacional</span><span class="sep">◆</span>
+    <span>BI Executivo</span><span class="sep">◆</span>
+    <span>Automação de Processos</span><span class="sep">◆</span>
+    <span>IA Aplicada</span><span class="sep">◆</span>
+    <span>Modelagem de Dados</span><span class="sep">◆</span>
+    <span>TOTVS RM · SQL Server</span><span class="sep">◆</span>
+    <span>Eficiência Operacional</span><span class="sep">◆</span>
+  </div>
+</div>
 
-<!-- ══ MANIFESTO ══ -->
-<section class="manifesto" id="manifesto">
+<!-- ============== QUEBRA DE PERCEPCAO ============== -->
+<section class="quebra section-pad">
   <div class="wrap">
-    <div class="manifesto-inner">
-      <div class="manifesto-left">
-        <div class="eyebrow"><span class="dot"></span>Manifesto</div>
-        <h2 class="display">O que <span class="em">acreditamos</span> sobre tecnologia e gestão.</h2>
-      </div>
-      <div class="beliefs">
-        <div class="belief">
-          <div class="belief-num">01</div>
-          <p><strong>Tecnologia não resolve problema de processo.</strong> Antes de automatizar, é preciso entender. Um sistema novo sobre um processo quebrado produz erros mais rápido — não melhores resultados.</p>
-        </div>
-        <div class="belief">
-          <div class="belief-num">02</div>
-          <p><strong>Dashboard bonito sobre dado ruim é um espelho mentiroso.</strong> Visualização sem qualidade de dado não é BI — é ilusão de controle. A inteligência começa na origem, não na tela.</p>
-        </div>
-        <div class="belief">
-          <div class="belief-num">03</div>
-          <p><strong>Dado que não gera decisão é ruído.</strong> O objetivo não é o relatório — é a ação que acontece depois. Se um indicador não tem dono nem resposta possível, ele não deveria existir.</p>
-        </div>
-        <div class="belief">
-          <div class="belief-num">04</div>
-          <p><strong>Autonomia operacional é o destino.</strong> O trabalho bem feito termina quando a operação funciona sem depender de nós. Consultorias que criam dependência entregam problema, não solução.</p>
+    <div class="eyebrow" style="margin-bottom:32px;"><span class="dot"></span>01 · Quebra de percepção</div>
+    <div class="quebra-grid">
+      <h2 class="display">O problema não é falta <span class="italic" style="color:var(--gold-soft)">de tecnologia.</span></h2>
+      <div>
+        <p class="body">
+          Muitas empresas já possuem sistemas, relatórios, planilhas e dados. Mesmo assim, continuam tomando decisões com informações fragmentadas, processos manuais e indicadores que chegam tarde demais.
+        </p>
+        <div class="pull display">
+          Quando os dados não conversam, <span class="accent">a gestão perde controle.</span>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ══ METODOLOGIA ══ -->
-<section class="metodologia" id="metodologia">
-  <div class="wrap">
-    <div class="section-head">
-      <div class="eyebrow"><span class="dot"></span>Metodologia</div>
-      <h2 class="display">Como <span style="font-style:italic">orquestramos</span> sua operação.</h2>
-      <p class="sub">Não entregamos software. Entregamos um processo: do diagnóstico à autonomia — com cada etapa conectada à anterior.</p>
+<!-- ============== MANIFESTO ============== -->
+<section class="manifesto section-pad" id="manifesto">
+  <div class="manifesto-bg" aria-hidden="true">
+    <svg viewBox="0 0 1440 900" preserveAspectRatio="none">
+      <defs>
+        <pattern id="mgrid" width="120" height="120" patternUnits="userSpaceOnUse">
+          <path d="M 120 0 L 0 0 0 120" fill="none" stroke="rgba(245,242,235,0.04)" stroke-width="1"/>
+        </pattern>
+      </defs>
+      <rect width="1440" height="900" fill="url(#mgrid)"/>
+    </svg>
+  </div>
+  <div class="wrap manifesto-inner">
+    <aside class="manifesto-side">
+      <div class="mark">M.</div>
+      <div class="meta">
+        Manifesto · 02<br/>
+        Nossa visão<br/>
+        Edição 2026
+      </div>
+    </aside>
+    <div class="manifesto-body">
+      <div class="stanza">
+        <p>Quando uma empresa entra no território dos dados,<br/><span class="quiet">não existe adaptação.</span></p>
+        <p><span class="gold">Existe tomada de posição.</span></p>
+      </div>
+
+      <div class="stanza">
+        <p>Muitas empresas têm sistemas.<br/><span class="quiet">Poucas transformam sistemas em decisão.</span></p>
+        <p>Muitas têm planilhas.<br/><span class="quiet">Poucas têm inteligência operacional.</span></p>
+        <p>Muitas acumulam dados.<br/><span class="quiet">Poucas sabem o que fazer com eles.</span></p>
+      </div>
+
+      <div class="stanza">
+        <p class="small">◆ É aqui que entramos</p>
+        <p>Integrações, BI, automação e sistemas sob medida<br/>para transformar operação em <span class="gold">controle</span>,<br/>dados em <span class="gold">clareza</span><br/>e tecnologia em <span class="gold">resultado financeiro</span>.</p>
+      </div>
+
+      <div class="stanza">
+        <p>Porque no mercado,<br/><span class="quiet">não importa quem tem mais informação.</span></p>
+        <p><span class="gold">Importa quem transforma informação em decisão.</span></p>
+      </div>
+
+      <div class="closing">
+        E no topo,<br/>
+        eficiência não se promete.<br/>
+        <span style="font-style:normal; color:var(--fg);">Se constrói.</span>
+      </div>
     </div>
+  </div>
+</section>
+
+<!-- ============== EDUCACAO ============== -->
+<section class="edu section-pad">
+  <div class="wrap">
+    <div class="eyebrow" style="margin-bottom:32px;"><span class="dot"></span>03 · Primeiro foco · Setor educacional</div>
+    <div class="edu-head">
+      <h2 class="display">Para instituições de ensino, eficiência <span class="italic" style="color:var(--gold-soft)">também é estratégia.</span></h2>
+      <p>
+        Educação é o primeiro foco estratégico da ORKESTRIA CONSULT — não o único mercado. Os princípios de integração, controle e decisão se aplicam a qualquer operação onde dados, sistemas e processos precisam conversar para gerar resultado.
+      </p>
+    </div>
+
+    <div class="pain-grid">
+      <div class="pain-cell">
+        <span class="num">P · 01</span>
+        <h3>Planilhas paralelas</h3>
+        <p>Versões divergentes da mesma realidade circulam entre áreas e corroem qualquer indicador.</p>
+      </div>
+      <div class="pain-cell">
+        <span class="num">P · 02</span>
+        <h3>Relatórios demorados</h3>
+        <p>A informação chega depois que a janela de decisão já passou.</p>
+      </div>
+      <div class="pain-cell">
+        <span class="num">P · 03</span>
+        <h3>Sistemas desconectados</h3>
+        <p>Existem, funcionam, mas não conversam — e a gestão paga por essa fronteira invisível.</p>
+      </div>
+      <div class="pain-cell">
+        <span class="num">P · 04</span>
+        <h3>Retrabalho administrativo</h3>
+        <p>Equipes operacionais dedicam horas a tarefas que deveriam acontecer sozinhas.</p>
+      </div>
+      <div class="pain-cell">
+        <span class="num">P · 05</span>
+        <h3>Falta de visão financeira</h3>
+        <p>Inadimplência, margem e previsibilidade lidos por percepção, não por dado consolidado.</p>
+      </div>
+      <div class="pain-cell">
+        <span class="num">P · 06</span>
+        <h3>Decisões sem dados confiáveis</h3>
+        <p>A direção decide com sensibilidade, não com leitura — e o risco se acumula.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== STRIP CTA ============== -->
+<div class="strip-cta">
+  <div class="wrap strip-cta-inner">
+    <div class="label">
+      Instituições de ensino não perdem eficiência por falta de dados. <span style="color:var(--gold-soft)">Perdem porque os dados não conversam.</span>
+    </div>
+    <a href="#diagnostico" class="btn btn-ghost">Quero analisar minha operação <span class="arrow">→</span></a>
+  </div>
+</div>
+
+<!-- ============== VALOR ============== -->
+<section class="valor section-pad">
+  <div class="wrap">
+    <div class="eyebrow" style="margin-bottom:32px;"><span class="dot"></span>04 · Valor percebido</div>
+    <h2 class="display">Dados não valem pelo volume. Valem pelo <span class="italic" style="color:var(--gold)">controle</span> que entregam.</h2>
+
+    <div class="valor-grid">
+      <p class="valor-lead">
+        Tecnologia só vira vantagem quando produz controle operacional, reduz incerteza e devolve à diretoria poder real de decisão. Antes disso, é decoração.
+      </p>
+
+      <ul class="benefit-list">
+        <li><span class="num">B·01</span> Clareza executiva para a diretoria <span class="tag">Decisão</span></li>
+        <li><span class="num">B·02</span> Menos retrabalho para as equipes <span class="tag">Eficiência</span></li>
+        <li><span class="num">B·03</span> Mais previsibilidade financeira <span class="tag">Controle</span></li>
+        <li><span class="num">B·04</span> Processos automatizados de ponta a ponta <span class="tag">Automação</span></li>
+        <li><span class="num">B·05</span> Dados integrados entre áreas e sistemas <span class="tag">Integração</span></li>
+        <li><span class="num">B·06</span> Decisões mais rápidas, embasadas em fato <span class="tag">Velocidade</span></li>
+        <li><span class="num">B·07</span> Visão operacional confiável e auditável <span class="tag">Inteligência</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============== METODOLOGIA ============== -->
+<section class="meto section-pad" id="metodologia">
+  <div class="wrap">
+    <div class="eyebrow" style="margin-bottom:32px;"><span class="dot"></span>05 · Metodologia</div>
+    <div class="meto-head">
+      <h2 class="display">Da operação fragmentada ao <span class="italic" style="color:var(--gold-soft)">comando inteligente.</span></h2>
+      <p>Uma sequência consultiva que parte da leitura da operação e termina em plano executivo de evolução. Não entregamos tecnologia decorativa — entregamos controle, clareza e capacidade de decisão.</p>
+    </div>
+
     <div class="steps">
       <div class="step">
-        <div class="step-num">01 · Diagnóstico</div>
-        <h3>Mapeamos o que existe e o que falta.</h3>
-        <p>Analisamos sistemas, fluxos e fontes de dados atuais. Identificamos gargalos, redundâncias e o que impede a operação de gerar leitura executiva confiável.</p>
+        <span class="num">01 / 06</span>
+        <h3>Mapeamento dos processos atuais</h3>
+        <p>Entendemos como a operação funciona hoje — não como deveria funcionar no papel.</p>
       </div>
       <div class="step">
-        <div class="step-num">02 · Integração</div>
-        <h3>Conectamos sistemas que não se falam.</h3>
-        <p>ERP, planilhas, plataformas educacionais, APIs — integramos as fontes para que a informação flua sem intervenção manual e sem perda de integridade.</p>
+        <span class="num">02 / 06</span>
+        <h3>Identificação de gargalos e retrabalho</h3>
+        <p>Onde a operação perde tempo, dinheiro e controle de forma silenciosa.</p>
       </div>
       <div class="step">
-        <div class="step-num">03 · Visibilidade</div>
-        <h3>Dados viram leitura executiva.</h3>
-        <p>Construímos painéis e relatórios calibrados para decisão — não para estética. Cada indicador tem dono, contexto e ação possível associados.</p>
+        <span class="num">03 / 06</span>
+        <h3>Análise dos dados e sistemas existentes</h3>
+        <p>Auditoria das fontes, da consistência e da capacidade real de leitura gerencial.</p>
       </div>
       <div class="step">
-        <div class="step-num">04 · Autonomia</div>
-        <h3>A operação aprende a se sustentar.</h3>
-        <p>Transferimos conhecimento, documentamos processos e estruturamos governança para que a inteligência operacional não dependa de nós para funcionar.</p>
+        <span class="num">04 / 06</span>
+        <h3>Desenho de integrações e automações</h3>
+        <p>Conexões entre áreas, sistemas e fluxos que eliminam retrabalho e padronizam a verdade.</p>
+      </div>
+      <div class="step">
+        <span class="num">05 / 06</span>
+        <h3>Criação de indicadores executivos</h3>
+        <p>Painéis que mostram o que importa para a diretoria — sem ruído, sem vaidade.</p>
+      </div>
+      <div class="step">
+        <span class="num">06 / 06</span>
+        <h3>Plano de evolução com IA, BI e sistemas</h3>
+        <p>Um caminho claro de maturidade: o que vem agora, o que vem depois, e por quê.</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ══ PROCESSO / VALOR PERCEBIDO ══ -->
-<section class="processo" id="processo">
+<!-- ============== HISTORIAS DE PROCESSO · XML AO ERP ============== -->
+<section class="processo section-pad" id="processo">
   <div class="wrap">
-    <div class="processo-inner">
-      <div class="processo-left">
-        <div class="eyebrow"><span class="dot"></span>04 · Valor Percebido</div>
-        <h2 class="display">Dados não valem pelo volume. Valem pelo <span class="em">controle</span> que entregam.</h2>
-        <p class="desc">Tecnologia só vira vantagem quando produz controle operacional, reduz incerteza e devolve à diretoria poder real de decisão. Antes disso, é decoração.</p>
-      </div>
-      <div class="benefit-list">
-        <div class="benefit-item">
-          <div class="benefit-left">
-            <span class="benefit-code">B · 01</span>
-            <span class="benefit-text">Clareza executiva para a diretoria</span>
-          </div>
-          <span class="benefit-tag">Decisão</span>
-        </div>
-        <div class="benefit-item">
-          <div class="benefit-left">
-            <span class="benefit-code">B · 02</span>
-            <span class="benefit-text">Menos retrabalho para as equipes</span>
-          </div>
-          <span class="benefit-tag">Eficiência</span>
-        </div>
-        <div class="benefit-item">
-          <div class="benefit-left">
-            <span class="benefit-code">B · 03</span>
-            <span class="benefit-text">Mais previsibilidade financeira</span>
-          </div>
-          <span class="benefit-tag">Controle</span>
-        </div>
-        <div class="benefit-item">
-          <div class="benefit-left">
-            <span class="benefit-code">B · 04</span>
-            <span class="benefit-text">Processos automatizados de ponta a ponta</span>
-          </div>
-          <span class="benefit-tag">Automação</span>
-        </div>
-        <div class="benefit-item">
-          <div class="benefit-left">
-            <span class="benefit-code">B · 05</span>
-            <span class="benefit-text">Dados integrados entre áreas e sistemas</span>
-          </div>
-          <span class="benefit-tag">Integração</span>
-        </div>
-        <div class="benefit-item">
-          <div class="benefit-left">
-            <span class="benefit-code">B · 06</span>
-            <span class="benefit-text">Decisões mais rápidas, embasadas em fato</span>
-          </div>
-          <span class="benefit-tag">Velocidade</span>
-        </div>
-        <div class="benefit-item">
-          <div class="benefit-left">
-            <span class="benefit-code">B · 07</span>
-            <span class="benefit-text">Visão operacional confiável e auditável</span>
-          </div>
-          <span class="benefit-tag">Inteligência</span>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ══ DIAGNÓSTICO CTA ══ -->
-<section class="diagnostico" id="diagnostico">
-  <div class="wrap">
-    <div class="diag-inner">
+    <div class="eyebrow" style="margin-bottom:32px;"><span class="dot"></span>06 · Histórias de Processo</div>
+    <div class="processo-head">
       <div>
-        <div class="diag-label">Próximo passo</div>
-        <h2 class="display">Comece com um diagnóstico <span class="em">sem custo.</span></h2>
-        <p>Uma sessão de trabalho para mapear sua operação atual, identificar o maior gargalo e propor um caminho claro. Sem proposta genérica, sem PowerPoint de introdução.</p>
+        <div class="label">◆ Caso · Entrada de Notas Fiscais</div>
+        <h2 class="display">Do XML ao ERP: como a entrada de NF deixa de ser tarefa manual e vira <span class="italic" style="color:var(--gold-soft)">fluxo inteligente.</span></h2>
       </div>
+      <p>
+        Uma nota fiscal não deveria depender de uma fila manual para virar informação de gestão. O custo dessa fila não aparece em relatório — aparece em retrabalho, atraso e decisão tomada com atraso.
+      </p>
+    </div>
+
+    <!-- Manual flow -->
+    <div class="flow manual">
+      <div class="flow-title">
+        <div class="name">Como costuma acontecer hoje · <span class="gold">fluxo manual.</span></div>
+        <div class="meta">Cadeia lenta · 6 etapas · vulnerável a erro</div>
+      </div>
+      <div class="flow-steps">
+        <div class="fstep"><div class="node">01</div><div class="lbl">Chegada</div><div class="txt">XML chega na caixa de e-mail</div></div>
+        <div class="fstep"><div class="node">02</div><div class="lbl">Download</div><div class="txt">Alguém baixa e organiza manualmente</div></div>
+        <div class="fstep"><div class="node">03</div><div class="lbl">Conferência</div><div class="txt">Confere fornecedor e pedido</div></div>
+        <div class="fstep"><div class="node">04</div><div class="lbl">Validação</div><div class="txt">Valida valores e divergências</div></div>
+        <div class="fstep"><div class="node">05</div><div class="lbl">Comunicação</div><div class="txt">Aciona o responsável da área</div></div>
+        <div class="fstep"><div class="node">06</div><div class="lbl">Registro</div><div class="txt">Lança no ERP, fim do ciclo</div></div>
+      </div>
+    </div>
+
+    <!-- Smart flow -->
+    <div class="flow smart">
+      <div class="flow-title">
+        <div class="name">Como deveria acontecer · <span class="gold">fluxo inteligente.</span></div>
+        <div class="meta">Operação rastreável · sem fila manual</div>
+      </div>
+      <div class="flow-steps">
+        <div class="fstep"><div class="node">◆</div><div class="lbl">Captura</div><div class="txt">XML capturado automaticamente</div></div>
+        <div class="fstep"><div class="node">◆</div><div class="lbl">Confronto</div><div class="txt">Comparado com o pedido de compra</div></div>
+        <div class="fstep"><div class="node">◆</div><div class="lbl">Regras</div><div class="txt">Validado por regras de negócio</div></div>
+        <div class="fstep"><div class="node">◆</div><div class="lbl">Roteamento</div><div class="txt">Direcionado ao responsável certo</div></div>
+        <div class="fstep"><div class="node">◆</div><div class="lbl">Entrada</div><div class="txt">Preparado para o ERP com rastreabilidade</div></div>
+        <div class="fstep"><div class="node">◆</div><div class="lbl">Controle</div><div class="txt">Diretoria enxerga em tempo real</div></div>
+      </div>
+    </div>
+
+    <div class="processo-foot">
+      <div class="pull">
+        Não é apenas automação.<br/>
+        <span class="gold">É controle operacional.</span>
+      </div>
+      <div class="right">
+        <p>
+          Cada etapa manual é uma janela para atraso, erro e retrabalho. Quando o fluxo se torna inteligente, a operação deixa de gastar tempo executando o óbvio — e passa a gastar tempo decidindo o que importa.
+        </p>
+        <div style="display:flex; gap:14px; flex-wrap:wrap;">
+          <a href="#contato" class="btn btn-primary">Quero analisar esse processo na minha operação <span class="arrow">→</span></a>
+          <a href="blog/do-xml-ao-erp.html" class="btn btn-ghost">Ler análise completa</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== DIAGNOSTICO ============== -->
+<section class="diag section-pad" id="diagnostico">
+  <div class="wrap">
+    <div class="eyebrow" style="margin-bottom:32px;"><span class="dot"></span>07 · Oferta principal</div>
+    <div class="diag-card">
       <div>
-        <a href="#contato" class="btn btn-primary" style="font-size:15px;padding:18px 32px;">Agendar diagnóstico <span class="arrow">→</span></a>
+        <span class="seal">◆ Leitura executiva da operação</span>
+        <h2 class="display">Diagnóstico de Eficiência Operacional</h2>
+        <p class="lead">
+          Antes de automatizar, é preciso enxergar onde a operação está vazando tempo, dinheiro e controle. Uma análise consultiva — não um questionário comercial.
+        </p>
+        <div class="diag-cta">
+          <a href="#contato" class="btn btn-primary">Quero analisar minha operação <span class="arrow">→</span></a>
+          <a href="#metodologia" class="btn btn-ghost">Ver metodologia</a>
+        </div>
       </div>
-    </div>
-  </div>
-</section>
 
-<!-- ══ CAPACIDADES ══ -->
-<section class="autoridade" id="autoridade">
-  <div class="wrap">
-    <div class="section-head">
-      <div class="eyebrow"><span class="dot"></span>Capacidades</div>
-      <h2 class="display">O que entregamos <span style="font-style:italic">na prática.</span></h2>
-      <p class="sub">Combinamos expertise técnica com visão de gestão para resolver problemas que sistemas sozinhos não conseguem.</p>
-    </div>
-    <div class="caps-grid">
-      <div class="cap">
-        <div class="cap-icon">ERP · TOTVS RM</div>
-        <h3>Parametrização e integração de ERP</h3>
-        <p>Configuração, automação e integração do TOTVS RM com outros sistemas — eliminando retrabalho e garantindo dados confiáveis para gestão financeira e acadêmica.</p>
-      </div>
-      <div class="cap">
-        <div class="cap-icon">Dados &amp; BI</div>
-        <h3>Business Intelligence aplicado à decisão</h3>
-        <p>Modelagem de dados, construção de dashboards e relatórios executivos que traduzem números em perguntas respondidas — não apenas em gráficos.</p>
-      </div>
-      <div class="cap">
-        <div class="cap-icon">Integrações</div>
-        <h3>Conexão entre sistemas e plataformas</h3>
-        <p>APIs, ETL, automações entre ERPs, CRMs, plataformas educacionais e fontes legadas — dados fluindo sem intervenção manual e sem perda de rastreabilidade.</p>
-      </div>
-      <div class="cap">
-        <div class="cap-icon">Automação</div>
-        <h3>Processos automáticos e auditáveis</h3>
-        <p>Fluxos de entrada de NF, conciliação financeira, relatórios periódicos — operações que hoje dependem de pessoas passam a rodar sozinhas com rastreamento completo.</p>
-      </div>
-      <div class="cap">
-        <div class="cap-icon">IA Aplicada</div>
-        <h3>Inteligência artificial em operações reais</h3>
-        <p>Classificação automática de dados, análise preditiva de indicadores educacionais e assistentes de gestão — IA sem hype, integrada ao fluxo operacional.</p>
-      </div>
-      <div class="cap">
-        <div class="cap-icon">Educação</div>
-        <h3>Especialidade no setor educacional</h3>
-        <p>Profundo conhecimento dos processos de instituições de ensino: matrícula, rematrícula, inadimplência, gestão acadêmica e indicadores de permanência e evasão.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ══ BLOG STRIP ══ -->
-<section class="blog-strip">
-  <div class="wrap">
-    <div class="blog-strip-inner">
       <div>
-        <div class="eyebrow" style="margin-bottom:16px;"><span class="dot"></span>Inteligência Operacional</div>
-        <h2 class="display">Artigos para quem <span class="em">decide.</span></h2>
-        <p class="sub">Análises curtas, casos práticos e histórias de como operações manuais se transformam em fluxos inteligentes.</p>
+        <span class="eyebrow" style="display:block; margin-bottom:18px;">O diagnóstico identifica</span>
+        <ul class="diag-list">
+          <li><span class="check"></span>Áreas com retrabalho operacional</li>
+          <li><span class="check"></span>Dados duplicados ou desconectados</li>
+          <li><span class="check"></span>Processos passíveis de automação</li>
+          <li><span class="check"></span>Indicadores executivos ausentes</li>
+          <li><span class="check"></span>Riscos operacionais de gestão</li>
+          <li><span class="check"></span>Oportunidades de integração</li>
+          <li><span class="check"></span>Ganhos potenciais de produtividade</li>
+        </ul>
       </div>
-      <a href="/blog/" class="btn btn-outline" style="flex-shrink:0;">Ver todos os artigos <span class="arrow">→</span></a>
     </div>
   </div>
 </section>
 
-<!-- ══ CONTATO ══ -->
-<section id="contato">
+<!-- ============== AUTORIDADE ============== -->
+<section class="auth section-pad" id="autoridade">
   <div class="wrap">
-    <div class="contato-inner">
-      <div class="contato-left">
-        <div class="eyebrow"><span class="dot"></span>Contato</div>
-        <h2 class="display">Vamos <span class="em">conversar</span> sobre sua operação.</h2>
-        <p class="sub">Descreva brevemente o maior problema operacional que você enfrenta hoje. Respondemos em até 24 horas com uma proposta de próximo passo.</p>
+    <div class="eyebrow" style="margin-bottom:32px;"><span class="dot"></span>08 · Capacidade Estratégica</div>
+    <div class="auth-grid">
+      <div>
+        <h2 class="display">Tecnologia com <span class="italic" style="color:var(--gold-soft)">visão de negócio.</span></h2>
+        <p class="lead">
+          Reunimos experiência em sistemas corporativos, TOTVS RM, BI, SQL Server, integrações, automação e IA aplicada — mas o que entregamos não é tecnologia. É controle operacional, clareza executiva e poder de decisão sobre a própria operação.
+        </p>
+        <div class="stack">
+          <div class="chip"><span>◆</span>TOTVS RM</div>
+          <div class="chip"><span>◆</span>SQL Server</div>
+          <div class="chip"><span>◆</span>Power BI</div>
+          <div class="chip"><span>◆</span>Integrações</div>
+          <div class="chip"><span>◆</span>Automação</div>
+          <div class="chip"><span>◆</span>IA Aplicada</div>
+        </div>
+      </div>
+
+      <div class="capabilities">
+        <div class="cap">
+          <span class="label">Sistemas corporativos sob medida</span>
+          <span class="meta">C·01</span>
+        </div>
+        <div class="cap">
+          <span class="label">Integrações complexas entre áreas</span>
+          <span class="meta">C·02</span>
+        </div>
+        <div class="cap">
+          <span class="label">BI e dashboards executivos</span>
+          <span class="meta">C·03</span>
+        </div>
+        <div class="cap">
+          <span class="label">Automação de processos</span>
+          <span class="meta">C·04</span>
+        </div>
+        <div class="cap">
+          <span class="label">Modelagem de dados</span>
+          <span class="meta">C·05</span>
+        </div>
+        <div class="cap">
+          <span class="label">Ganho financeiro e eficiência operacional</span>
+          <span class="meta">C·06</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== BLOG / INTELIGENCIA ============== -->
+<section class="blog section-pad" id="inteligencia">
+  <div class="wrap">
+    <div class="eyebrow" style="margin-bottom:32px;"><span class="dot"></span>09 · Inteligência operacional · Histórias de Processo</div>
+    <div class="blog-head">
+      <h2 class="display">Artigos para gestores que querem transformar tecnologia em <span class="italic" style="color:var(--gold)">decisão.</span></h2>
+      <p>Análises curtas, casos práticos e Histórias de Processo: como operações manuais se transformam em fluxos inteligentes — e como dados deixam de ser ruído para virar leitura executiva.</p>
+    </div>
+
+    <div class="blog-cats">
+      <button class="cat active">Todos</button>
+      <button class="cat">Histórias de Processo</button>
+      <button class="cat">Educação</button>
+      <button class="cat">Dados &amp; BI</button>
+      <button class="cat">Integrações</button>
+      <button class="cat">IA Aplicada</button>
+      <button class="cat">Eficiência Operacional</button>
+      <button class="cat">Sistemas Corporativos</button>
+      <button class="cat">TOTVS RM</button>
+    </div>
+
+    <div class="articles">
+      <a class="article article-feat" href="blog/do-xml-ao-erp.html">
+        <div class="article-thumb">
+          <svg viewBox="0 0 800 450" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="g1" x1="0" x2="1" y1="0" y2="1">
+                <stop offset="0%" stop-color="#0E1726"/>
+                <stop offset="100%" stop-color="#1A2030"/>
+              </linearGradient>
+              <pattern id="lines1" width="40" height="40" patternUnits="userSpaceOnUse">
+                <line x1="0" y1="0" x2="40" y2="40" stroke="rgba(245,242,235,0.06)" stroke-width="1"/>
+              </pattern>
+            </defs>
+            <rect width="800" height="450" fill="url(#g1)"/>
+            <rect width="800" height="450" fill="url(#lines1)"/>
+            <g transform="translate(60 70)">
+              <text font-family="Geist Mono, monospace" font-size="11" fill="rgba(245,242,235,0.6)" letter-spacing="2">HISTORIAS DE PROCESSO · 01</text>
+            </g>
+            <!-- Process: XML -> ERP -->
+            <g font-family="Geist Mono, monospace" font-size="10" letter-spacing="2">
+              <text x="60" y="240" fill="rgba(245,242,235,0.55)">XML</text>
+              <text x="370" y="240" fill="#B89968">REGRAS</text>
+              <text x="700" y="240" fill="rgba(245,242,235,0.55)" text-anchor="end">ERP</text>
+            </g>
+            <g stroke="rgba(245,242,235,0.25)" stroke-width="1" fill="none">
+              <line x1="60" y1="260" x2="160" y2="260"/>
+              <line x1="200" y1="260" x2="340" y2="260" stroke-dasharray="2 4"/>
+              <line x1="430" y1="260" x2="570" y2="260" stroke-dasharray="2 4"/>
+              <line x1="610" y1="260" x2="700" y2="260"/>
+            </g>
+            <g stroke="#B89968" stroke-width="1.2" fill="none">
+              <rect x="160" y="244" width="40" height="32" rx="2"/>
+              <rect x="340" y="244" width="90" height="32" rx="2"/>
+              <rect x="570" y="244" width="40" height="32" rx="2"/>
+            </g>
+            <g fill="rgba(184,153,104,0.9)">
+              <circle cx="180" cy="260" r="2.5"/>
+              <circle cx="385" cy="260" r="2.5"/>
+              <circle cx="590" cy="260" r="2.5"/>
+            </g>
+            <g font-family="Geist Mono, monospace" font-size="8" fill="rgba(245,242,235,0.45)" letter-spacing="1.5">
+              <text x="160" y="298">CAPTURA</text>
+              <text x="340" y="298">VALIDACAO + ROTEAMENTO</text>
+              <text x="570" y="298">ENTRADA</text>
+            </g>
+            <text x="640" y="80" font-family="Instrument Serif, serif" font-size="64" font-style="italic" fill="#B89968" opacity="0.8">01</text>
+            <g transform="translate(60 380)" font-family="Geist Mono, monospace" font-size="9" fill="rgba(245,242,235,0.5)" letter-spacing="2">
+              <text>FLUXO INTELIGENTE · RASTREAVEL · CONTROLE</text>
+            </g>
+          </svg>
+        </div>
+        <div class="article-meta">
+          <span class="cat-tag">◆ Histórias de Processo</span>
+          <span>10 min · 2026</span>
+        </div>
+        <h3>Do XML ao ERP: a entrada de NF como fluxo inteligente.</h3>
+        <p class="excerpt">
+          O que muda quando a nota fiscal deixa de depender de conferência manual e passa a seguir um fluxo automatizado, rastreável e integrado ao ERP. Não é apenas automação — é controle operacional.
+        </p>
+        <span class="read">Ler artigo <span class="arrow">→</span></span>
+      </a>
+
+      <a class="article" href="blog/instituicoes-nao-precisam-de-mais-planilhas.html">
+        <div class="article-meta">
+          <span class="cat-tag">◆ Educação</span>
+          <span>8 min</span>
+        </div>
+        <h3>Instituições de ensino não precisam de mais planilhas. Precisam de decisão.</h3>
+        <p class="excerpt">
+          Mais dados raramente resolvem o problema da gestão escolar. O que falta não é volume — é uma versão única da verdade.
+        </p>
+        <span class="read">Ler artigo <span class="arrow">→</span></span>
+      </a>
+
+      <a class="article" href="blog/custo-invisivel-dos-dados-que-nao-conversam.html">
+        <div class="article-meta">
+          <span class="cat-tag">◆ Eficiência Operacional</span>
+          <span>6 min</span>
+        </div>
+        <h3>O custo invisível dos dados que não conversam.</h3>
+        <p class="excerpt">
+          O maior desperdício operacional não aparece em planilha. Está nas reuniões que existem só para reconciliar números.
+        </p>
+        <span class="read">Ler artigo <span class="arrow">→</span></span>
+      </a>
+
+      <a class="article" href="blog/dashboards-bonitos-nao-resolvem-dados-ruins.html">
+        <div class="article-meta">
+          <span class="cat-tag">◆ Dados &amp; BI</span>
+          <span>5 min</span>
+        </div>
+        <h3>Por que dashboards bonitos não resolvem dados ruins.</h3>
+        <p class="excerpt">
+          BI sem governança é maquiagem. Antes de visualizar, é preciso decidir o que é verdade — e por quê.
+        </p>
+        <span class="read">Ler artigo <span class="arrow">→</span></span>
+      </a>
+
+      <a class="article" href="blog/o-problema-nao-e-o-sistema.html">
+        <div class="article-meta">
+          <span class="cat-tag">◆ Integrações</span>
+          <span>7 min</span>
+        </div>
+        <h3>O problema não é o sistema. É a falta de integração.</h3>
+        <p class="excerpt">
+          Trocar de ERP raramente resolve um problema que é de arquitetura de informação. Integrar custa menos do que migrar.
+        </p>
+        <span class="read">Ler artigo <span class="arrow">→</span></span>
+      </a>
+    </div>
+
+    <div style="display:flex; justify-content:space-between; align-items:center; padding-top:32px; gap:24px; flex-wrap:wrap;">
+      <span class="num" style="color:rgba(10,14,20,0.55)">06 artigos · atualizado em 2026</span>
+      <a href="blog/index.html" class="btn btn-ghost" style="color:var(--ink); border-color:rgba(10,14,20,0.18);">
+        Ver todos os artigos <span class="arrow">→</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============== FINAL CTA ============== -->
+<section class="final">
+  <div class="final-bg" aria-hidden="true">
+    <svg viewBox="0 0 1440 700" preserveAspectRatio="none" style="width:100%; height:100%; opacity:0.5;">
+      <defs>
+        <radialGradient id="finalGlow" cx="50%" cy="50%" r="60%">
+          <stop offset="0%" stop-color="rgba(184,153,104,0.10)"/>
+          <stop offset="60%" stop-color="rgba(184,153,104,0)"/>
+        </radialGradient>
+      </defs>
+      <rect width="1440" height="700" fill="url(#finalGlow)"/>
+      <g stroke="rgba(245,242,235,0.05)" stroke-width="1" fill="none">
+        <circle cx="720" cy="350" r="320"/>
+        <circle cx="720" cy="350" r="220"/>
+        <circle cx="720" cy="350" r="120"/>
+      </g>
+    </svg>
+  </div>
+  <div class="wrap" style="position:relative;">
+    <div class="eyebrow" style="margin-bottom:32px;"><span class="dot"></span>10 · Próximo passo</div>
+    <h2 class="display">
+      Sua operação já está dizendo onde perde eficiência.<br/>
+      <span class="em">A questão é se você consegue enxergar.</span>
+    </h2>
+    <p>Solicite um Diagnóstico de Eficiência Operacional e descubra como sistemas, dados e processos podem gerar mais controle, produtividade e poder de decisão.</p>
+    <div class="actions">
+      <a href="#contato" class="btn btn-primary">Solicitar diagnóstico <span class="arrow">→</span></a>
+      <a href="#metodologia" class="btn btn-ghost">Como conduzimos</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============== CONTATO / FORM ============== -->
+<section class="contact section-pad" id="contato">
+  <div class="wrap">
+    <div class="eyebrow" style="margin-bottom:32px;"><span class="dot"></span>11 · Contato direto</div>
+    <div class="contact-grid">
+      <div>
+        <h2 class="display">Comece pela leitura. <span class="italic" style="color:var(--gold-soft)">Depois, pela decisão.</span></h2>
+        <p class="meta">
+          Preencha os dados ao lado para iniciarmos uma conversa estratégica. O Diagnóstico de Eficiência Operacional é conduzido pessoalmente — não é um questionário automatizado.
+        </p>
         <div class="contact-info">
-          <div class="contact-item">
-            <span class="contact-label">Contato</span>
-            <span class="contact-value">Fabio Nunes</span>
-          </div>
-          <div class="contact-item">
-            <span class="contact-label">Email</span>
-            <span class="contact-value"><a href="mailto:OrkestriaPlatform@outlook.com">OrkestriaPlatform@outlook.com</a></span>
-          </div>
-          <div class="contact-item">
-            <span class="contact-label">WhatsApp</span>
-            <span class="contact-value"><a href="https://wa.me/5519971541730" target="_blank" rel="noopener">(19) 97154-1730</a></span>
-          </div>
+          <div class="row"><span class="k">Contato</span><span>Fabio Nunes</span></div>
+          <div class="row"><span class="k">E-mail</span><span><a href="mailto:OrkestriaPlatform@outlook.com">OrkestriaPlatform@outlook.com</a></span></div>
+          <div class="row"><span class="k">WhatsApp</span><span><a href="https://wa.me/5519971541730" target="_blank" rel="noopener">+55 (19) 97154-1730</a></span></div>
+          <div class="row"><span class="k">Atendimento</span><span>Seg–Sex · 09h–18h (BRT)</span></div>
+          <div class="row"><span class="k">Base</span><span>Brasil · Atendimento remoto e presencial</span></div>
+          <div class="row"><span class="k">Resposta</span><span>Até 1 dia útil</span></div>
         </div>
       </div>
-      <form class="contact-form" onsubmit="handleForm(event)">
-        <div class="form-group">
-          <label for="nome">Nome</label>
-          <input type="text" id="nome" name="nome" placeholder="Seu nome" required />
+
+      <form onsubmit="event.preventDefault(); this.querySelector('.submit').innerHTML='Enviado · obrigado <span class=arrow>✓</span>'; this.querySelector('.submit').setAttribute('disabled','true');">
+        <div class="form-row">
+          <div class="field">
+            <label for="nome">Nome</label>
+            <input id="nome" name="nome" type="text" autocomplete="name" required />
+          </div>
+          <div class="field">
+            <label for="empresa">Empresa / Instituição</label>
+            <input id="empresa" name="empresa" type="text" autocomplete="organization" required />
+          </div>
         </div>
-        <div class="form-group">
-          <label for="empresa">Instituição / Empresa</label>
-          <input type="text" id="empresa" name="empresa" placeholder="Nome da instituição" />
+
+        <div class="form-row">
+          <div class="field">
+            <label for="email">E-mail corporativo</label>
+            <input id="email" name="email" type="email" autocomplete="email" required />
+          </div>
+          <div class="field">
+            <label for="telefone">Telefone</label>
+            <input id="telefone" name="telefone" type="tel" autocomplete="tel" />
+          </div>
         </div>
-        <div class="form-group">
-          <label for="email">E-mail</label>
-          <input type="email" id="email" name="email" placeholder="seu@email.com" required />
+
+        <div class="field">
+          <label for="segmento">Segmento</label>
+          <select id="segmento" name="segmento" required>
+            <option value="">Selecione</option>
+            <option>Instituição de ensino — escola</option>
+            <option>Instituição de ensino — faculdade / universidade</option>
+            <option>Grupo educacional / mantenedora</option>
+            <option>Empresa de serviços</option>
+            <option>Indústria</option>
+            <option>Comércio / varejo</option>
+            <option>Outro</option>
+          </select>
         </div>
-        <div class="form-group">
-          <label for="mensagem">Qual é o seu maior problema operacional hoje?</label>
-          <textarea id="mensagem" name="mensagem" placeholder="Descreva brevemente..." required></textarea>
+
+        <div class="field">
+          <label for="mensagem">Onde sua operação está perdendo eficiência?</label>
+          <textarea id="mensagem" name="mensagem" rows="3" placeholder="Contexto, dores, sistemas em uso, número de unidades, etc."></textarea>
         </div>
-        <button type="submit" class="btn btn-primary form-submit">Enviar mensagem <span class="arrow">→</span></button>
+
+        <button type="submit" class="btn btn-primary submit">
+          Solicitar diagnóstico <span class="arrow">→</span>
+        </button>
       </form>
     </div>
   </div>
 </section>
 
+<!-- ============== FOOTER ============== -->
 <footer>
   <div class="wrap">
-    <div class="foot-inner">
-      <div class="foot-brand">Orkestria<span>Consult</span></div>
-      <div class="foot-links">
-        <a href="#manifesto">Manifesto</a>
-        <a href="#metodologia">Metodologia</a>
-        <a href="#processo">Processo</a>
-        <a href="#diagnostico">Diagnóstico</a>
-        <a href="/blog/">Inteligência</a>
-        <a href="#contato">Contato</a>
+    <div class="foot-top">
+      <div class="foot-brand">
+        <a href="#" class="brand">
+          <span class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="14" cy="14" r="13" stroke="#F5F2EB" stroke-width="1"/>
+              <circle cx="14" cy="14" r="7" stroke="#B89968" stroke-width="1"/>
+              <circle cx="14" cy="14" r="1.6" fill="#B89968"/>
+              <line x1="14" y1="1" x2="14" y2="6" stroke="#F5F2EB" stroke-width="1"/>
+              <line x1="14" y1="22" x2="14" y2="27" stroke="#F5F2EB" stroke-width="1"/>
+              <line x1="1" y1="14" x2="6" y2="14" stroke="#F5F2EB" stroke-width="1"/>
+              <line x1="22" y1="14" x2="27" y2="14" stroke="#F5F2EB" stroke-width="1"/>
+            </svg>
+          </span>
+          <span class="brand-name">Orkestria<span>Consult</span></span>
+        </a>
+        <p>Consultoria premium em inteligência operacional, IA aplicada, dados, sistemas e integrações para instituições e empresas que decidem com clareza.</p>
       </div>
-      <div class="foot-copy">© 2026 Orkestria Consult</div>
+
+      <div>
+        <h4>Navegação</h4>
+        <ul>
+          <li><a href="#manifesto">Manifesto</a></li>
+          <li><a href="#metodologia">Metodologia</a></li>
+          <li><a href="#processo">Histórias de Processo</a></li>
+          <li><a href="#diagnostico">Diagnóstico</a></li>
+          <li><a href="#autoridade">Capacidade Estratégica</a></li>
+          <li><a href="#contato">Contato</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4>Inteligência</h4>
+        <ul>
+          <li><a href="blog/index.html">Todos os artigos</a></li>
+          <li><a href="blog/index.html#processo">Histórias de Processo</a></li>
+          <li><a href="blog/index.html#educacao">Educação</a></li>
+          <li><a href="blog/index.html#dados">Dados &amp; BI</a></li>
+          <li><a href="blog/index.html#integracoes">Integrações</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4>Contato</h4>
+        <ul>
+          <li>Fabio Nunes</li>
+          <li><a href="mailto:OrkestriaPlatform@outlook.com">OrkestriaPlatform@outlook.com</a></li>
+          <li><a href="https://wa.me/5519971541730" target="_blank" rel="noopener">+55 (19) 97154-1730</a></li>
+          <li>Seg–Sex · 09h–18h BRT</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="foot-bottom">
+      <span>© 2026 Orkestria Consult · Todos os direitos reservados</span>
+      <span>Inteligência operacional · BR</span>
     </div>
   </div>
 </footer>
 
 <script>
-function handleForm(e) {
-  e.preventDefault();
-  const f = e.target;
-  const subject = encodeURIComponent('Diagnóstico Orkestria — ' + (f.empresa.value || f.nome.value));
-  const body = encodeURIComponent(
-    'Nome: ' + f.nome.value +
-    '\nEmpresa: ' + f.empresa.value +
-    '\nE-mail: ' + f.email.value +
-    '\n\n' + f.mensagem.value
-  );
-  window.location.href = 'mailto:OrkestriaPlatform@outlook.com?subject=' + subject + '&body=' + body;
-}
+  // category filter (visual only)
+  document.querySelectorAll('.cat').forEach(b => {
+    b.addEventListener('click', () => {
+      document.querySelectorAll('.cat').forEach(x => x.classList.remove('active'));
+      b.classList.add('active');
+    });
+  });
+
+  // reveal on scroll
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('section .display, section .body, section .pull, .pain-cell, .step, .article, .benefit-list, .diag-list, .stack, .capabilities').forEach(el => {
+    el.classList.add('reveal'); io.observe(el);
+  });
 </script>
 
 </body>

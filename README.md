@@ -6,7 +6,7 @@ Site institucional + blog da **Orkestria Consult**, consultoria especializada em
 
 ```
 /
-├── index.html          ← site principal (Landing Page)
+├── index.html          ← site principal editorial
 ├── wrangler.toml       ← config Cloudflare Workers
 ├── blog/
 │   ├── index.html      ← listagem dos artigos
@@ -23,12 +23,14 @@ Site institucional + blog da **Orkestria Consult**, consultoria especializada em
 
 | Seção | ID | Conteúdo |
 |-------|----|----------|
-| Hero | `#inicio` | Headline principal e CTAs |
-| Metodologia | `#metodologia` | 4 etapas do processo |
-| Diagnóstico | `#diagnostico` | CTA de conversão |
-| Capacidades | `#autoridade` | Grid de 6 serviços |
-| Blog | — | Link para `/blog/` |
-| Contato | `#contato` | Formulário + email |
+| Hero | topo | Headline principal e visual operacional |
+| Manifesto | `#manifesto` | Posicionamento sobre tecnologia, dados e gestão |
+| Metodologia | `#metodologia` | 6 etapas do diagnóstico consultivo |
+| Processo | `#processo` | História de processo: do XML ao ERP |
+| Diagnóstico | `#diagnostico` | Oferta principal de Diagnóstico de Eficiência Operacional |
+| Capacidade Estratégica | `#autoridade` | Experiência, tecnologias e entregas |
+| Inteligência | `#inteligencia` | Vitrine editorial dos artigos |
+| Contato | `#contato` | Formulário + email + WhatsApp |
 
 ## Artigos publicados
 
