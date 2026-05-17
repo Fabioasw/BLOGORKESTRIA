@@ -1943,7 +1943,7 @@
         </div>
       </div>
 
-      <form onsubmit="event.preventDefault(); this.querySelector('.submit').innerHTML='Enviado · obrigado <span class=arrow>✓</span>'; this.querySelector('.submit').setAttribute('disabled','true');">
+      <form id="diagnostico-form">
         <div class="form-row">
           <div class="field">
             <label for="nome">Nome</label>
@@ -1986,8 +1986,12 @@
         </div>
 
         <button type="submit" class="btn btn-primary submit">
-          Solicitar diagnóstico <span class="arrow">→</span>
+          Solicitar diagnóstico pelo WhatsApp <span class="arrow">→</span>
         </button>
+        <p style="color:var(--fg-faint); font-size:13px; line-height:1.6; margin-top:-4px;">
+          O envio abre uma mensagem pronta no WhatsApp. Se preferir, envie direto para
+          <a href="mailto:OrkestriaPlatform@outlook.com" style="color:var(--gold-soft);">OrkestriaPlatform@outlook.com</a>.
+        </p>
       </form>
     </div>
   </div>
@@ -2057,6 +2061,33 @@
 </footer>
 
 <script>
+  const diagnosticoForm = document.getElementById('diagnostico-form');
+  if (diagnosticoForm) {
+    diagnosticoForm.addEventListener('submit', (event) => {
+      event.preventDefault();
+
+      const data = new FormData(diagnosticoForm);
+      const message = [
+        'Olá, Fabio. Quero solicitar um Diagnóstico de Eficiência Operacional.',
+        '',
+        `Nome: ${data.get('nome') || ''}`,
+        `Empresa/Instituição: ${data.get('empresa') || ''}`,
+        `E-mail: ${data.get('email') || ''}`,
+        `Telefone: ${data.get('telefone') || ''}`,
+        `Segmento: ${data.get('segmento') || ''}`,
+        '',
+        `Contexto: ${data.get('mensagem') || ''}`
+      ].join('\n');
+
+      const submit = diagnosticoForm.querySelector('.submit');
+      if (submit) {
+        submit.innerHTML = 'Abrindo WhatsApp <span class="arrow">→</span>';
+      }
+
+      window.open(`https://wa.me/5519971541730?text=${encodeURIComponent(message)}`, '_blank', 'noopener');
+    });
+  }
+
   // category filter (visual only)
   document.querySelectorAll('.cat').forEach(b => {
     b.addEventListener('click', () => {
