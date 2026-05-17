@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Inteligência Operacional — Orkestria Consult</title>
+<meta name="description" content="Artigos para gestores que querem transformar tecnologia em decisão. Educação, dados, integrações, IA aplicada e eficiência operacional." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --ink: #0A0E14;
+    --marine: #0E1726;
+    --paper: #F5F2EB;
+    --paper-2: #EDE8DC;
+    --line: rgba(245, 242, 235, 0.10);
+    --line-dark: rgba(10, 14, 20, 0.10);
+    --gold: #B89968;
+    --gold-soft: #C9AC7D;
+    --signal: #2E6BFF;
+    --fg: #F5F2EB;
+    --fg-mute: rgba(245, 242, 235, 0.62);
+    --fg-faint: rgba(245, 242, 235, 0.42);
+    --serif: "Instrument Serif", "Times New Roman", Georgia, serif;
+    --sans: "Geist", "Helvetica Neue", Arial, sans-serif;
+    --mono: "Geist Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+  body { font-family: var(--sans); background: var(--ink); color: var(--fg); font-size:16px; line-height:1.55; text-wrap:pretty; }
+  a { color: inherit; text-decoration: none; }
+  .wrap { max-width: 1320px; margin: 0 auto; padding: 0 40px; }
+  .display { font-family: var(--serif); font-weight:400; letter-spacing:-0.02em; line-height:1.05; }
+  .italic { font-style: italic; }
+  .eyebrow { font-family: var(--mono); font-size:11px; letter-spacing:0.18em; text-transform:uppercase; color: var(--fg-mute); }
+  .eyebrow .dot { display:inline-block; width:6px; height:6px; background: var(--gold); border-radius:50%; vertical-align:middle; margin: 0 10px 2px 0; }
+
+  /* nav */
+  .nav { position: fixed; top:0; left:0; right:0; z-index:50; background: rgba(10,14,20,0.72); backdrop-filter: blur(14px) saturate(180%); -webkit-backdrop-filter: blur(14px) saturate(180%); border-bottom:1px solid var(--line); }
+  .nav-inner { display:flex; align-items:center; justify-content:space-between; gap:32px; height:72px; }
+  .brand { display:flex; align-items:center; gap:14px; }
+  .brand-mark { width:26px; height:26px; }
+  .brand-name { font-weight:500; font-size:14px; letter-spacing:0.22em; text-transform:uppercase; }
+  .brand-name span { color: var(--gold); font-weight:400; margin-left:4px; }
+  .nav-links { display:flex; gap:28px; font-size:13.5px; color: var(--fg-mute); flex-wrap:nowrap; }
+  .nav-links a:hover { color: var(--fg); }
+  .nav-cta { display:inline-flex; align-items:center; gap:10px; font-size:13px; padding:10px 18px; border:1px solid var(--line); border-radius:999px; white-space:nowrap; transition: border-color .2s, background .2s; }
+  .nav-cta:hover { border-color: var(--gold); background: rgba(184,153,104,0.06); }
+  .nav-cta .arrow { transition: transform .25s; }
+  .nav-cta:hover .arrow { transform: translateX(3px); }
+  @media (max-width: 1100px) { .nav-links { display:none; } }
+
+  /* hero */
+  .blog-hero { padding: 180px 0 100px; border-bottom: 1px solid var(--line); position: relative; overflow: hidden; }
+  .blog-hero h1 { font-size: clamp(50px, 7vw, 110px); max-width: 16ch; letter-spacing:-0.025em; }
+  .blog-hero h1 .em { color: var(--gold-soft); font-style: italic; }
+  .blog-hero .sub { color: var(--fg-mute); font-size: 18px; max-width: 60ch; margin-top: 40px; line-height: 1.6; }
+  .blog-hero .top { display:flex; justify-content:space-between; flex-wrap:wrap; gap:24px; margin-bottom:48px; }
+  .blog-hero .meta { color: var(--fg-faint); font-family: var(--mono); font-size:11px; letter-spacing:0.14em; text-transform:uppercase; }
+
+  /* filter row */
+  .filter { padding: 36px 0; border-bottom: 1px solid var(--line); }
+  .filter-inner { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:24px; }
+  .cats { display:flex; gap:8px; flex-wrap:wrap; }
+  .cat { font-family: var(--mono); font-size:11px; letter-spacing:0.16em; text-transform:uppercase; padding:8px 14px; border:1px solid var(--line); border-radius:999px; color: var(--fg-mute); background:transparent; cursor:pointer; transition:.2s; }
+  .cat:hover, .cat.active { background: var(--paper); color: var(--ink); border-color: var(--paper); }
+  .counter { font-family: var(--mono); font-size: 11px; letter-spacing:0.14em; text-transform:uppercase; color: var(--fg-faint); }
+
+  /* list */
+  .list { padding: 60px 0 140px; }
+  .row {
+    display: grid;
+    grid-template-columns: 80px 1fr 200px 100px;
+    gap: 32px;
+    align-items: center;
+    padding: 36px 0;
+    border-bottom: 1px solid var(--line);
+    transition: background .2s, padding-left .25s ease;
+  }
+  .row:hover { background: rgba(184,153,104,0.03); padding-left: 16px; padding-right: 16px; }
+  .row .idx { font-family: var(--mono); font-size:11px; letter-spacing:0.14em; color: var(--gold); }
+  .row h3 { font-family: var(--serif); font-weight:400; font-size: clamp(22px, 2.4vw, 36px); letter-spacing:-0.01em; line-height:1.1; max-width: 30ch; }
+  .row .cat-tag { font-family: var(--mono); font-size:10.5px; letter-spacing:0.16em; text-transform:uppercase; color: var(--fg-mute); }
+  .row .read { font-family: var(--mono); font-size:11px; letter-spacing:0.16em; text-transform:uppercase; color: var(--fg); justify-self: end; display:inline-flex; gap:8px; align-items:center; }
+  .row .read .arrow { transition: transform .25s; }
+  .row:hover .read .arrow { transform: translateX(4px); }
+  @media (max-width: 860px) {
+    .row { grid-template-columns: 60px 1fr; gap:18px; }
+    .row .cat-tag, .row .read { grid-column: 2; justify-self: start; }
+  }
+
+  /* CTA strip */
+  .strip { padding: 80px 0; border-top: 1px solid var(--line); background: var(--marine); }
+  .strip-inner { display:flex; justify-content:space-between; align-items:center; gap:32px; flex-wrap:wrap; }
+  .strip h3 { font-family: var(--serif); font-style: italic; font-size: clamp(24px, 3vw, 40px); max-width: 30ch; line-height: 1.2; }
+  .strip h3 .em { color: var(--gold-soft); }
+  .btn { display:inline-flex; align-items:center; gap:12px; padding:16px 26px; border-radius:999px; font-size:14px; font-weight:500; border:1px solid transparent; transition: .2s; cursor: pointer; }
+  .btn-primary { background: var(--paper); color: var(--ink); }
+  .btn-primary:hover { background: #fff; }
+  .btn .arrow { transition: transform .25s; }
+  .btn:hover .arrow { transform: translateX(4px); }
+
+  /* footer */
+  footer { padding: 64px 0 32px; border-top: 1px solid var(--line); color: var(--fg-mute); font-family: var(--mono); font-size: 11px; letter-spacing:0.14em; text-transform: uppercase; }
+  .foot-inner { display:flex; justify-content:space-between; flex-wrap:wrap; gap:16px; }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="wrap nav-inner">
+    <a href="../index.html" class="brand">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="14" cy="14" r="13" stroke="#F5F2EB" stroke-width="1"/>
+          <circle cx="14" cy="14" r="7" stroke="#B89968" stroke-width="1"/>
+          <circle cx="14" cy="14" r="1.6" fill="#B89968"/>
+          <line x1="14" y1="1" x2="14" y2="6" stroke="#F5F2EB" stroke-width="1"/>
+          <line x1="14" y1="22" x2="14" y2="27" stroke="#F5F2EB" stroke-width="1"/>
+          <line x1="1" y1="14" x2="6" y2="14" stroke="#F5F2EB" stroke-width="1"/>
+          <line x1="22" y1="14" x2="27" y2="14" stroke="#F5F2EB" stroke-width="1"/>
+        </svg>
+      </span>
+      <span class="brand-name">Orkestria<span>Consult</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="../index.html#metodologia">Metodologia</a>
+      <a href="../index.html#diagnostico">Diagnóstico</a>
+      <a href="../index.html#autoridade">Capacidades</a>
+      <a href="index.html">Inteligência</a>
+      <a href="../index.html#contato">Contato</a>
+    </div>
+    <a href="../index.html#diagnostico" class="nav-cta">Solicitar diagnóstico <span class="arrow">→</span></a>
+  </div>
+</nav>
+
+<header class="blog-hero">
+  <div class="wrap">
+    <div class="top">
+      <div class="eyebrow"><span class="dot"></span>Inteligência Operacional · Edição 01</div>
+      <div class="meta">6 artigos · atualizado 2026</div>
+    </div>
+    <h1 class="display">Artigos para gestores que querem transformar tecnologia em <span class="em">decisão.</span></h1>
+    <p class="sub">Análises curtas, casos práticos e <strong style="color:var(--gold-soft); font-weight:400;">Histórias de Processo</strong>: como operações manuais se transformam em fluxos inteligentes — e como dados deixam de ser ruído para virar leitura executiva.</p>
+  </div>
+</header>
+
+<section class="filter">
+  <div class="wrap filter-inner">
+    <div class="cats">
+      <button class="cat active">Todos</button>
+      <button class="cat">Histórias de Processo</button>
+      <button class="cat">Educação</button>
+      <button class="cat">Dados &amp; BI</button>
+      <button class="cat">Integrações</button>
+      <button class="cat">IA Aplicada</button>
+      <button class="cat">Eficiência Operacional</button>
+      <button class="cat">Sistemas Corporativos</button>
+      <button class="cat">TOTVS RM</button>
+    </div>
+    <span class="counter">06 / 06 artigos</span>
+  </div>
+</section>
+
+<section class="list">
+  <div class="wrap">
+
+    <a class="row" href="do-xml-ao-erp.html">
+      <span class="idx">HP · 01</span>
+      <h3>Do XML ao ERP: a entrada de NF como fluxo inteligente.</h3>
+      <span class="cat-tag">◆ Histórias de Processo · 10 min</span>
+      <span class="read">Ler <span class="arrow">→</span></span>
+    </a>
+
+    <a class="row" href="instituicoes-nao-precisam-de-mais-planilhas.html">
+      <span class="idx">A · 01</span>
+      <h3>Instituições de ensino não precisam de mais planilhas. Precisam de decisão.</h3>
+      <span class="cat-tag">◆ Educação · 8 min</span>
+      <span class="read">Ler <span class="arrow">→</span></span>
+    </a>
+
+    <a class="row" href="custo-invisivel-dos-dados-que-nao-conversam.html">
+      <span class="idx">A · 02</span>
+      <h3>O custo invisível dos dados que não conversam.</h3>
+      <span class="cat-tag">◆ Eficiência · 6 min</span>
+      <span class="read">Ler <span class="arrow">→</span></span>
+    </a>
+
+    <a class="row" href="dashboards-bonitos-nao-resolvem-dados-ruins.html">
+      <span class="idx">A · 03</span>
+      <h3>Por que dashboards bonitos não resolvem dados ruins.</h3>
+      <span class="cat-tag">◆ Dados &amp; BI · 5 min</span>
+      <span class="read">Ler <span class="arrow">→</span></span>
+    </a>
+
+    <a class="row" href="o-problema-nao-e-o-sistema.html">
+      <span class="idx">A · 04</span>
+      <h3>O problema não é o sistema. É a falta de integração.</h3>
+      <span class="cat-tag">◆ Integrações · 7 min</span>
+      <span class="read">Ler <span class="arrow">→</span></span>
+    </a>
+
+    <a class="row" href="operacao-educacional-inteligencia-de-gestao.html">
+      <span class="idx">A · 05</span>
+      <h3>Como transformar operação educacional em inteligência de gestão.</h3>
+      <span class="cat-tag">◆ Educação · 9 min</span>
+      <span class="read">Ler <span class="arrow">→</span></span>
+    </a>
+
+  </div>
+</section>
+
+<section class="strip">
+  <div class="wrap strip-inner">
+    <h3>Sua operação já está dizendo onde perde eficiência. <span class="em">A questão é se você consegue enxergar.</span></h3>
+    <a href="../index.html#diagnostico" class="btn btn-primary">Solicitar diagnóstico <span class="arrow">→</span></a>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot-inner">
+    <span>© 2026 Orkestria Consult</span>
+    <span>Inteligência Operacional · BR</span>
+  </div>
+</footer>
+
+<script>
+  document.querySelectorAll('.cat').forEach(b => {
+    b.addEventListener('click', () => {
+      document.querySelectorAll('.cat').forEach(x => x.classList.remove('active'));
+      b.classList.add('active');
+    });
+  });
+</script>
+</body>
+</html>

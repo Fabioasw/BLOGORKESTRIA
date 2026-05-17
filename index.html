@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Inteligência Operacional — Orkestria Consult</title>
-<meta name="description" content="Artigos para gestores que querem transformar tecnologia em decisão. Educação, dados, integrações, IA aplicada e eficiência operacional." />
+<title>Orkestria Consult — Inteligência Operacional</title>
+<meta name="description" content="Transformamos dados e sistemas em inteligência executiva. Consultoria especializada em operações educacionais, ERP, BI e automação de processos." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
@@ -29,89 +29,137 @@
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
-  body { font-family: var(--sans); background: var(--ink); color: var(--fg); font-size:16px; line-height:1.55; text-wrap:pretty; }
+  body { font-family: var(--sans); background: var(--ink); color: var(--fg); font-size: 16px; line-height: 1.55; text-wrap: pretty; }
   a { color: inherit; text-decoration: none; }
   .wrap { max-width: 1320px; margin: 0 auto; padding: 0 40px; }
-  .display { font-family: var(--serif); font-weight:400; letter-spacing:-0.02em; line-height:1.05; }
+  .display { font-family: var(--serif); font-weight: 400; letter-spacing: -0.02em; line-height: 1.05; }
   .italic { font-style: italic; }
-  .eyebrow { font-family: var(--mono); font-size:11px; letter-spacing:0.18em; text-transform:uppercase; color: var(--fg-mute); }
-  .eyebrow .dot { display:inline-block; width:6px; height:6px; background: var(--gold); border-radius:50%; vertical-align:middle; margin: 0 10px 2px 0; }
+  .eyebrow { font-family: var(--mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--fg-mute); }
+  .eyebrow .dot { display: inline-block; width: 6px; height: 6px; background: var(--gold); border-radius: 50%; vertical-align: middle; margin: 0 10px 2px 0; }
 
-  /* nav */
-  .nav { position: fixed; top:0; left:0; right:0; z-index:50; background: rgba(10,14,20,0.72); backdrop-filter: blur(14px) saturate(180%); -webkit-backdrop-filter: blur(14px) saturate(180%); border-bottom:1px solid var(--line); }
-  .nav-inner { display:flex; align-items:center; justify-content:space-between; gap:32px; height:72px; }
-  .brand { display:flex; align-items:center; gap:14px; }
-  .brand-mark { width:26px; height:26px; }
-  .brand-name { font-weight:500; font-size:14px; letter-spacing:0.22em; text-transform:uppercase; }
-  .brand-name span { color: var(--gold); font-weight:400; margin-left:4px; }
-  .nav-links { display:flex; gap:28px; font-size:13.5px; color: var(--fg-mute); flex-wrap:nowrap; }
+  /* NAV */
+  .nav { position: fixed; top: 0; left: 0; right: 0; z-index: 50; background: rgba(10,14,20,0.72); backdrop-filter: blur(14px) saturate(180%); -webkit-backdrop-filter: blur(14px) saturate(180%); border-bottom: 1px solid var(--line); }
+  .nav-inner { display: flex; align-items: center; justify-content: space-between; gap: 32px; height: 72px; }
+  .brand { display: flex; align-items: center; gap: 14px; }
+  .brand-mark { width: 26px; height: 26px; }
+  .brand-name { font-weight: 500; font-size: 14px; letter-spacing: 0.22em; text-transform: uppercase; }
+  .brand-name span { color: var(--gold); font-weight: 400; margin-left: 4px; }
+  .nav-links { display: flex; gap: 28px; font-size: 13.5px; color: var(--fg-mute); flex-wrap: nowrap; }
   .nav-links a:hover { color: var(--fg); }
-  .nav-cta { display:inline-flex; align-items:center; gap:10px; font-size:13px; padding:10px 18px; border:1px solid var(--line); border-radius:999px; white-space:nowrap; transition: border-color .2s, background .2s; }
+  .nav-cta { display: inline-flex; align-items: center; gap: 10px; font-size: 13px; padding: 10px 18px; border: 1px solid var(--line); border-radius: 999px; white-space: nowrap; transition: border-color .2s, background .2s; }
   .nav-cta:hover { border-color: var(--gold); background: rgba(184,153,104,0.06); }
   .nav-cta .arrow { transition: transform .25s; }
   .nav-cta:hover .arrow { transform: translateX(3px); }
-  @media (max-width: 1100px) { .nav-links { display:none; } }
+  @media (max-width: 1100px) { .nav-links { display: none; } }
 
-  /* hero */
-  .blog-hero { padding: 180px 0 100px; border-bottom: 1px solid var(--line); position: relative; overflow: hidden; }
-  .blog-hero h1 { font-size: clamp(50px, 7vw, 110px); max-width: 16ch; letter-spacing:-0.025em; }
-  .blog-hero h1 .em { color: var(--gold-soft); font-style: italic; }
-  .blog-hero .sub { color: var(--fg-mute); font-size: 18px; max-width: 60ch; margin-top: 40px; line-height: 1.6; }
-  .blog-hero .top { display:flex; justify-content:space-between; flex-wrap:wrap; gap:24px; margin-bottom:48px; }
-  .blog-hero .meta { color: var(--fg-faint); font-family: var(--mono); font-size:11px; letter-spacing:0.14em; text-transform:uppercase; }
-
-  /* filter row */
-  .filter { padding: 36px 0; border-bottom: 1px solid var(--line); }
-  .filter-inner { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:24px; }
-  .cats { display:flex; gap:8px; flex-wrap:wrap; }
-  .cat { font-family: var(--mono); font-size:11px; letter-spacing:0.16em; text-transform:uppercase; padding:8px 14px; border:1px solid var(--line); border-radius:999px; color: var(--fg-mute); background:transparent; cursor:pointer; transition:.2s; }
-  .cat:hover, .cat.active { background: var(--paper); color: var(--ink); border-color: var(--paper); }
-  .counter { font-family: var(--mono); font-size: 11px; letter-spacing:0.14em; text-transform:uppercase; color: var(--fg-faint); }
-
-  /* list */
-  .list { padding: 60px 0 140px; }
-  .row {
-    display: grid;
-    grid-template-columns: 80px 1fr 200px 100px;
-    gap: 32px;
-    align-items: center;
-    padding: 36px 0;
-    border-bottom: 1px solid var(--line);
-    transition: background .2s, padding-left .25s ease;
-  }
-  .row:hover { background: rgba(184,153,104,0.03); padding-left: 16px; padding-right: 16px; }
-  .row .idx { font-family: var(--mono); font-size:11px; letter-spacing:0.14em; color: var(--gold); }
-  .row h3 { font-family: var(--serif); font-weight:400; font-size: clamp(22px, 2.4vw, 36px); letter-spacing:-0.01em; line-height:1.1; max-width: 30ch; }
-  .row .cat-tag { font-family: var(--mono); font-size:10.5px; letter-spacing:0.16em; text-transform:uppercase; color: var(--fg-mute); }
-  .row .read { font-family: var(--mono); font-size:11px; letter-spacing:0.16em; text-transform:uppercase; color: var(--fg); justify-self: end; display:inline-flex; gap:8px; align-items:center; }
-  .row .read .arrow { transition: transform .25s; }
-  .row:hover .read .arrow { transform: translateX(4px); }
-  @media (max-width: 860px) {
-    .row { grid-template-columns: 60px 1fr; gap:18px; }
-    .row .cat-tag, .row .read { grid-column: 2; justify-self: start; }
-  }
-
-  /* CTA strip */
-  .strip { padding: 80px 0; border-top: 1px solid var(--line); background: var(--marine); }
-  .strip-inner { display:flex; justify-content:space-between; align-items:center; gap:32px; flex-wrap:wrap; }
-  .strip h3 { font-family: var(--serif); font-style: italic; font-size: clamp(24px, 3vw, 40px); max-width: 30ch; line-height: 1.2; }
-  .strip h3 .em { color: var(--gold-soft); }
-  .btn { display:inline-flex; align-items:center; gap:12px; padding:16px 26px; border-radius:999px; font-size:14px; font-weight:500; border:1px solid transparent; transition: .2s; cursor: pointer; }
+  /* HERO */
+  .hero { min-height: 100vh; display: flex; align-items: center; padding: 120px 0 80px; position: relative; overflow: hidden; border-bottom: 1px solid var(--line); }
+  .hero::before { content: ''; position: absolute; top: -20%; right: -10%; width: 60%; height: 120%; background: radial-gradient(ellipse at center, rgba(184,153,104,0.06) 0%, transparent 70%); pointer-events: none; }
+  .hero-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+  .hero-eyebrow { margin-bottom: 32px; }
+  .hero h1 { font-size: clamp(48px, 6vw, 96px); max-width: 14ch; letter-spacing: -0.025em; margin-bottom: 32px; }
+  .hero h1 .em { color: var(--gold-soft); font-style: italic; }
+  .hero .sub { color: var(--fg-mute); font-size: 18px; max-width: 48ch; line-height: 1.65; margin-bottom: 48px; }
+  .hero-actions { display: flex; gap: 16px; flex-wrap: wrap; }
+  .btn { display: inline-flex; align-items: center; gap: 12px; padding: 16px 26px; border-radius: 999px; font-size: 14px; font-weight: 500; border: 1px solid transparent; transition: .2s; cursor: pointer; text-decoration: none; }
   .btn-primary { background: var(--paper); color: var(--ink); }
   .btn-primary:hover { background: #fff; }
+  .btn-outline { background: transparent; color: var(--fg); border-color: var(--line); }
+  .btn-outline:hover { border-color: var(--gold); background: rgba(184,153,104,0.06); }
   .btn .arrow { transition: transform .25s; }
   .btn:hover .arrow { transform: translateX(4px); }
+  .hero-visual { display: flex; justify-content: center; align-items: center; }
+  .hero-orb { width: 360px; height: 360px; border-radius: 50%; border: 1px solid var(--line); position: relative; display: flex; align-items: center; justify-content: center; }
+  .hero-orb::before { content: ''; position: absolute; inset: 20px; border-radius: 50%; border: 1px solid rgba(184,153,104,0.3); }
+  .hero-orb::after { content: ''; position: absolute; inset: 60px; border-radius: 50%; border: 1px solid rgba(184,153,104,0.15); }
+  .hero-orb-core { width: 32px; height: 32px; border-radius: 50%; background: var(--gold); opacity: 0.7; }
+  @media (max-width: 900px) { .hero-inner { grid-template-columns: 1fr; } .hero-visual { display: none; } }
 
-  /* footer */
-  footer { padding: 64px 0 32px; border-top: 1px solid var(--line); color: var(--fg-mute); font-family: var(--mono); font-size: 11px; letter-spacing:0.14em; text-transform: uppercase; }
-  .foot-inner { display:flex; justify-content:space-between; flex-wrap:wrap; gap:16px; }
+  /* SECTIONS */
+  section { padding: 120px 0; }
+  .section-head { margin-bottom: 72px; }
+  .section-head h2 { font-size: clamp(36px, 4.5vw, 72px); letter-spacing: -0.02em; margin-top: 16px; }
+  .section-head .sub { color: var(--fg-mute); font-size: 17px; max-width: 52ch; margin-top: 20px; line-height: 1.65; }
+
+  /* METODOLOGIA */
+  .metodologia { border-bottom: 1px solid var(--line); }
+  .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; }
+  .step { background: rgba(245,242,235,0.02); border: 1px solid var(--line); padding: 40px 32px; transition: background .2s; }
+  .step:hover { background: rgba(184,153,104,0.04); }
+  .step-num { font-family: var(--mono); font-size: 11px; letter-spacing: 0.18em; color: var(--gold); margin-bottom: 24px; }
+  .step h3 { font-family: var(--serif); font-size: 26px; letter-spacing: -0.01em; line-height: 1.15; margin-bottom: 16px; }
+  .step p { color: var(--fg-mute); font-size: 14px; line-height: 1.7; }
+  @media (max-width: 900px) { .steps { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 560px) { .steps { grid-template-columns: 1fr; } }
+
+  /* DIAGNÓSTICO CTA */
+  .diagnostico { background: var(--marine); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .diag-inner { display: grid; grid-template-columns: 1fr auto; gap: 64px; align-items: center; }
+  .diag-label { font-family: var(--mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); margin-bottom: 20px; }
+  .diag-inner h2 { font-size: clamp(32px, 4vw, 60px); letter-spacing: -0.02em; line-height: 1.1; max-width: 22ch; }
+  .diag-inner h2 .em { color: var(--gold-soft); font-style: italic; }
+  .diag-inner p { color: var(--fg-mute); font-size: 16px; max-width: 44ch; margin-top: 20px; line-height: 1.65; }
+  .diag-action { flex-shrink: 0; }
+  @media (max-width: 860px) { .diag-inner { grid-template-columns: 1fr; gap: 40px; } }
+
+  /* CAPACIDADES */
+  .autoridade { border-bottom: 1px solid var(--line); }
+  .caps-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; }
+  .cap { border: 1px solid var(--line); padding: 40px 36px; transition: background .2s; }
+  .cap:hover { background: rgba(184,153,104,0.03); }
+  .cap-icon { font-family: var(--mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); margin-bottom: 20px; }
+  .cap h3 { font-family: var(--serif); font-size: 22px; letter-spacing: -0.01em; line-height: 1.2; margin-bottom: 12px; }
+  .cap p { color: var(--fg-mute); font-size: 14px; line-height: 1.7; }
+  @media (max-width: 900px) { .caps-grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 560px) { .caps-grid { grid-template-columns: 1fr; } }
+
+  /* BLOG STRIP */
+  .blog-strip { border-bottom: 1px solid var(--line); }
+  .blog-strip-inner { display: flex; justify-content: space-between; align-items: flex-end; gap: 40px; flex-wrap: wrap; }
+  .blog-strip h2 { font-size: clamp(28px, 3.5vw, 52px); letter-spacing: -0.02em; max-width: 24ch; }
+  .blog-strip h2 .em { color: var(--gold-soft); font-style: italic; }
+  .blog-strip .sub { color: var(--fg-mute); font-size: 16px; max-width: 44ch; margin-top: 16px; line-height: 1.65; }
+
+  /* CONTATO */
+  .contato-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; }
+  .contato h2 { font-size: clamp(32px, 4vw, 60px); letter-spacing: -0.02em; margin-top: 16px; max-width: 20ch; }
+  .contato h2 .em { color: var(--gold-soft); font-style: italic; }
+  .contato .sub { color: var(--fg-mute); font-size: 16px; margin-top: 20px; line-height: 1.65; max-width: 44ch; }
+  .contact-info { margin-top: 48px; display: flex; flex-direction: column; gap: 20px; }
+  .contact-item { display: flex; gap: 16px; align-items: flex-start; }
+  .contact-label { font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--gold); min-width: 80px; padding-top: 2px; }
+  .contact-value { font-size: 15px; color: var(--fg-mute); }
+  .contact-value a:hover { color: var(--fg); }
+  .contact-form { background: rgba(245,242,235,0.03); border: 1px solid var(--line); padding: 48px 40px; }
+  .form-group { margin-bottom: 24px; }
+  .form-group label { display: block; font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--fg-mute); margin-bottom: 10px; }
+  .form-group input,
+  .form-group textarea { width: 100%; background: transparent; border: 1px solid var(--line); color: var(--fg); font-family: var(--sans); font-size: 15px; padding: 14px 16px; outline: none; transition: border-color .2s; border-radius: 0; -webkit-appearance: none; }
+  .form-group input:focus,
+  .form-group textarea:focus { border-color: var(--gold); }
+  .form-group textarea { resize: vertical; min-height: 120px; }
+  .form-submit { width: 100%; margin-top: 8px; justify-content: center; border-radius: 4px; }
+  @media (max-width: 900px) { .contato-inner { grid-template-columns: 1fr; } }
+
+  /* FOOTER */
+  footer { padding: 64px 0 32px; border-top: 1px solid var(--line); }
+  .foot-inner { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 16px; align-items: center; }
+  .foot-brand { font-family: var(--mono); font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--fg-mute); }
+  .foot-brand span { color: var(--gold); }
+  .foot-copy { font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--fg-faint); }
+  .foot-links { display: flex; gap: 24px; flex-wrap: wrap; }
+  .foot-links a { font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--fg-mute); transition: color .2s; }
+  .foot-links a:hover { color: var(--fg); }
+
+  @media (max-width: 600px) { .wrap { padding: 0 20px; } section { padding: 80px 0; } }
 </style>
 </head>
 <body>
 
+<!-- NAV -->
 <nav class="nav">
   <div class="wrap nav-inner">
-    <a href="../index.html" class="brand">
+    <a href="/" class="brand">
       <span class="brand-mark" aria-hidden="true">
         <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
           <circle cx="14" cy="14" r="13" stroke="#F5F2EB" stroke-width="1"/>
@@ -126,113 +174,216 @@
       <span class="brand-name">Orkestria<span>Consult</span></span>
     </a>
     <div class="nav-links">
-      <a href="../index.html#metodologia">Metodologia</a>
-      <a href="../index.html#diagnostico">Diagnóstico</a>
-      <a href="../index.html#autoridade">Capacidades</a>
-      <a href="index.html">Inteligência</a>
-      <a href="../index.html#contato">Contato</a>
+      <a href="#metodologia">Metodologia</a>
+      <a href="#diagnostico">Diagnóstico</a>
+      <a href="#autoridade">Capacidades</a>
+      <a href="/blog/">Inteligência</a>
+      <a href="#contato">Contato</a>
     </div>
-    <a href="../index.html#diagnostico" class="nav-cta">Solicitar diagnóstico <span class="arrow">→</span></a>
+    <a href="#diagnostico" class="nav-cta">Solicitar diagnóstico <span class="arrow">→</span></a>
   </div>
 </nav>
 
-<header class="blog-hero">
+<!-- HERO -->
+<section class="hero" id="inicio">
   <div class="wrap">
-    <div class="top">
-      <div class="eyebrow"><span class="dot"></span>Inteligência Operacional · Edição 01</div>
-      <div class="meta">6 artigos · atualizado 2026</div>
+    <div class="hero-inner">
+      <div>
+        <div class="eyebrow hero-eyebrow"><span class="dot"></span>Orkestria Consult · Inteligência Operacional</div>
+        <h1 class="display">Transformamos operação em <span class="em">inteligência.</span></h1>
+        <p class="sub">Integramos sistemas, organizamos dados e entregamos visibilidade executiva para gestores que precisam de mais do que relatórios — precisam de decisão.</p>
+        <div class="hero-actions">
+          <a href="#diagnostico" class="btn btn-primary">Solicitar diagnóstico <span class="arrow">→</span></a>
+          <a href="#metodologia" class="btn btn-outline">Como trabalhamos</a>
+        </div>
+      </div>
+      <div class="hero-visual" aria-hidden="true">
+        <div class="hero-orb">
+          <div class="hero-orb-core"></div>
+        </div>
+      </div>
     </div>
-    <h1 class="display">Artigos para gestores que querem transformar tecnologia em <span class="em">decisão.</span></h1>
-    <p class="sub">Análises curtas, casos práticos e <strong style="color:var(--gold-soft); font-weight:400;">Histórias de Processo</strong>: como operações manuais se transformam em fluxos inteligentes — e como dados deixam de ser ruído para virar leitura executiva.</p>
-  </div>
-</header>
-
-<section class="filter">
-  <div class="wrap filter-inner">
-    <div class="cats">
-      <button class="cat active">Todos</button>
-      <button class="cat">Histórias de Processo</button>
-      <button class="cat">Educação</button>
-      <button class="cat">Dados &amp; BI</button>
-      <button class="cat">Integrações</button>
-      <button class="cat">IA Aplicada</button>
-      <button class="cat">Eficiência Operacional</button>
-      <button class="cat">Sistemas Corporativos</button>
-      <button class="cat">TOTVS RM</button>
-    </div>
-    <span class="counter">06 / 06 artigos</span>
   </div>
 </section>
 
-<section class="list">
+<!-- METODOLOGIA -->
+<section class="metodologia" id="metodologia">
   <div class="wrap">
-
-    <a class="row" href="do-xml-ao-erp.html">
-      <span class="idx">HP · 01</span>
-      <h3>Do XML ao ERP: a entrada de NF como fluxo inteligente.</h3>
-      <span class="cat-tag">◆ Histórias de Processo · 10 min</span>
-      <span class="read">Ler <span class="arrow">→</span></span>
-    </a>
-
-    <a class="row" href="instituicoes-nao-precisam-de-mais-planilhas.html">
-      <span class="idx">A · 01</span>
-      <h3>Instituições de ensino não precisam de mais planilhas. Precisam de decisão.</h3>
-      <span class="cat-tag">◆ Educação · 8 min</span>
-      <span class="read">Ler <span class="arrow">→</span></span>
-    </a>
-
-    <a class="row" href="custo-invisivel-dos-dados-que-nao-conversam.html">
-      <span class="idx">A · 02</span>
-      <h3>O custo invisível dos dados que não conversam.</h3>
-      <span class="cat-tag">◆ Eficiência · 6 min</span>
-      <span class="read">Ler <span class="arrow">→</span></span>
-    </a>
-
-    <a class="row" href="dashboards-bonitos-nao-resolvem-dados-ruins.html">
-      <span class="idx">A · 03</span>
-      <h3>Por que dashboards bonitos não resolvem dados ruins.</h3>
-      <span class="cat-tag">◆ Dados &amp; BI · 5 min</span>
-      <span class="read">Ler <span class="arrow">→</span></span>
-    </a>
-
-    <a class="row" href="o-problema-nao-e-o-sistema.html">
-      <span class="idx">A · 04</span>
-      <h3>O problema não é o sistema. É a falta de integração.</h3>
-      <span class="cat-tag">◆ Integrações · 7 min</span>
-      <span class="read">Ler <span class="arrow">→</span></span>
-    </a>
-
-    <a class="row" href="operacao-educacional-inteligencia-de-gestao.html">
-      <span class="idx">A · 05</span>
-      <h3>Como transformar operação educacional em inteligência de gestão.</h3>
-      <span class="cat-tag">◆ Educação · 9 min</span>
-      <span class="read">Ler <span class="arrow">→</span></span>
-    </a>
-
+    <div class="section-head">
+      <div class="eyebrow"><span class="dot"></span>Metodologia</div>
+      <h2 class="display">Como <span class="italic">orquestramos</span> sua operação.</h2>
+      <p class="sub">Não entregamos software. Entregamos um processo: do diagnóstico à autonomia — com cada etapa conectada à anterior.</p>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">01 · Diagnóstico</div>
+        <h3>Mapeamos o que existe e o que falta.</h3>
+        <p>Analisamos sistemas, fluxos e fontes de dados atuais. Identificamos gargalos, redundâncias e o que impede a operação de gerar leitura executiva confiável.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">02 · Integração</div>
+        <h3>Conectamos sistemas que não se falam.</h3>
+        <p>ERP, planilhas, plataformas educacionais, APIs — integramos as fontes para que a informação flua sem intervenção manual e sem perda de integridade.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">03 · Visibilidade</div>
+        <h3>Dados viram leitura executiva.</h3>
+        <p>Construímos painéis e relatórios calibrados para decisão — não para estética. Cada indicador tem dono, contexto e ação possível associados.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">04 · Autonomia</div>
+        <h3>A operação aprende a se sustentar.</h3>
+        <p>Transferimos conhecimento, documentamos processos e estruturamos governança para que a inteligência operacional não dependa de nós para funcionar.</p>
+      </div>
+    </div>
   </div>
 </section>
 
-<section class="strip">
-  <div class="wrap strip-inner">
-    <h3>Sua operação já está dizendo onde perde eficiência. <span class="em">A questão é se você consegue enxergar.</span></h3>
-    <a href="../index.html#diagnostico" class="btn btn-primary">Solicitar diagnóstico <span class="arrow">→</span></a>
+<!-- DIAGNÓSTICO CTA -->
+<section class="diagnostico" id="diagnostico">
+  <div class="wrap">
+    <div class="diag-inner">
+      <div>
+        <div class="diag-label">Próximo passo</div>
+        <h2 class="display">Comece com um diagnóstico <span class="em">sem custo.</span></h2>
+        <p>Uma sessão de trabalho para mapear sua operação atual, identificar o maior gargalo e propor um caminho claro. Sem proposta genérica, sem PowerPoint de introdução.</p>
+      </div>
+      <div class="diag-action">
+        <a href="#contato" class="btn btn-primary" style="font-size:15px;padding:18px 32px;">Agendar diagnóstico <span class="arrow">→</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CAPACIDADES -->
+<section class="autoridade" id="autoridade">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow"><span class="dot"></span>Capacidades</div>
+      <h2 class="display">O que entregamos <span class="italic">na prática.</span></h2>
+      <p class="sub">Combinamos expertise técnica com visão de gestão para resolver problemas que sistemas sozinhos não conseguem.</p>
+    </div>
+    <div class="caps-grid">
+      <div class="cap">
+        <div class="cap-icon">ERP · TOTVS RM</div>
+        <h3>Parametrização e integração de ERP</h3>
+        <p>Configuração, automação e integração do TOTVS RM com outros sistemas — eliminando retrabalho e garantindo dados confiáveis para gestão financeira e acadêmica.</p>
+      </div>
+      <div class="cap">
+        <div class="cap-icon">Dados &amp; BI</div>
+        <h3>Business Intelligence aplicado à decisão</h3>
+        <p>Modelagem de dados, construção de dashboards e relatórios executivos que traduzem números em perguntas respondidas — não apenas em gráficos.</p>
+      </div>
+      <div class="cap">
+        <div class="cap-icon">Integrações</div>
+        <h3>Conexão entre sistemas e plataformas</h3>
+        <p>APIs, ETL, automações entre ERPs, CRMs, plataformas educacionais e fontes legadas — dados fluindo sem intervenção manual e sem perda de rastreabilidade.</p>
+      </div>
+      <div class="cap">
+        <div class="cap-icon">Automação</div>
+        <h3>Processos automáticos e auditáveis</h3>
+        <p>Fluxos de entrada de NF, conciliação financeira, relatórios periódicos — operações que hoje dependem de pessoas passam a rodar sozinhas e com rastreamento completo.</p>
+      </div>
+      <div class="cap">
+        <div class="cap-icon">IA Aplicada</div>
+        <h3>Inteligência artificial em operações reais</h3>
+        <p>Classificação automática de dados, análise preditiva de indicadores educacionais e assistentes de gestão — IA sem hype, integrada ao fluxo operacional.</p>
+      </div>
+      <div class="cap">
+        <div class="cap-icon">Educação</div>
+        <h3>Especialidade no setor educacional</h3>
+        <p>Profundo conhecimento dos processos de instituições de ensino: matrícula, rematrícula, inadimplência, gestão acadêmica e indicadores de permanência e evasão.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BLOG STRIP -->
+<section class="blog-strip">
+  <div class="wrap">
+    <div class="blog-strip-inner">
+      <div>
+        <div class="eyebrow" style="margin-bottom:16px;"><span class="dot"></span>Inteligência Operacional</div>
+        <h2 class="display">Artigos para quem <span class="em">decide.</span></h2>
+        <p class="sub">Análises curtas, casos práticos e histórias de como operações manuais se transformam em fluxos inteligentes.</p>
+      </div>
+      <a href="/blog/" class="btn btn-outline" style="flex-shrink:0;">Ver todos os artigos <span class="arrow">→</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- CONTATO -->
+<section id="contato">
+  <div class="wrap">
+    <div class="contato-inner">
+      <div>
+        <div class="eyebrow"><span class="dot"></span>Contato</div>
+        <h2 class="display contato">Vamos <span class="em">conversar</span> sobre sua operação.</h2>
+        <p class="sub contato">Descreva brevemente o maior problema operacional que você enfrenta hoje. Respondemos em até 24 horas com uma proposta de próximo passo.</p>
+        <div class="contact-info">
+          <div class="contact-item">
+            <span class="contact-label">Email</span>
+            <span class="contact-value"><a href="mailto:contato@orkestriaplatform.com">contato@orkestriaplatform.com</a></span>
+          </div>
+          <div class="contact-item">
+            <span class="contact-label">LinkedIn</span>
+            <span class="contact-value"><a href="https://linkedin.com/company/orkestria" target="_blank" rel="noopener">linkedin.com/company/orkestria</a></span>
+          </div>
+        </div>
+      </div>
+      <form class="contact-form" onsubmit="handleForm(event)">
+        <div class="form-group">
+          <label for="nome">Nome</label>
+          <input type="text" id="nome" name="nome" placeholder="Seu nome" required />
+        </div>
+        <div class="form-group">
+          <label for="empresa">Instituição / Empresa</label>
+          <input type="text" id="empresa" name="empresa" placeholder="Nome da instituição" />
+        </div>
+        <div class="form-group">
+          <label for="email">E-mail</label>
+          <input type="email" id="email" name="email" placeholder="seu@email.com" required />
+        </div>
+        <div class="form-group">
+          <label for="mensagem">Qual é o seu maior problema operacional hoje?</label>
+          <textarea id="mensagem" name="mensagem" placeholder="Descreva brevemente..." required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary form-submit">Enviar mensagem <span class="arrow">→</span></button>
+      </form>
+    </div>
   </div>
 </section>
 
 <footer>
-  <div class="wrap foot-inner">
-    <span>© 2026 Orkestria Consult</span>
-    <span>Inteligência Operacional · BR</span>
+  <div class="wrap">
+    <div class="foot-inner">
+      <div class="foot-brand">Orkestria<span>Consult</span></div>
+      <div class="foot-links">
+        <a href="#metodologia">Metodologia</a>
+        <a href="#diagnostico">Diagnóstico</a>
+        <a href="#autoridade">Capacidades</a>
+        <a href="/blog/">Inteligência</a>
+        <a href="#contato">Contato</a>
+      </div>
+      <div class="foot-copy">© 2026 Orkestria Consult</div>
+    </div>
   </div>
 </footer>
 
 <script>
-  document.querySelectorAll('.cat').forEach(b => {
-    b.addEventListener('click', () => {
-      document.querySelectorAll('.cat').forEach(x => x.classList.remove('active'));
-      b.classList.add('active');
-    });
-  });
+function handleForm(e) {
+  e.preventDefault();
+  const f = e.target;
+  const subject = encodeURIComponent('Diagnóstico Orkestria — ' + (f.empresa.value || f.nome.value));
+  const body = encodeURIComponent(
+    'Nome: ' + f.nome.value +
+    '\nEmpresa: ' + f.empresa.value +
+    '\nE-mail: ' + f.email.value +
+    '\n\n' + f.mensagem.value
+  );
+  window.location.href = 'mailto:contato@orkestriaplatform.com?subject=' + subject + '&body=' + body;
+}
 </script>
+
 </body>
 </html>

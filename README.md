@@ -1,54 +1,64 @@
-# Blog Orkestria — Inteligência Operacional
+# Orkestria Consult — orkestriaplatform.com
 
-Blog editorial da **Orkestria Consult**, com artigos para gestores que querem transformar tecnologia em decisão.
-
-## Sobre
-
-Conteúdo focado em análises curtas, casos práticos e **Histórias de Processo**: como operações manuais se transformam em fluxos inteligentes — e como dados deixam de ser ruído para virar leitura executiva.
-
-## Artigos publicados
-
-| Código | Título | Categoria | Leitura |
-|--------|--------|-----------|---------|
-| HP·01 | Do XML ao ERP: a entrada de NF como fluxo inteligente | Histórias de Processo | 10 min |
-| A·01 | Instituições de ensino não precisam de mais planilhas | Educação | 8 min |
-| A·02 | O custo invisível dos dados que não conversam | Eficiência Operacional | 6 min |
-| A·03 | Por que dashboards bonitos não resolvem dados ruins | Dados & BI | 5 min |
-| A·04 | O problema não é o sistema | Eficiência Operacional | — |
-| A·05 | Operação educacional e inteligência de gestão | Educação | — |
+Site institucional + blog da **Orkestria Consult**, consultoria especializada em inteligência operacional para educação e negócios.
 
 ## Estrutura
 
 ```
-BlogOrkestria/
-├── index.html                                          # Página de listagem dos artigos
-├── article.css                                         # Estilos compartilhados dos artigos
-├── do-xml-ao-erp.html
-├── instituicoes-nao-precisam-de-mais-planilhas.html
-├── custo-invisivel-dos-dados-que-nao-conversam.html
-├── dashboards-bonitos-nao-resolvem-dados-ruins.html
-├── o-problema-nao-e-o-sistema.html
-└── operacao-educacional-inteligencia-de-gestao.html
+/
+├── index.html          ← site principal (Landing Page)
+├── wrangler.toml       ← config Cloudflare Workers
+├── blog/
+│   ├── index.html      ← listagem dos artigos
+│   ├── article.css     ← estilos compartilhados dos artigos
+│   ├── do-xml-ao-erp.html
+│   ├── instituicoes-nao-precisam-de-mais-planilhas.html
+│   ├── custo-invisivel-dos-dados-que-nao-conversam.html
+│   ├── dashboards-bonitos-nao-resolvem-dados-ruins.html
+│   ├── o-problema-nao-e-o-sistema.html
+│   └── operacao-educacional-inteligencia-de-gestao.html
 ```
+
+## Páginas do site principal
+
+| Seção | ID | Conteúdo |
+|-------|----|----------|
+| Hero | `#inicio` | Headline principal e CTAs |
+| Metodologia | `#metodologia` | 4 etapas do processo |
+| Diagnóstico | `#diagnostico` | CTA de conversão |
+| Capacidades | `#autoridade` | Grid de 6 serviços |
+| Blog | — | Link para `/blog/` |
+| Contato | `#contato` | Formulário + email |
+
+## Artigos publicados
+
+| Código | Título | Categoria |
+|--------|--------|-----------|
+| HP·01 | Do XML ao ERP: a entrada de NF como fluxo inteligente | Histórias de Processo |
+| A·01 | Instituições de ensino não precisam de mais planilhas | Educação |
+| A·02 | O custo invisível dos dados que não conversam | Eficiência Operacional |
+| A·03 | Por que dashboards bonitos não resolvem dados ruins | Dados & BI |
+| A·04 | O problema não é o sistema | Eficiência Operacional |
+| A·05 | Operação educacional e inteligência de gestão | Educação |
 
 ## Stack
 
-- HTML5 estático, sem framework
+- HTML5 estático, sem framework ou build step
 - CSS customizado com variáveis (design system próprio)
 - Fontes: Instrument Serif + Geist + Geist Mono (Google Fonts)
-- Design: tema escuro (`#0A0E14`) com paleta dourada (`#B89968`)
+- Deploy: Cloudflare Workers com assets estáticos (`wrangler.toml`)
+- CI/CD: push na branch `main` → deploy automático via Cloudflare
 
-## Categorias
+## Deploy
 
-- Histórias de Processo
-- Educação
-- Dados & BI
-- Integrações
-- IA Aplicada
-- Eficiência Operacional
-- Sistemas Corporativos
-- TOTVS RM
+```bash
+git add .
+git commit -m "mensagem"
+git push
+# → Cloudflare detecta o push e publica automaticamente
+```
 
 ---
 
-**Orkestria Consult** · Inteligência Operacional para Educação e Negócios
+**Orkestria Consult** · Inteligência Operacional para Educação e Negócios  
+[orkestriaplatform.com](https://orkestriaplatform.com)
