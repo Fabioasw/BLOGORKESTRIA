@@ -81,6 +81,18 @@
   .section-head h2 { font-size: clamp(36px, 4.5vw, 72px); letter-spacing: -0.02em; margin-top: 16px; }
   .section-head .sub { color: var(--fg-mute); font-size: 17px; max-width: 52ch; margin-top: 20px; line-height: 1.65; }
 
+  /* MANIFESTO */
+  .manifesto { border-bottom: 1px solid var(--line); }
+  .manifesto-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; }
+  .manifesto-inner h2 { font-size: clamp(36px, 4.5vw, 64px); letter-spacing: -0.02em; margin-top: 16px; }
+  .manifesto-inner h2 .em { color: var(--gold-soft); font-style: italic; }
+  .beliefs { display: flex; flex-direction: column; gap: 32px; padding-top: 8px; }
+  .belief { border-left: 1px solid var(--gold); padding-left: 24px; }
+  .belief-num { font-family: var(--mono); font-size: 11px; letter-spacing: 0.18em; color: var(--gold); margin-bottom: 10px; }
+  .belief p { color: var(--fg-mute); font-size: 16px; line-height: 1.7; }
+  .belief p strong { color: var(--fg); font-weight: 500; }
+  @media (max-width: 900px) { .manifesto-inner { grid-template-columns: 1fr; gap: 40px; } }
+
   /* METODOLOGIA */
   .metodologia { border-bottom: 1px solid var(--line); }
   .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; }
@@ -174,6 +186,7 @@
       <span class="brand-name">Orkestria<span>Consult</span></span>
     </a>
     <div class="nav-links">
+      <a href="#manifesto">Manifesto</a>
       <a href="#metodologia">Metodologia</a>
       <a href="#diagnostico">Diagnóstico</a>
       <a href="#autoridade">Capacidades</a>
@@ -200,6 +213,36 @@
       <div class="hero-visual" aria-hidden="true">
         <div class="hero-orb">
           <div class="hero-orb-core"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MANIFESTO -->
+<section class="manifesto" id="manifesto">
+  <div class="wrap">
+    <div class="manifesto-inner">
+      <div>
+        <div class="eyebrow"><span class="dot"></span>Manifesto</div>
+        <h2 class="display">O que <span class="em">acreditamos</span> sobre tecnologia e gestão.</h2>
+      </div>
+      <div class="beliefs">
+        <div class="belief">
+          <div class="belief-num">01</div>
+          <p><strong>Tecnologia não resolve problema de processo.</strong> Antes de automatizar, é preciso entender. Um sistema novo sobre um processo quebrado produz erros mais rápido — não melhores resultados.</p>
+        </div>
+        <div class="belief">
+          <div class="belief-num">02</div>
+          <p><strong>Dashboard bonito sobre dado ruim é um espelho mentiroso.</strong> Visualização sem qualidade de dado não é BI — é ilusão de controle. A inteligência começa na origem, não na tela.</p>
+        </div>
+        <div class="belief">
+          <div class="belief-num">03</div>
+          <p><strong>Dado que não gera decisão é ruído.</strong> Relatórios não são o objetivo. O objetivo é a ação que acontece depois. Se um indicador não tem dono nem resposta possível, ele não deveria existir.</p>
+        </div>
+        <div class="belief">
+          <div class="belief-num">04</div>
+          <p><strong>Autonomia operacional é o destino.</strong> O trabalho bem feito termina quando a operação funciona sem depender de nós. Consultorias que criam dependência entregam problema, não solução.</p>
         </div>
       </div>
     </div>
@@ -322,12 +365,16 @@
         <p class="sub contato">Descreva brevemente o maior problema operacional que você enfrenta hoje. Respondemos em até 24 horas com uma proposta de próximo passo.</p>
         <div class="contact-info">
           <div class="contact-item">
-            <span class="contact-label">Email</span>
-            <span class="contact-value"><a href="mailto:contato@orkestriaplatform.com">contato@orkestriaplatform.com</a></span>
+            <span class="contact-label">Contato</span>
+            <span class="contact-value">Fabio Nunes</span>
           </div>
           <div class="contact-item">
-            <span class="contact-label">LinkedIn</span>
-            <span class="contact-value"><a href="https://linkedin.com/company/orkestria" target="_blank" rel="noopener">linkedin.com/company/orkestria</a></span>
+            <span class="contact-label">Email</span>
+            <span class="contact-value"><a href="mailto:OrkestriaPlatform@outlook.com">OrkestriaPlatform@outlook.com</a></span>
+          </div>
+          <div class="contact-item">
+            <span class="contact-label">WhatsApp</span>
+            <span class="contact-value"><a href="https://wa.me/5519971541730" target="_blank" rel="noopener">(19) 97154-1730</a></span>
           </div>
         </div>
       </div>
@@ -359,6 +406,7 @@
     <div class="foot-inner">
       <div class="foot-brand">Orkestria<span>Consult</span></div>
       <div class="foot-links">
+        <a href="#manifesto">Manifesto</a>
         <a href="#metodologia">Metodologia</a>
         <a href="#diagnostico">Diagnóstico</a>
         <a href="#autoridade">Capacidades</a>
@@ -381,7 +429,7 @@ function handleForm(e) {
     '\nE-mail: ' + f.email.value +
     '\n\n' + f.mensagem.value
   );
-  window.location.href = 'mailto:contato@orkestriaplatform.com?subject=' + subject + '&body=' + body;
+  window.location.href = 'mailto:OrkestriaPlatform@outlook.com?subject=' + subject + '&body=' + body;
 }
 </script>
 
