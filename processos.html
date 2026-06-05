@@ -86,15 +86,33 @@
 
   /* ---------- LEGEND ---------- */
   .legend { border-bottom: 1px solid var(--line); background: rgba(255,255,255,0.01); }
-  .legend-inner { display: flex; flex-wrap: wrap; gap: 14px 30px; padding: 22px 0; align-items: center; }
-  .legend-k { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--fg-faint); margin-right: 6px; }
-  .lg { display: inline-flex; align-items: center; gap: 9px; font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--fg-mute); }
+  .legend-inner { display: flex; flex-wrap: wrap; gap: 10px 26px; padding: 18px 0; align-items: center; }
+  .legend-k { font-family: var(--mono); font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--fg-faint); margin-right: 4px; flex-shrink: 0; }
+  .lg { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--fg-mute); }
   .lg .sym { width: 26px; height: 18px; display: inline-flex; align-items: center; justify-content: center; }
   .lg svg { width: 26px; height: 18px; overflow: visible; }
+  @media (max-width: 560px) { .legend-inner { gap: 8px 18px; } .legend-k { width: 100%; margin-bottom: 2px; } }
+
+  /* ---------- CAPTION (proteção estratégica + label BPMN) ---------- */
+  .proc-caption { border-bottom: 1px solid var(--line); background: rgba(255,255,255,0.005); }
+  .proc-caption-inner { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px 48px; padding: 15px 0; }
+  .proc-caption .note { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.06em; color: var(--fg-faint); line-height: 1.6; max-width: 72ch; }
+  .proc-caption .label-bpmn { font-family: var(--mono); font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--fg-faint); white-space: nowrap; display: inline-flex; align-items: center; gap: 10px; flex-shrink: 0; }
+  .proc-caption .label-bpmn::before { content: ""; width: 18px; height: 1px; background: var(--gold); opacity: 0.6; }
+
+  /* ---------- ÍNDICE DE PROCESSOS ---------- */
+  .proc-index { border-bottom: 1px solid var(--line); background: rgba(255,255,255,0.008); }
+  .proc-index-inner { display: flex; flex-wrap: wrap; gap: 8px; padding: 18px 0; align-items: center; }
+  .proc-index-k { font-family: var(--mono); font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--fg-faint); margin-right: 4px; flex-shrink: 0; }
+  .pidx { display: inline-flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--fg-mute); border: 1px solid rgba(245,242,235,0.10); padding: 7px 14px; border-radius: 999px; transition: border-color .2s, color .2s, background .2s; white-space: nowrap; }
+  .pidx:hover { border-color: rgba(184,153,104,0.48); color: var(--gold-soft); background: rgba(184,153,104,0.04); }
+  .pidx .n { color: var(--fg-faint); font-size: 9px; letter-spacing: 0.14em; }
+  @media (max-width: 700px) { .proc-caption .label-bpmn { display: none; } }
+  @media (max-width: 560px) { .proc-index-k { display: none; } }
 
   /* ---------- PROCESS BLOCKS ---------- */
   .lib { padding: 30px 0 40px; }
-  .proc { padding: 64px 0; }
+  .proc { padding: 64px 0; scroll-margin-top: 104px; }
   .proc-top { display: grid; grid-template-columns: 230px 1fr; gap: 56px; align-items: start; margin-bottom: 46px; }
   .proc-id { display: flex; flex-direction: column; gap: 16px; position: sticky; top: 96px; }
   .proc-num { font-family: var(--serif); font-style: italic; font-size: 76px; line-height: 0.9; color: var(--gold-soft); letter-spacing: -0.03em; }
@@ -148,6 +166,7 @@
 
   /* ---------- CTA STRIP ---------- */
   .pcta { background: var(--marine); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 120px 0; position: relative; overflow: hidden; }
+  @media (max-width: 640px) { .pcta { padding: 80px 0; } .pcta .actions { gap: 12px; } .btn { padding: 14px 22px; font-size: 13.5px; } }
   .pcta-bg { position: absolute; inset: 0; pointer-events: none; opacity: 0.5; }
   .pcta-bg svg { width: 100%; height: 100%; }
   .pcta-inner { position: relative; z-index: 1; }
@@ -281,6 +300,29 @@
     <span class="lg"><span class="sym"><svg viewBox="0 0 26 18"><line x1="2" y1="9" x2="22" y2="9" stroke="#B5654A" stroke-width="1.4" stroke-dasharray="4 4"/></svg></span>Retrabalho</span>
   </div>
 </section>
+
+<!-- ============== CAPTION EDITORIAL ============== -->
+<div class="proc-caption">
+  <div class="wrap proc-caption-inner">
+    <p class="note">Os fluxos abaixo mostram a arquitetura de valor. A implementação depende do ambiente, ERP, dados e regras de negócio de cada operação.</p>
+    <span class="label-bpmn">BPMN executivo · leitura estratégica</span>
+  </div>
+</div>
+
+<!-- ============== ÍNDICE DE PROCESSOS ============== -->
+<nav class="proc-index" aria-label="Índice de processos">
+  <div class="wrap proc-index-inner">
+    <span class="proc-index-k">Ir para</span>
+    <a class="pidx" href="#xml-erp"><span class="n">01</span>XML ao ERP</a>
+    <a class="pidx" href="#conciliacao-financeira"><span class="n">02</span>Conciliação</a>
+    <a class="pidx" href="#fluxo-caixa"><span class="n">03</span>Fluxo de Caixa</a>
+    <a class="pidx" href="#conciliacao-contabil"><span class="n">04</span>Contábil</a>
+    <a class="pidx" href="#patrimonio"><span class="n">05</span>Patrimônio</a>
+    <a class="pidx" href="#rh-ponto"><span class="n">06</span>RH e Ponto</a>
+    <a class="pidx" href="#assinaturas"><span class="n">07</span>Assinaturas</a>
+    <a class="pidx" href="#recebimentos"><span class="n">08</span>Recebimentos</a>
+  </div>
+</nav>
 
 <!-- ============== BIBLIOTECA DE PROCESSOS ============== -->
 <section class="lib">
