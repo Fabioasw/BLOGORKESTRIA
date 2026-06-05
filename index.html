@@ -135,6 +135,22 @@
     flex-wrap: nowrap;
   }
   .nav-links a:hover { color: var(--fg); }
+  .nav-links .nav-process {
+    color: var(--gold-soft);
+    position: relative;
+  }
+  .nav-links .nav-process::before {
+    content: "";
+    position: absolute;
+    left: -12px;
+    top: 50%;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--gold);
+    transform: translateY(-50%);
+    box-shadow: 0 0 18px rgba(184,153,104,0.45);
+  }
   .nav-cta {
     display: inline-flex; align-items: center; gap: 10px;
     font-size: 13px;
@@ -1240,12 +1256,75 @@
   .plib-head p { color: var(--fg-mute); max-width: 46ch; font-size: 17px; line-height: 1.65; }
   .plib-note { font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold); margin: 28px 0 54px; display: flex; align-items: center; gap: 12px; }
   .plib-note::before { content: ""; width: 24px; height: 1px; background: var(--gold); }
+  .plib-kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--gold-soft);
+    border: 1px solid rgba(184,153,104,0.35);
+    border-radius: 999px;
+    padding: 8px 14px;
+    margin-bottom: 22px;
+    background: rgba(184,153,104,0.045);
+  }
+  .process-proof {
+    margin: 0 0 56px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border-top: 1px solid var(--line);
+    border-left: 1px solid var(--line);
+  }
+  .process-proof .proof {
+    padding: 24px 26px;
+    border-right: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    min-height: 150px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 20px;
+    background: rgba(255,255,255,0.006);
+  }
+  .process-proof .proof .k {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+  .process-proof .proof .v {
+    font-family: var(--serif);
+    font-size: clamp(22px, 2.2vw, 34px);
+    line-height: 1.12;
+    letter-spacing: -0.01em;
+    color: var(--fg);
+  }
   .plib-grid { display: grid; grid-template-columns: 1fr 1fr; border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
   .plib-card { border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 40px 36px; display: flex; flex-direction: column; gap: 20px; transition: background .25s ease; }
   .plib-card:hover { background: rgba(184,153,104,0.03); }
   .plib-card .cardtop { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; }
   .plib-card .cnum { font-family: var(--serif); font-style: italic; font-size: 40px; color: var(--gold-soft); line-height: 1; letter-spacing: -0.02em; }
   .plib-card .ctag { font-family: var(--mono); font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--fg-faint); }
+  .plib-badges { display: flex; gap: 8px; flex-wrap: wrap; margin-top: -6px; }
+  .plib-badge {
+    font-family: var(--mono);
+    font-size: 9.5px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--fg-mute);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 6px 10px;
+  }
+  .plib-badge.gold {
+    color: var(--gold-soft);
+    border-color: rgba(184,153,104,0.42);
+    background: rgba(184,153,104,0.05);
+  }
   .plib-card h3 { font-family: var(--serif); font-weight: 400; font-size: 30px; line-height: 1.1; letter-spacing: -0.01em; max-width: 18ch; }
   .plib-card .pdesc { color: var(--fg-mute); font-size: 14.5px; line-height: 1.6; max-width: 48ch; }
   .mini { display: grid; gap: 11px; padding: 18px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
@@ -1263,7 +1342,40 @@
   .plib-card:hover .clink .arrow { transform: translateX(4px); }
   .plib-foot { display: flex; justify-content: space-between; align-items: center; gap: 24px; flex-wrap: wrap; padding-top: 34px; }
   .plib-foot .meta { font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--fg-faint); }
-  @media (max-width: 980px) { .plib-head { grid-template-columns: 1fr; gap: 24px; } .plib-grid { grid-template-columns: 1fr; } }
+  .process-bridge {
+    background: var(--marine);
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    padding: 52px 0;
+  }
+  .process-bridge-inner {
+    display: grid;
+    grid-template-columns: 1.15fr 1fr;
+    gap: 64px;
+    align-items: center;
+  }
+  .process-bridge h2 {
+    font-size: clamp(30px, 3.5vw, 54px);
+    max-width: 18ch;
+  }
+  .process-bridge p {
+    color: var(--fg-mute);
+    font-size: 17px;
+    line-height: 1.65;
+    max-width: 52ch;
+    margin-bottom: 26px;
+  }
+  .process-bridge .actions {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+  @media (max-width: 980px) {
+    .plib-head,
+    .process-bridge-inner { grid-template-columns: 1fr; gap: 24px; }
+    .plib-grid,
+    .process-proof { grid-template-columns: 1fr; }
+  }
 
 </style>
 </head>
@@ -1289,7 +1401,7 @@
     <div class="nav-links">
       <a href="#manifesto">Manifesto</a>
       <a href="#metodologia">Metodologia</a>
-      <a href="#processos">Processos</a>
+      <a href="processos.html" class="nav-process">Processos BPMN</a>
       <a href="#diagnostico">Diagnóstico</a>
       <a href="#inteligencia">Inteligência</a>
       <a href="#contato">Contato</a>
@@ -1412,6 +1524,7 @@
         <div class="hero-ctas">
           <a href="#diagnostico" class="btn btn-primary">Solicitar diagnóstico operacional <span class="arrow">→</span></a>
           <a href="#metodologia" class="btn btn-ghost">Entender a metodologia</a>
+          <a href="processos.html" class="btn btn-ghost">Ver exemplos BPMN <span class="arrow">→</span></a>
         </div>
       </div>
     </div>
@@ -1704,60 +1817,92 @@
   <div class="wrap">
     <div class="eyebrow" style="margin-bottom:32px;"><span class="dot"></span>07 · Processos Inteligentes</div>
     <div class="plib-head">
-      <h2 class="display">Antes de automatizar, é preciso <span class="italic" style="color:var(--gold-soft)">enxergar o processo.</span></h2>
-      <p>Mapeamos fluxos críticos de BackOffice, ERP e operação para identificar onde a empresa perde tempo, controle e capacidade de decisão.</p>
+      <div>
+        <span class="plib-kicker">BPMN Executivo · Antes vs Depois</span>
+        <h2 class="display">Veja como processos manuais viram <span class="italic" style="color:var(--gold-soft)">fluxos inteligentes.</span></h2>
+      </div>
+      <p>Mapeamos processos críticos de BackOffice, financeiro, RH, contabilidade, patrimônio e ERP para revelar onde a operação perde tempo, controle e capacidade de decisão.</p>
     </div>
-    <div class="plib-note">Mostramos o mapa. A execução exige método, dados e customização.</div>
+    <div class="plib-note">Os exemplos mostram o mapa. A execução exige método, dados e customização.</div>
+
+    <div class="process-proof">
+      <div class="proof">
+        <span class="k">O que o visitante enxerga</span>
+        <span class="v">A arquitetura do processo, do gargalo à decisão.</span>
+      </div>
+      <div class="proof">
+        <span class="k">O que fica sob consultoria</span>
+        <span class="v">Regras, dados, integrações e customização para cada operação.</span>
+      </div>
+    </div>
 
     <div class="plib-grid">
       <a class="plib-card" href="processos.html#xml-erp">
         <div class="cardtop"><span class="cnum">01</span><span class="ctag">BackOffice · Compras</span></div>
+        <div class="plib-badges"><span class="plib-badge gold">BPMN</span><span class="plib-badge">Antes vs Depois</span></div>
         <h3>Do XML ao ERP</h3>
         <p class="pdesc">O XML chega por e-mail e percorre uma fila manual até virar lançamento. O custo não aparece em relatório — aparece em atraso.</p>
         <div class="mini">
           <div class="mini-row before"><span class="mk">Antes</span><div class="mpills"><span class="mpill">E-mail</span><span class="mpill">Manual</span><span class="mpill">Fila</span></div></div>
           <div class="mini-row after"><span class="mk">Depois</span><div class="mpills"><span class="mpill">Captura</span><span class="mpill">Validação</span><span class="mpill">Indicador</span></div></div>
         </div>
-        <div class="cfoot"><span class="gains2">Menos retrabalho · Mais controle</span><span class="clink">Analisar <span class="arrow">→</span></span></div>
+        <div class="cfoot"><span class="gains2">Menos retrabalho · Mais controle</span><span class="clink">Ver fluxo <span class="arrow">→</span></span></div>
       </a>
 
       <a class="plib-card" href="processos.html#conciliacao-financeira">
         <div class="cardtop"><span class="cnum">02</span><span class="ctag">Financeiro</span></div>
+        <div class="plib-badges"><span class="plib-badge gold">BPMN</span><span class="plib-badge">Antes vs Depois</span></div>
         <h3>Conciliação Financeira</h3>
         <p class="pdesc">Extratos, cartões, boletos e baixas conferidos à mão, em planilhas que raramente batem na primeira tentativa.</p>
         <div class="mini">
           <div class="mini-row before"><span class="mk">Antes</span><div class="mpills"><span class="mpill">Planilha</span><span class="mpill">Manual</span><span class="mpill">Fila</span></div></div>
           <div class="mini-row after"><span class="mk">Depois</span><div class="mpills"><span class="mpill">Captura</span><span class="mpill">Regra</span><span class="mpill">Painel</span></div></div>
         </div>
-        <div class="cfoot"><span class="gains2">Fechamento mais rápido · Menos erro</span><span class="clink">Analisar <span class="arrow">→</span></span></div>
+        <div class="cfoot"><span class="gains2">Fechamento mais rápido · Menos erro</span><span class="clink">Ver fluxo <span class="arrow">→</span></span></div>
       </a>
 
       <a class="plib-card" href="processos.html#fluxo-caixa">
         <div class="cardtop"><span class="cnum">03</span><span class="ctag">Tesouraria</span></div>
+        <div class="plib-badges"><span class="plib-badge gold">BPMN</span><span class="plib-badge">Antes vs Depois</span></div>
         <h3>Fluxo de Caixa Inteligente</h3>
         <p class="pdesc">Contas a pagar, a receber e previsões espalhadas em relatórios e planilhas que envelhecem rápido.</p>
         <div class="mini">
           <div class="mini-row before"><span class="mk">Antes</span><div class="mpills"><span class="mpill">Planilha</span><span class="mpill">Manual</span><span class="mpill">Atraso</span></div></div>
           <div class="mini-row after"><span class="mk">Depois</span><div class="mpills"><span class="mpill">Integração</span><span class="mpill">Cenário</span><span class="mpill">Indicador</span></div></div>
         </div>
-        <div class="cfoot"><span class="gains2">Decisão antecipada · Visão de caixa</span><span class="clink">Analisar <span class="arrow">→</span></span></div>
+        <div class="cfoot"><span class="gains2">Decisão antecipada · Visão de caixa</span><span class="clink">Ver fluxo <span class="arrow">→</span></span></div>
       </a>
 
       <a class="plib-card" href="processos.html#conciliacao-contabil">
         <div class="cardtop"><span class="cnum">04</span><span class="ctag">Contabilidade</span></div>
+        <div class="plib-badges"><span class="plib-badge gold">BPMN</span><span class="plib-badge">Antes vs Depois</span></div>
         <h3>Conciliação Contábil</h3>
         <p class="pdesc">Lançamentos conferidos só no fim do mês. Divergências aparecem tarde e viram retrabalho com o fechamento sob pressão.</p>
         <div class="mini">
           <div class="mini-row before"><span class="mk">Antes</span><div class="mpills"><span class="mpill">Planilha</span><span class="mpill">Fim do mês</span><span class="mpill">Retrabalho</span></div></div>
           <div class="mini-row after"><span class="mk">Depois</span><div class="mpills"><span class="mpill">Contínuo</span><span class="mpill">Validação</span><span class="mpill">Auditoria</span></div></div>
         </div>
-        <div class="cfoot"><span class="gains2">Fechamento limpo · Auditoria facilitada</span><span class="clink">Analisar <span class="arrow">→</span></span></div>
+        <div class="cfoot"><span class="gains2">Fechamento limpo · Auditoria facilitada</span><span class="clink">Ver fluxo <span class="arrow">→</span></span></div>
       </a>
     </div>
 
     <div class="plib-foot">
       <span class="meta">08 processos mapeados · Financeiro · Contábil · RH · Patrimônio · Recebíveis</span>
-      <a href="processos.html" class="btn btn-ghost">Ver todos os processos <span class="arrow">→</span></a>
+      <a href="processos.html" class="btn btn-ghost">Ver biblioteca BPMN completa <span class="arrow">→</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- ============== PROCESSOS / PONTE PARA DIAGNOSTICO ============== -->
+<section class="process-bridge">
+  <div class="wrap process-bridge-inner">
+    <h2 class="display">Antes de pedir uma automação, veja como um processo pode ser redesenhado.</h2>
+    <div>
+      <p>Criamos uma biblioteca com 8 fluxos BPMN executivos mostrando o antes e o depois de processos críticos. É o melhor ponto de partida para entender onde a operação perde velocidade, controle e clareza.</p>
+      <div class="actions">
+        <a href="processos.html" class="btn btn-primary">Ver biblioteca de processos <span class="arrow">→</span></a>
+        <a href="#diagnostico" class="btn btn-ghost">Solicitar diagnóstico</a>
+      </div>
     </div>
   </div>
 </section>
@@ -2119,6 +2264,8 @@
         <ul>
           <li><a href="#manifesto">Manifesto</a></li>
           <li><a href="#metodologia">Metodologia</a></li>
+          <li><a href="processos.html">Processos Inteligentes</a></li>
+          <li><a href="processos.html#xml-erp">Biblioteca BPMN</a></li>
           <li><a href="#processo">Histórias de Processo</a></li>
           <li><a href="#diagnostico">Diagnóstico</a></li>
           <li><a href="#autoridade">Capacidade Estratégica</a></li>
