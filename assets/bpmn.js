@@ -594,8 +594,8 @@
     var svg = v.querySelector(".bv-canvas svg");
     if (!svg) return;
     var natW = svg.viewBox.baseVal.width || parseFloat(svg.getAttribute("width"));
-    var stageW = stage.clientWidth - 52;
-    var fit = Math.min(1, stageW / natW);
+    var stageW = stage.clientWidth - 40;
+    var fit = stageW / natW;
     svg.style.width = (natW * fit * V.zoom).toFixed(0) + "px";
     v.querySelector(".bv-zlabel").textContent = Math.round(V.zoom * 100) + "%";
   }
