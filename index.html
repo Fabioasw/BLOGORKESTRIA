@@ -1233,6 +1233,38 @@
     line-height: 1.2;
   }
 
+  /* ---------- PROCESSOS INTELIGENTES (vitrine) ---------- */
+  .plib { background: var(--ink); border-top: 1px solid var(--line); }
+  .plib-head { display: grid; grid-template-columns: 1.25fr 1fr; gap: 80px; align-items: end; margin-bottom: 22px; }
+  .plib-head h2 { font-size: clamp(40px, 5vw, 78px); max-width: 15ch; }
+  .plib-head p { color: var(--fg-mute); max-width: 46ch; font-size: 17px; line-height: 1.65; }
+  .plib-note { font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold); margin: 28px 0 54px; display: flex; align-items: center; gap: 12px; }
+  .plib-note::before { content: ""; width: 24px; height: 1px; background: var(--gold); }
+  .plib-grid { display: grid; grid-template-columns: 1fr 1fr; border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
+  .plib-card { border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 40px 36px; display: flex; flex-direction: column; gap: 20px; transition: background .25s ease; }
+  .plib-card:hover { background: rgba(184,153,104,0.03); }
+  .plib-card .cardtop { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; }
+  .plib-card .cnum { font-family: var(--serif); font-style: italic; font-size: 40px; color: var(--gold-soft); line-height: 1; letter-spacing: -0.02em; }
+  .plib-card .ctag { font-family: var(--mono); font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--fg-faint); }
+  .plib-card h3 { font-family: var(--serif); font-weight: 400; font-size: 30px; line-height: 1.1; letter-spacing: -0.01em; max-width: 18ch; }
+  .plib-card .pdesc { color: var(--fg-mute); font-size: 14.5px; line-height: 1.6; max-width: 48ch; }
+  .mini { display: grid; gap: 11px; padding: 18px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .mini-row { display: grid; grid-template-columns: 58px 1fr; gap: 14px; align-items: center; }
+  .mini-row .mk { font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.12em; text-transform: uppercase; }
+  .mini-row.before .mk { color: var(--fg-faint); }
+  .mini-row.after .mk { color: var(--gold); }
+  .mpills { display: flex; gap: 7px; flex-wrap: wrap; }
+  .mpill { font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.06em; text-transform: uppercase; padding: 5px 10px; border-radius: 999px; border: 1px solid var(--line); color: var(--fg-mute); }
+  .mini-row.after .mpill { border-color: rgba(184,153,104,0.42); color: var(--gold-soft); background: rgba(184,153,104,0.05); }
+  .plib-card .cfoot { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-top: auto; }
+  .plib-card .gains2 { font-size: 12.5px; color: var(--fg-mute); line-height: 1.4; }
+  .plib-card .clink { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold-soft); display: inline-flex; gap: 7px; align-items: center; white-space: nowrap; }
+  .plib-card .clink .arrow { transition: transform .25s ease; }
+  .plib-card:hover .clink .arrow { transform: translateX(4px); }
+  .plib-foot { display: flex; justify-content: space-between; align-items: center; gap: 24px; flex-wrap: wrap; padding-top: 34px; }
+  .plib-foot .meta { font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--fg-faint); }
+  @media (max-width: 980px) { .plib-head { grid-template-columns: 1fr; gap: 24px; } .plib-grid { grid-template-columns: 1fr; } }
+
 </style>
 </head>
 <body>
@@ -1257,7 +1289,7 @@
     <div class="nav-links">
       <a href="#manifesto">Manifesto</a>
       <a href="#metodologia">Metodologia</a>
-      <a href="#processo">Processo</a>
+      <a href="#processos">Processos</a>
       <a href="#diagnostico">Diagnóstico</a>
       <a href="#inteligencia">Inteligência</a>
       <a href="#contato">Contato</a>
@@ -1667,10 +1699,73 @@
   </div>
 </section>
 
+<!-- ============== PROCESSOS INTELIGENTES (resumo) ============== -->
+<section class="plib section-pad" id="processos">
+  <div class="wrap">
+    <div class="eyebrow" style="margin-bottom:32px;"><span class="dot"></span>07 · Processos Inteligentes</div>
+    <div class="plib-head">
+      <h2 class="display">Antes de automatizar, é preciso <span class="italic" style="color:var(--gold-soft)">enxergar o processo.</span></h2>
+      <p>Mapeamos fluxos críticos de BackOffice, ERP e operação para identificar onde a empresa perde tempo, controle e capacidade de decisão.</p>
+    </div>
+    <div class="plib-note">Mostramos o mapa. A execução exige método, dados e customização.</div>
+
+    <div class="plib-grid">
+      <a class="plib-card" href="processos.html#xml-erp">
+        <div class="cardtop"><span class="cnum">01</span><span class="ctag">BackOffice · Compras</span></div>
+        <h3>Do XML ao ERP</h3>
+        <p class="pdesc">O XML chega por e-mail e percorre uma fila manual até virar lançamento. O custo não aparece em relatório — aparece em atraso.</p>
+        <div class="mini">
+          <div class="mini-row before"><span class="mk">Antes</span><div class="mpills"><span class="mpill">E-mail</span><span class="mpill">Manual</span><span class="mpill">Fila</span></div></div>
+          <div class="mini-row after"><span class="mk">Depois</span><div class="mpills"><span class="mpill">Captura</span><span class="mpill">Validação</span><span class="mpill">Indicador</span></div></div>
+        </div>
+        <div class="cfoot"><span class="gains2">Menos retrabalho · Mais controle</span><span class="clink">Analisar <span class="arrow">→</span></span></div>
+      </a>
+
+      <a class="plib-card" href="processos.html#conciliacao-financeira">
+        <div class="cardtop"><span class="cnum">02</span><span class="ctag">Financeiro</span></div>
+        <h3>Conciliação Financeira</h3>
+        <p class="pdesc">Extratos, cartões, boletos e baixas conferidos à mão, em planilhas que raramente batem na primeira tentativa.</p>
+        <div class="mini">
+          <div class="mini-row before"><span class="mk">Antes</span><div class="mpills"><span class="mpill">Planilha</span><span class="mpill">Manual</span><span class="mpill">Fila</span></div></div>
+          <div class="mini-row after"><span class="mk">Depois</span><div class="mpills"><span class="mpill">Captura</span><span class="mpill">Regra</span><span class="mpill">Painel</span></div></div>
+        </div>
+        <div class="cfoot"><span class="gains2">Fechamento mais rápido · Menos erro</span><span class="clink">Analisar <span class="arrow">→</span></span></div>
+      </a>
+
+      <a class="plib-card" href="processos.html#fluxo-caixa">
+        <div class="cardtop"><span class="cnum">03</span><span class="ctag">Tesouraria</span></div>
+        <h3>Fluxo de Caixa Inteligente</h3>
+        <p class="pdesc">Contas a pagar, a receber e previsões espalhadas em relatórios e planilhas que envelhecem rápido.</p>
+        <div class="mini">
+          <div class="mini-row before"><span class="mk">Antes</span><div class="mpills"><span class="mpill">Planilha</span><span class="mpill">Manual</span><span class="mpill">Atraso</span></div></div>
+          <div class="mini-row after"><span class="mk">Depois</span><div class="mpills"><span class="mpill">Integração</span><span class="mpill">Cenário</span><span class="mpill">Indicador</span></div></div>
+        </div>
+        <div class="cfoot"><span class="gains2">Decisão antecipada · Visão de caixa</span><span class="clink">Analisar <span class="arrow">→</span></span></div>
+      </a>
+
+      <a class="plib-card" href="processos.html#conciliacao-contabil">
+        <div class="cardtop"><span class="cnum">04</span><span class="ctag">Contabilidade</span></div>
+        <h3>Conciliação Contábil</h3>
+        <p class="pdesc">Lançamentos conferidos só no fim do mês. Divergências aparecem tarde e viram retrabalho com o fechamento sob pressão.</p>
+        <div class="mini">
+          <div class="mini-row before"><span class="mk">Antes</span><div class="mpills"><span class="mpill">Planilha</span><span class="mpill">Fim do mês</span><span class="mpill">Retrabalho</span></div></div>
+          <div class="mini-row after"><span class="mk">Depois</span><div class="mpills"><span class="mpill">Contínuo</span><span class="mpill">Validação</span><span class="mpill">Auditoria</span></div></div>
+        </div>
+        <div class="cfoot"><span class="gains2">Fechamento limpo · Auditoria facilitada</span><span class="clink">Analisar <span class="arrow">→</span></span></div>
+      </a>
+    </div>
+
+    <div class="plib-foot">
+      <span class="meta">08 processos mapeados · Financeiro · Contábil · RH · Patrimônio · Recebíveis</span>
+      <a href="processos.html" class="btn btn-ghost">Ver todos os processos <span class="arrow">→</span></a>
+    </div>
+  </div>
+</section>
+
 <!-- ============== DIAGNOSTICO ============== -->
 <section class="diag section-pad" id="diagnostico">
   <div class="wrap">
-    <div class="eyebrow" style="margin-bottom:32px;"><span class="dot"></span>07 · Oferta principal</div>
+    <div class="eyebrow" style="margin-bottom:32px;"><span class="dot"></span>08 · Oferta principal</div>
     <div class="diag-card">
       <div>
         <span class="seal">◆ Leitura executiva da operação</span>
@@ -1703,7 +1798,7 @@
 <!-- ============== AUTORIDADE ============== -->
 <section class="auth section-pad" id="autoridade">
   <div class="wrap">
-    <div class="eyebrow" style="margin-bottom:32px;"><span class="dot"></span>08 · Capacidade Estratégica</div>
+    <div class="eyebrow" style="margin-bottom:32px;"><span class="dot"></span>09 · Capacidade Estratégica</div>
     <div class="auth-grid">
       <div>
         <h2 class="display">Tecnologia com <span class="italic" style="color:var(--gold-soft)">visão de negócio.</span></h2>
@@ -1753,7 +1848,7 @@
 <!-- ============== BLOG / INTELIGENCIA ============== -->
 <section class="blog section-pad" id="inteligencia">
   <div class="wrap">
-    <div class="eyebrow" style="margin-bottom:32px;"><span class="dot"></span>09 · Inteligência operacional · Histórias de Processo</div>
+    <div class="eyebrow" style="margin-bottom:32px;"><span class="dot"></span>10 · Inteligência operacional · Histórias de Processo</div>
     <div class="blog-head">
       <h2 class="display">Artigos para gestores que querem transformar tecnologia em <span class="italic" style="color:var(--gold)">decisão.</span></h2>
       <p>Análises curtas, casos práticos e Histórias de Processo: como operações manuais se transformam em fluxos inteligentes — e como dados deixam de ser ruído para virar leitura executiva.</p>
@@ -1910,7 +2005,7 @@
     </svg>
   </div>
   <div class="wrap" style="position:relative;">
-    <div class="eyebrow" style="margin-bottom:32px;"><span class="dot"></span>10 · Próximo passo</div>
+    <div class="eyebrow" style="margin-bottom:32px;"><span class="dot"></span>11 · Próximo passo</div>
     <h2 class="display">
       Sua operação já está dizendo onde perde eficiência.<br/>
       <span class="em">A questão é se você consegue enxergar.</span>
@@ -1926,7 +2021,7 @@
 <!-- ============== CONTATO / FORM ============== -->
 <section class="contact section-pad" id="contato">
   <div class="wrap">
-    <div class="eyebrow" style="margin-bottom:32px;"><span class="dot"></span>11 · Contato direto</div>
+    <div class="eyebrow" style="margin-bottom:32px;"><span class="dot"></span>12 · Contato direto</div>
     <div class="contact-grid">
       <div>
         <h2 class="display">Comece pela leitura. <span class="italic" style="color:var(--gold-soft)">Depois, pela decisão.</span></h2>
