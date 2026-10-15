@@ -1,0 +1,13 @@
+/* Shared navigation enhancement; the original desktop design is preserved. */
+.site-menu-toggle { display:none; font:inherit; color:var(--fg); background:transparent; border:1px solid var(--line); padding:10px 14px; border-radius:999px; cursor:pointer; }
+:focus-visible { outline:2px solid #C9AC7D; outline-offset:5px; }
+@media (min-width:1281px) { .nav-links { gap:18px; font-size:13px; } }
+@media (max-width:1280px) {
+  .nav .nav-links { display:none; }
+  .nav .site-menu-toggle { display:block; margin-left:auto; }
+  .nav .nav-links.menu-open { display:flex; position:absolute; top:72px; left:0; right:0; padding:24px; background:#0A0E14; border-bottom:1px solid var(--line); flex-direction:column; gap:8px; max-height:calc(100dvh - 72px); overflow:auto; }
+  .nav .nav-links.menu-open a { padding:10px; }
+  .nav .nav-process::before { display:none; }
+}
+@media (max-width:600px) { .nav .nav-cta { display:none; } .nav-inner { gap:10px; } .brand-name { font-size:11px; letter-spacing:.12em; } .brand { gap:8px; } .site-menu-toggle { font-size:13px; } }
+@media (prefers-reduced-motion:reduce) { html { scroll-behavior:auto; } *,*::before,*::after { animation:none!important; transition:none!important; } .reveal { opacity:1!important; transform:none!important; } }

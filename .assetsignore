@@ -1,0 +1,14 @@
+# Publish only the website. Server source, Git history, tests, databases,
+# credentials, documentation and future scratch files stay private.
+*
+!index.html
+!processos.html
+!totvs-rm.html
+!privacidade.html
+!robots.txt
+!sitemap.xml
+!_headers
+!assets/
+!assets/**
+!blog/
+!blog/**

@@ -127,7 +127,9 @@
   .proc-arrow span { writing-mode: vertical-rl; transform: rotate(180deg); font-family: var(--mono); font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold); background: #0F1520; padding: 10px 0; position: relative; z-index: 1; }
   .proc-arrow::after { content: "→"; position: absolute; right: 6px; top: 50%; transform: translateY(-50%); color: var(--gold); font-size: 14px; z-index: 1; background: #0F1520; padding: 2px; }
 
-  .dgm-head { display: flex; align-items: baseline; gap: 12px; margin-bottom: 16px; }
+  /* Keep wide SVGs inside their horizontal scroller on small screens. */
+  .dgm { min-width: 0; }
+  .dgm-head { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; }
   .dgm-tag { font-family: var(--mono); font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; padding: 5px 11px; border-radius: 999px; border: 1px solid var(--line); }
   .dgm-before { color: var(--fg-mute); border-color: rgba(245,242,235,0.18); }
   .dgm-after { color: var(--gold-soft); border-color: rgba(184,153,104,0.45); background: rgba(184,153,104,0.06); }
@@ -227,6 +229,8 @@
     .bv-panel { max-height: calc(100vh - 8px); }
   }
 </style>
+<link rel="stylesheet" href="/assets/navigation.css">
+<script src="/assets/navigation.js" defer></script>
 </head>
 <body>
 
@@ -248,6 +252,7 @@
       <span class="brand-name">Orkestria<span>Consult</span></span>
     </a>
     <div class="nav-links">
+      <a href="/totvs-rm">Soluções TOTVS RM</a>
       <a href="index.html#manifesto">Manifesto</a>
       <a href="index.html#metodologia">Metodologia</a>
       <a href="processos.html" class="active">Processos</a>
