@@ -12,8 +12,7 @@
   };
   let consent = store.get('localStorage', 'orkestria-measurement') === 'granted';
   let campaign = {};
-  let busy = false, complete = false, available = false, token = '', widgetId;
-  let requestId = crypto.randomUUID(), lastPayload = null;
+  let opening = false;
   let began = false;
   const emitted = new Set();
 
@@ -57,7 +56,7 @@
   track('page_view', {}, true); track('view_totvs_rm', {}, true);
   form.addEventListener('focusin', () => { if (!began) { began = true; track('begin_lead_form', {}, true); } });
   document.querySelectorAll('[data-service]').forEach(link => link.addEventListener('click', () => {
-    if (!complete && !busy) form.elements.necessidade.value = link.dataset.service;
+    if (!opening) form.elements.necessidade.value = link.dataset.service;
     track('select_service', { service: link.dataset.service });
   }));
 
@@ -65,23 +64,9 @@
     status.textContent = text;
     status.dataset.error = String(error);
   }
-  function updateSubmit() { submit.disabled = !available || !token || busy || complete; }
-  function resetChallenge() {
-    token = '';
-    if (widgetId !== undefined) window.turnstile?.reset(widgetId);
-    updateSubmit();
-  }
   function clearErrors() {
     form.querySelectorAll('[aria-invalid]').forEach(input => input.removeAttribute('aria-invalid'));
     form.querySelectorAll('.field-error').forEach(error => { error.textContent = ''; });
-  }
-  function fieldErrors(fields) {
-    for (const [name, error] of Object.entries(fields || {})) {
-      const input = form.elements.namedItem(name);
-      const hint = document.getElementById(`${name}-error`);
-      if (input && hint && typeof error === 'string') { input.setAttribute('aria-invalid', 'true'); hint.textContent = error; }
-    }
-    form.querySelector('[aria-invalid=true]')?.focus();
   }
   form.addEventListener('input', event => {
     const input = event.target;
@@ -89,72 +74,48 @@
     const hint = document.getElementById(`${input.name}-error`);
     if (hint) hint.textContent = '';
   });
-  form.addEventListener('submit', async event => {
+  form.addEventListener('submit', event => {
     event.preventDefault();
-    if (busy || complete || !available) return;
-    if (!form.reportValidity()) return;
-    if (!token) { message('Conclua a verificação de segurança.', true); return; }
+    if (opening || !form.reportValidity()) return;
     clearErrors();
-    const values = Object.fromEntries(new FormData(form));
-    const payload = Object.fromEntries(['nome', 'email', 'empresa', 'cargo', 'necessidade', 'descricao', 'website'].map(key => [key, String(values[key] || '').trim()]));
-    payload.campaign = consent ? campaign : {};
-    const snapshot = JSON.stringify(payload);
-    if (lastPayload !== null && lastPayload !== snapshot) requestId = crypto.randomUUID();
-    lastPayload = snapshot;
-    busy = true; updateSubmit(); form.setAttribute('aria-busy', 'true');
-    submit.textContent = 'Enviando solicitação…'; message('Registrando sua solicitação com segurança…');
-    try {
-      const response = await fetch('/api/leads/totvs-rm', {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...payload, token, requestId }), signal: AbortSignal.timeout(20000),
-      });
-      const body = await response.json();
-      if (!response.ok || body.ok !== true) {
-        fieldErrors(body.fields);
-        message(body.error || 'Não foi possível registrar. Tente novamente.', true);
-        resetChallenge();
-        return;
+    const data = Object.fromEntries(new FormData(form));
+    const fields = [
+      ['nome', 'Nome', 2, 120], ['email', 'E-mail', 5, 254],
+      ['empresa', 'Empresa', 2, 160], ['cargo', 'Cargo ou área', 2, 120],
+      ['necessidade', 'Necessidade', 2, 80], ['descricao', 'Descrição', 20, 4000],
+    ];
+    let invalid = false;
+    for (const [name, , min, max] of fields) {
+      data[name] = String(data[name] || '').trim();
+      if (data[name].length < min || data[name].length > max) {
+        form.elements[name].setAttribute('aria-invalid', 'true');
+        document.getElementById(`${name}-error`).textContent = `Use entre ${min} e ${max} caracteres.`;
+        invalid = true;
       }
-      complete = true;
-      track('generate_lead', {}, true);
-      form.querySelectorAll('input,select,textarea').forEach(input => { input.disabled = true; });
-      message('Solicitação registrada. Nossa equipe poderá entrar em contato pelo e-mail informado.');
-      status.tabIndex = -1; status.focus();
-    } catch {
-      message('Não conseguimos confirmar o recebimento. Verifique a conexão e tente novamente; uma repetição do mesmo envio não duplica o registro.', true);
-      resetChallenge();
-    } finally {
-      busy = false; form.removeAttribute('aria-busy');
-      submit.textContent = complete ? 'Solicitação registrada ✓' : 'Solicitar avaliação do projeto ↗';
-      updateSubmit();
     }
+    if (invalid) {
+      form.querySelector('[aria-invalid=true]')?.focus();
+      message('Revise os campos indicados antes de continuar.', true);
+      return;
+    }
+    const lines = [
+      'Olá, Orkestria. Quero solicitar uma avaliação de projeto TOTVS RM.', '',
+      ...fields.map(([name, label]) => `${label}: ${data[name]}`),
+    ];
+    if (consent && Object.keys(campaign).length) {
+      lines.push('', 'Origem da campanha:');
+      for (const key of campaignKeys) if (campaign[key]) lines.push(`${key}: ${campaign[key]}`);
+    }
+    const url = `https://wa.me/5519971541730?text=${encodeURIComponent(lines.join('\n'))}`;
+    const fallback = document.getElementById('whatsapp-fallback');
+    fallback.href = url;
+    fallback.hidden = false;
+    opening = true;
+    submit.disabled = true;
+    track('open_whatsapp', {}, false);
+    window.open(url, '_blank', 'noopener,noreferrer');
+    message('Mensagem preparada. Confirme o envio no WhatsApp. Se a janela não abriu, use o link abaixo.');
+    setTimeout(() => { opening = false; submit.disabled = false; }, 1500);
   });
-
-  async function initialize() {
-    try {
-      const response = await fetch('/api/leads/config', { signal: AbortSignal.timeout(10000) });
-      if (!response.ok) throw new Error('config');
-      const config = await response.json();
-      if (!config.available || !config.siteKey) {
-        message('A captação pelo formulário ainda não está disponível. Tente novamente mais tarde.', true);
-        return;
-      }
-      window.orkestriaTurnstileReady = () => {
-        widgetId = window.turnstile.render('#turnstile-widget', {
-          sitekey: config.siteKey, action: 'totvs_rm_lead', theme: 'dark', size: window.matchMedia('(max-width: 520px)').matches ? 'compact' : 'flexible',
-          callback(value) { token = value; if (status.dataset.error !== 'true') message('Formulário pronto para envio.'); updateSubmit(); },
-          'expired-callback'() { token = ''; message('A verificação expirou. Conclua-a novamente.', true); updateSubmit(); },
-          'error-callback'() { token = ''; message('A verificação não carregou. Verifique a conexão e recarregue a página.', true); updateSubmit(); },
-        });
-        available = true; updateSubmit();
-      };
-      const script = document.createElement('script');
-      script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?onload=orkestriaTurnstileReady&render=explicit';
-      script.async = true;
-      script.onerror = () => message('Não foi possível carregar a proteção. Verifique a conexão e recarregue a página.', true);
-      document.head.append(script);
-      message('Conclua a verificação de segurança para enviar.');
-    } catch { message('Não foi possível verificar a disponibilidade. Recarregue a página para tentar novamente.', true); }
-  }
-  initialize();
+  submit.disabled = false;
 })();

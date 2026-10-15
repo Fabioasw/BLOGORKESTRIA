@@ -405,15 +405,15 @@
 <h2 class="display">Qual desafio sua empresa enfrenta com o <span class="gold">TOTVS RM?</span>
 </h2>
 <p class="lead">Conte um pouco sobre sua necessidade. Nossa equipe poderá avaliar o cenário e entrar em contato para conversar sobre uma possível solução.</p>
-<p class="contact-note">Sem telefone obrigatório. Sem abrir outro aplicativo.<br>Uma solicitação com contexto para uma conversa objetiva.</p>
+<p class="contact-note">Sem telefone obrigatório. Atendimento pelo WhatsApp.<br>Uma solicitação com contexto para uma conversa objetiva.</p>
 <aside class="consent" aria-label="Preferências de medição">
-<p id="consent-description">A medição opcional está desativada. Você pode permitir eventos de navegação e atribuição de campanhas. O formulário funciona independentemente dessa escolha.</p>
+<p id="consent-description">A medição opcional está desativada. Você pode permitir eventos de navegação e atribuição de campanhas. Você pode preparar a mensagem independentemente dessa escolha.</p>
 <button type="button" id="consent-accept">Permitir medição</button>
 <button type="button" id="consent-reject">Recusar medição</button>
 <a href="/privacidade">Privacidade</a>
 </aside>
 </div>
-<form id="rm-form" action="/api/leads/totvs-rm" method="post" aria-label="Solicitação de avaliação TOTVS RM">
+<form id="rm-form"  aria-label="Solicitação de avaliação TOTVS RM">
 <div class="form-row">
 <div class="field">
 <label for="nome">Nome profissional</label>
@@ -466,19 +466,11 @@
 <span class="field-error" id="descricao-error">
 </span>
 </div>
-<div class="hp" aria-hidden="true">
-<label for="website">Deixe este campo vazio</label>
-<input id="website" name="website" tabindex="-1" autocomplete="off">
-</div>
-<div id="turnstile-widget">
-</div>
-<p id="form-status" class="form-status" role="status" aria-live="polite">Verificando disponibilidade do formulário…</p>
-<button class="btn btn-primary" id="lead-submit" type="submit" disabled>Solicitar avaliação do projeto <span aria-hidden="true">↗</span>
-</button>
-<p class="privacy-copy">Usaremos seus dados para avaliar a solicitação e responder ao seu contato. O envio não inscreve você em publicidade. Saiba como tratamos os dados na <a href="/privacidade">política de privacidade</a>.</p>
-<noscript>
-<p>Ative o JavaScript para validar a proteção contra spam e enviar sua solicitação com segurança.</p>
-</noscript>
+<p id="form-status" class="form-status" role="status" aria-live="polite">Preencha os dados para preparar sua mensagem.</p>
+<button class="btn btn-primary" id="lead-submit" type="submit">Continuar no WhatsApp <span aria-hidden="true">↗</span></button>
+<a id="whatsapp-fallback" class="text-link" target="_blank" rel="noopener noreferrer" hidden>Abrir mensagem no WhatsApp ↗</a>
+<p class="privacy-copy">Ao continuar, os dados preenchidos serão incluídos em uma mensagem para o WhatsApp +55 (19) 97154-1730. Você confirma o envio no aplicativo. O conteúdo não é salvo em banco de dados por este site. Consulte a <a href="/privacidade">política de privacidade</a>.</p>
+<noscript><p>Ative o JavaScript para preparar a mensagem ou <a href="https://wa.me/5519971541730" target="_blank" rel="noopener noreferrer">converse diretamente pelo WhatsApp</a>.</p></noscript>
 </form>
 </div>
 </section>

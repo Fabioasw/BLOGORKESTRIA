@@ -89,16 +89,15 @@ Biblioteca completa com **8 processos estratégicos** mapeados em diagramas BPMN
 
 ## Landing page TOTVS RM
 
-Nova rota: `/totvs-rm`, com serviços, exemplos ilustrativos, metodologia e formulário que registra leads no backend `POST /api/leads/totvs-rm`. A identidade visual institucional e o formulário original de WhatsApp foram preservados. O menu compartilhado agora possui versão móvel acessível.
+Nova rota: `/totvs-rm`, com serviços, exemplos ilustrativos, metodologia e formulário que prepara uma mensagem para o WhatsApp +55 (19) 97154-1730. O visitante confirma o envio no aplicativo. O site não salva o conteúdo do formulário em banco de dados. A identidade visual institucional e o formulário original de WhatsApp foram preservados. O menu compartilhado agora possui versão móvel acessível.
 
-A captação requer D1, Turnstile e segredos na Cloudflare. Sem essa configuração, a página informa indisponibilidade e não simula recebimento. Consulte [DEPLOY.md](DEPLOY.md) antes de publicar. A política de privacidade fica em `/privacidade`.
+A captação via WhatsApp funciona sem banco, API ou chaves externas. Consulte [DEPLOY.md](DEPLOY.md) para publicação e medição. A política de privacidade fica em `/privacidade`.
 
 ## Stack
 
 - HTML5 estático, sem framework ou build step
 - CSS customizado com variáveis (design system próprio)
 - JS vanilla puro — `assets/bpmn.js` gera SVG proceduralmente (sem dependências)
-- Backend de captação: Cloudflare Worker + D1 + Turnstile (configuração externa necessária)
 - Fontes: Instrument Serif + Geist + Geist Mono (Google Fonts)
 - Deploy: Cloudflare Workers com assets estáticos (`wrangler.toml`)
 - CI/CD: push na branch `main` → deploy automático via Cloudflare

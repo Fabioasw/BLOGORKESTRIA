@@ -1,21 +1,5 @@
 name = "orkestriaplatform"
 compatibility_date = "2026-05-17"
-main = "worker.mjs"
-
-[triggers]
-crons = ["17 3 * * *"]
 
 [assets]
 directory = "."
-binding = "ASSETS"
-run_worker_first = ["/api/*"]
-
-# Configure the real database ID before enabling lead capture (see DEPLOY.md).
-# [[d1_databases]]
-# binding = "LEADS_DB"
-# database_name = "orkestria-leads"
-# database_id = "REPLACE_WITH_REAL_D1_ID"
-# migrations_dir = "migrations"
-
-# TURNSTILE_SITE_KEY: public variable in the Cloudflare dashboard.
-# TURNSTILE_SECRET_KEY and RATE_LIMIT_SECRET: secrets, never commit them.
