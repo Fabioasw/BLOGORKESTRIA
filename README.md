@@ -87,22 +87,27 @@ Biblioteca completa com **8 processos estratégicos** mapeados em diagramas BPMN
 | A·04 | O problema não é o sistema | Eficiência Operacional |
 | A·05 | Operação educacional e inteligência de gestão | Educação |
 
-## Landing page TOTVS RM
+## Landing page TOTVS RM e oportunidades comerciais
 
-Nova rota: `/totvs-rm`, com serviços, exemplos ilustrativos, metodologia e formulário que prepara uma mensagem para o WhatsApp +55 (19) 97154-1730. O visitante confirma o envio no aplicativo. O site não salva o conteúdo do formulário em banco de dados. A identidade visual institucional e o formulário original de WhatsApp foram preservados. O menu compartilhado agora possui versão móvel acessível.
+A rota `/totvs-rm` mantém os serviços, exemplos ilustrativos, metodologia e design institucional. O formulário envia para `POST /api/leads/totvs-rm`, protegido por Turnstile e com confirmação após gravação no D1. O WhatsApp permanece como alternativa secundária.
 
-A captação via WhatsApp funciona sem banco, API ou chaves externas. Consulte [DEPLOY.md](DEPLOY.md) para publicação e medição. A política de privacidade fica em `/privacidade`.
+O painel `/admin/leads` usa Cloudflare Access e autorização de backend para listar oportunidades, filtrar, alterar status e registrar histórico. A configuração do binding `DB` aponta para o D1 informado pelo responsável. As chaves Turnstile e a configuração Access precisam de valores reais antes da ativação.
+
+Veja [DEPLOY.md](DEPLOY.md) para testes, variáveis, migrações, proteção do painel, publicação e rollback. **Push/merge em main, deploy e migração remota exigem autorização expressa.** A página `/privacidade` descreve a coleta e a escolha opcional de marketing.
 
 ## Stack
 
 - HTML5 estático, sem framework ou build step
 - CSS customizado com variáveis (design system próprio)
+- Backend: Cloudflare Worker TypeScript + D1 + Turnstile; painel protegido por Access e JWT
 - JS vanilla puro — `assets/bpmn.js` gera SVG proceduralmente (sem dependências)
 - Fontes: Instrument Serif + Geist + Geist Mono (Google Fonts)
 - Deploy: Cloudflare Workers com assets estáticos (`wrangler.toml`)
 - CI/CD: push na branch `main` → deploy automático via Cloudflare
 
 ## Deploy
+
+Somente após aprovação expressa e seguindo a ordem de secrets, migração e validação de [DEPLOY.md](DEPLOY.md). O push em `main` aciona a publicação automática; o desenvolvimento deve permanecer em branch separada até a revisão.
 
 ```bash
 git add index.html README.md

@@ -1,0 +1,23 @@
+{
+  "name": "orkestria-platform",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev --local",
+    "check": "tsc --noEmit",
+    "test": "node --experimental-strip-types --test tests/*.test.ts",
+    "test:runtime": "node tests/runtime-smoke.mjs",
+    "build": "wrangler deploy --dry-run --outdir work/build",
+    "db:local": "wrangler d1 migrations apply DB --local",
+    "preview:fixtures": "node --experimental-strip-types tests/preview.ts"
+  },
+  "dependencies": {
+    "jose": "^6.2.12"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^5.20261015.1",
+    "@types/node": "^26.6.5",
+    "typescript": "^7.0.2",
+    "wrangler": "^4.151.0"
+  }
+}

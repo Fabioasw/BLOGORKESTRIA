@@ -1,5 +1,24 @@
 name = "orkestriaplatform"
 compatibility_date = "2026-05-17"
+main = "src/worker/index.ts"
+
+[vars]
+RETENTION_DAYS = "180"
+PRIVACY_NOTICE_VERSION = "2026-10-15"
+ADMIN_EMAILS = "fabioasw01@gmail.com"
+# Configure TURNSTILE_SITE_KEY, ACCESS_TEAM_DOMAIN and ACCESS_AUD
+# with real values before publishing. See DEPLOY.md.
+
+[triggers]
+crons = ["17 3 * * *"]
 
 [assets]
 directory = "."
+binding = "ASSETS"
+run_worker_first = ["/api/*", "/admin", "/admin/*"]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "orkestria-leads"
+database_id = "ed13b097-dc98-4800-97dd-04a75c4107b4"
+migrations_dir = "migrations"

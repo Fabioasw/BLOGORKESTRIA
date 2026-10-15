@@ -12,7 +12,8 @@
   };
   let consent = store.get('localStorage', 'orkestria-measurement') === 'granted';
   let campaign = {};
-  let opening = false;
+  let busy = false, complete = false, available = false, token = '', widgetId, noticeVersion = '';
+  let requestKey = crypto.randomUUID(), lastPayload = null;
   let began = false;
   const emitted = new Set();
 
@@ -56,7 +57,7 @@
   track('page_view', {}, true); track('view_totvs_rm', {}, true);
   form.addEventListener('focusin', () => { if (!began) { began = true; track('begin_lead_form', {}, true); } });
   document.querySelectorAll('[data-service]').forEach(link => link.addEventListener('click', () => {
-    if (!opening) form.elements.necessidade.value = link.dataset.service;
+    if (!busy && !complete) form.elements.necessidade.value = link.dataset.service;
     track('select_service', { service: link.dataset.service });
   }));
 
@@ -74,48 +75,85 @@
     const hint = document.getElementById(`${input.name}-error`);
     if (hint) hint.textContent = '';
   });
-  form.addEventListener('submit', event => {
-    event.preventDefault();
-    if (opening || !form.reportValidity()) return;
-    clearErrors();
-    const data = Object.fromEntries(new FormData(form));
-    const fields = [
-      ['nome', 'Nome', 2, 120], ['email', 'E-mail', 5, 254],
-      ['empresa', 'Empresa', 2, 160], ['cargo', 'Cargo ou área', 2, 120],
-      ['necessidade', 'Necessidade', 2, 80], ['descricao', 'Descrição', 20, 4000],
-    ];
-    let invalid = false;
-    for (const [name, , min, max] of fields) {
-      data[name] = String(data[name] || '').trim();
-      if (data[name].length < min || data[name].length > max) {
-        form.elements[name].setAttribute('aria-invalid', 'true');
-        document.getElementById(`${name}-error`).textContent = `Use entre ${min} e ${max} caracteres.`;
-        invalid = true;
+  const names = { nome: 'name', email: 'email', empresa: 'company', cargo: 'job_title', necessidade: 'service_type', descricao: 'description' };
+  function updateSubmit() { submit.disabled = !available || !token || busy || complete; }
+  function resetChallenge() { token = ''; if (widgetId !== undefined) window.turnstile?.reset(widgetId); updateSubmit(); }
+  function renderErrors(fields) {
+    for (const [local, remote] of Object.entries(names)) {
+      if (typeof fields?.[remote] === 'string') {
+        form.elements[local].setAttribute('aria-invalid', 'true');
+        document.getElementById(`${local}-error`).textContent = fields[remote];
       }
     }
-    if (invalid) {
-      form.querySelector('[aria-invalid=true]')?.focus();
-      message('Revise os campos indicados antes de continuar.', true);
-      return;
+    form.querySelector('[aria-invalid=true]')?.focus();
+  }
+  form.addEventListener('submit', async event => {
+    event.preventDefault();
+    if (busy || complete || !available || !form.reportValidity()) return;
+    if (!token) { message('Conclua a verificação de segurança.', true); return; }
+    clearErrors();
+    const values = Object.fromEntries(new FormData(form));
+    const payload = Object.fromEntries(Object.entries(names).map(([local,remote]) => [remote, String(values[local] || '').trim()]));
+    payload.marketing_consent = form.elements.marketing_consent.checked;
+    payload.measurement_consent = consent;
+    payload.privacy_notice_version = noticeVersion;
+    payload.website = values.website || '';
+    payload.campaign = consent ? campaign : {};
+    const snapshot = JSON.stringify(payload);
+    if (lastPayload !== null && lastPayload !== snapshot) requestKey = crypto.randomUUID();
+    lastPayload = snapshot;
+    busy = true; updateSubmit(); form.setAttribute('aria-busy','true');
+    submit.textContent = 'Enviando solicitação…'; message('Registrando sua solicitação com segurança…');
+    try {
+      const response = await fetch('/api/leads/totvs-rm', {
+        method:'POST', headers:{'Content-Type':'application/json','Idempotency-Key':requestKey},
+        body:JSON.stringify({...payload,token}), signal:AbortSignal.timeout(20000),
+      });
+      const result = await response.json();
+      if (!response.ok || result.ok !== true || !result.data?.id) {
+        renderErrors(result.error?.fields);
+        message(result.error?.message || 'Não foi possível registrar sua solicitação. Tente novamente.', true);
+        resetChallenge(); return;
+      }
+      complete = true;
+      track('generate_lead',{},true);
+      form.querySelectorAll('input,select,textarea').forEach(input => { input.disabled = true; });
+      message('Recebemos sua solicitação! Nossa equipe analisará as informações e entrará em contato pelo e-mail informado.');
+      status.tabIndex = -1; status.focus();
+    } catch {
+      message('Não conseguimos confirmar o recebimento. Verifique sua conexão e tente novamente. Repetir o mesmo envio não duplica o registro.',true);
+      resetChallenge();
+    } finally {
+      busy = false; form.removeAttribute('aria-busy');
+      submit.textContent = complete ? 'Solicitação recebida ✓' : 'Solicitar avaliação do projeto';
+      updateSubmit();
     }
-    const lines = [
-      'Olá, Orkestria. Quero solicitar uma avaliação de projeto TOTVS RM.', '',
-      ...fields.map(([name, label]) => `${label}: ${data[name]}`),
-    ];
-    if (consent && Object.keys(campaign).length) {
-      lines.push('', 'Origem da campanha:');
-      for (const key of campaignKeys) if (campaign[key]) lines.push(`${key}: ${campaign[key]}`);
-    }
-    const url = `https://wa.me/5519971541730?text=${encodeURIComponent(lines.join('\n'))}`;
-    const fallback = document.getElementById('whatsapp-fallback');
-    fallback.href = url;
-    fallback.hidden = false;
-    opening = true;
-    submit.disabled = true;
-    track('open_whatsapp', {}, false);
-    window.open(url, '_blank', 'noopener,noreferrer');
-    message('Mensagem preparada. Confirme o envio no WhatsApp. Se a janela não abriu, use o link abaixo.');
-    setTimeout(() => { opening = false; submit.disabled = false; }, 1500);
   });
-  submit.disabled = false;
+  async function initialize() {
+    try {
+      const response = await fetch('/api/leads/config',{signal:AbortSignal.timeout(10000)});
+      const result = await response.json();
+      const config = result.data;
+      if (!response.ok || !result.ok || !config?.available || !config.siteKey) {
+        message('O formulário ainda não está disponível. Tente mais tarde ou use o contato alternativo por WhatsApp.',true); return;
+      }
+      noticeVersion = config.privacyNoticeVersion;
+      window.orkestriaTurnstileReady = () => {
+        widgetId = window.turnstile.render('#turnstile-widget',{
+          sitekey:config.siteKey, action:'totvs_rm_lead', theme:'dark', size:matchMedia('(max-width:520px)').matches?'compact':'flexible',
+          callback(value) { token=value; if(status.dataset.error!=='true') message('Formulário pronto para envio.'); updateSubmit(); },
+          'expired-callback'() { token=''; message('A verificação expirou. Conclua-a novamente.',true); updateSubmit(); },
+          'error-callback'() { token=''; message('Falha ao carregar a verificação. Verifique sua conexão e recarregue a página.',true); updateSubmit(); },
+        });
+        available=true; updateSubmit();
+      };
+      const script=document.createElement('script');
+      script.src='https://challenges.cloudflare.com/turnstile/v0/api.js?onload=orkestriaTurnstileReady&render=explicit';
+      script.async=true;
+      script.onerror=()=>message('Não foi possível carregar a proteção. Recarregue a página para tentar novamente.',true);
+      document.head.append(script);
+      message('Conclua a verificação de segurança para enviar.');
+    } catch {message('Não foi possível verificar a disponibilidade. Recarregue a página ou utilize o contato alternativo.',true);}
+  }
+  initialize();
 })();

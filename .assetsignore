@@ -12,3 +12,6 @@
 !assets/**
 !blog/
 !blog/**
+
+!admin/
+!admin/**

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Oportunidades comerciais | Orkestria</title>
+<meta name="robots" content="noindex,nofollow,noarchive">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/site-base.css"><link rel="stylesheet" href="/assets/admin.css">
+<script src="/assets/admin.js" defer></script>
+</head>
+<body>
+<header class="admin-header"><div class="admin-wrap"><a class="brand" href="/">ORKESTRIA <span>CONSULT</span></a><span>Área administrativa · Acesso protegido</span><a href="/cdn-cgi/access/logout">Sair</a></div></header>
+<main class="admin-wrap">
+<p class="eyebrow">Comercial / TOTVS RM</p>
+<div class="page-heading"><div><h1 class="display">Oportunidades comerciais.</h1><p id="session-label">Verificando sessão protegida…</p></div><button id="refresh" class="btn btn-ghost" type="button">Atualizar</button></div>
+<p id="page-status" role="status" aria-live="polite"></p>
+<section aria-label="Indicadores comerciais" class="metrics" id="metrics"></section>
+<section class="list-panel" aria-labelledby="list-heading">
+<h2 id="list-heading">Solicitações recebidas</h2>
+<form id="filters" class="filters">
+<div><label for="search">Pesquisar nome, empresa, e-mail ou cargo</label><input id="search" name="q" type="search" maxlength="160" autocomplete="off"></div>
+<div><label for="status-filter">Status</label><select id="status-filter" name="status"><option value="">Todos</option></select></div>
+<div><label for="source-filter">Origem</label><select id="source-filter" name="source"><option value="">Todas</option></select></div>
+<div><label for="date-from">Data inicial (UTC)</label><input id="date-from" name="from" type="date"></div>
+<div><label for="date-to">Data final (UTC)</label><input id="date-to" name="to" type="date"></div>
+<div><label for="sort">Ordenar por</label><select id="sort" name="sort"><option value="created_at">Data</option><option value="company">Empresa</option><option value="name">Nome</option><option value="status">Status</option></select></div>
+<div><label for="direction">Direção</label><select id="direction" name="direction"><option value="desc">Decrescente</option><option value="asc">Crescente</option></select></div>
+<div class="filter-actions"><button class="btn btn-primary" type="submit">Aplicar filtros</button><button id="clear-filters" class="plain-button" type="button">Limpar</button></div>
+</form>
+<div class="table-scroll" tabindex="0" aria-label="Tabela de oportunidades, role horizontalmente em telas pequenas">
+<table><caption class="sr-only">Leads comerciais e situação do atendimento</caption><thead><tr><th scope="col">Data</th><th scope="col">Nome</th><th scope="col">Empresa</th><th scope="col">E-mail</th><th scope="col">Cargo</th><th scope="col">Necessidade</th><th scope="col">Origem</th><th scope="col">Status</th><th scope="col">Ação</th></tr></thead><tbody id="leads-body"></tbody></table>
+</div>
+<p id="empty-state" hidden>Nenhuma oportunidade encontrada para os filtros selecionados.</p>
+<div class="pagination"><p id="page-label"></p><div><button id="previous-page" type="button">Anterior</button><button id="next-page" type="button">Próxima</button></div></div>
+</section>
+</main>
+<dialog id="lead-dialog" aria-labelledby="detail-heading">
+<div class="dialog-heading"><div><p class="eyebrow">Detalhes da oportunidade</p><h2 class="display" id="detail-heading">Solicitação</h2></div><button id="close-dialog" type="button" aria-label="Fechar detalhes">Fechar ×</button></div>
+<p id="detail-status" role="status" aria-live="polite"></p>
+<dl id="lead-details" class="details"></dl>
+<form id="update-lead"><div class="edit-grid"><div><label for="lead-status">Status comercial</label><select id="lead-status" name="status"></select></div><div><label for="lead-note">Observação interna (opcional)</label><textarea id="lead-note" name="note" rows="3" maxlength="2000" placeholder="Registre o contexto do acompanhamento. Evite dados sensíveis."></textarea></div></div><div class="edit-actions"><button id="save-lead" type="submit" class="btn btn-primary">Salvar acompanhamento</button><button id="reload-detail" type="button" class="plain-button">Recarregar detalhes</button></div></form>
+<section aria-labelledby="history-heading"><h3 id="history-heading">Histórico comercial</h3><ol id="lead-history" class="history"></ol></section>
+<details class="delete-area"><summary>Exclusão de dados</summary><p>A exclusão remove esta oportunidade e todo o histórico. Confirme uma solicitação legítima e sua autorização antes de continuar. Esta ação não pode ser desfeita.</p><label for="delete-confirmation">Digite EXCLUIR para confirmar</label><input id="delete-confirmation" autocomplete="off"><button id="delete-lead" type="button">Excluir oportunidade e histórico</button></details>
+</dialog>
+</body></html>

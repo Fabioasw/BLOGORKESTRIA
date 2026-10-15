@@ -3,19 +3,19 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Consultoria TOTVS RM | Customizações e Integrações | Orkestria</title>
-<meta name="description" content="Especialistas em customizações TOTVS RM, Fórmula Visual, APIs, automação financeira, CNAB e sistemas web integrados. Conheça nossas soluções.">
+<title>Consultoria TOTVS RM | Integrações e Customizações | Orkestria</title>
+<meta name="description" content="Customizações TOTVS RM, Fórmula Visual, integrações, APIs, automação financeira, CNAB e desenvolvimento de sistemas web. Conheça a Orkestria.">
 <link rel="canonical" href="https://orkestriaplatform.com/totvs-rm">
 <meta name="theme-color" content="#0A0E14">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="pt_BR">
 <meta property="og:site_name" content="Orkestria Consult">
-<meta property="og:title" content="Consultoria TOTVS RM | Customizações e Integrações | Orkestria">
-<meta property="og:description" content="Especialistas em customizações TOTVS RM, Fórmula Visual, APIs, automação financeira, CNAB e sistemas web integrados. Conheça nossas soluções.">
+<meta property="og:title" content="Consultoria TOTVS RM | Integrações e Customizações | Orkestria">
+<meta property="og:description" content="Customizações TOTVS RM, Fórmula Visual, integrações, APIs, automação financeira, CNAB e desenvolvimento de sistemas web. Conheça a Orkestria.">
 <meta property="og:url" content="https://orkestriaplatform.com/totvs-rm">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Consultoria TOTVS RM | Customizações e Integrações | Orkestria">
-<meta name="twitter:description" content="Especialistas em customizações TOTVS RM, Fórmula Visual, APIs, automação financeira, CNAB e sistemas web integrados. Conheça nossas soluções.">
+<meta name="twitter:title" content="Consultoria TOTVS RM | Integrações e Customizações | Orkestria">
+<meta name="twitter:description" content="Customizações TOTVS RM, Fórmula Visual, integrações, APIs, automação financeira, CNAB e desenvolvimento de sistemas web. Conheça a Orkestria.">
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
@@ -405,15 +405,15 @@
 <h2 class="display">Qual desafio sua empresa enfrenta com o <span class="gold">TOTVS RM?</span>
 </h2>
 <p class="lead">Conte um pouco sobre sua necessidade. Nossa equipe poderá avaliar o cenário e entrar em contato para conversar sobre uma possível solução.</p>
-<p class="contact-note">Sem telefone obrigatório. Atendimento pelo WhatsApp.<br>Uma solicitação com contexto para uma conversa objetiva.</p>
+<p class="contact-note">Sem telefone obrigatório. Solicitação diretamente pelo site.<br>Uma solicitação com contexto para uma conversa objetiva.</p>
 <aside class="consent" aria-label="Preferências de medição">
-<p id="consent-description">A medição opcional está desativada. Você pode permitir eventos de navegação e atribuição de campanhas. Você pode preparar a mensagem independentemente dessa escolha.</p>
+<p id="consent-description">A medição opcional está desativada. Você pode permitir eventos de navegação e atribuição de campanhas. O formulário funciona independentemente dessa escolha.</p>
 <button type="button" id="consent-accept">Permitir medição</button>
 <button type="button" id="consent-reject">Recusar medição</button>
 <a href="/privacidade">Privacidade</a>
 </aside>
 </div>
-<form id="rm-form"  aria-label="Solicitação de avaliação TOTVS RM">
+<form id="rm-form" action="/api/leads/totvs-rm" method="post" aria-label="Solicitação de avaliação TOTVS RM">
 <div class="form-row">
 <div class="field">
 <label for="nome">Nome profissional</label>
@@ -466,11 +466,14 @@
 <span class="field-error" id="descricao-error">
 </span>
 </div>
-<p id="form-status" class="form-status" role="status" aria-live="polite">Preencha os dados para preparar sua mensagem.</p>
-<button class="btn btn-primary" id="lead-submit" type="submit">Continuar no WhatsApp <span aria-hidden="true">↗</span></button>
-<a id="whatsapp-fallback" class="text-link" target="_blank" rel="noopener noreferrer" hidden>Abrir mensagem no WhatsApp ↗</a>
-<p class="privacy-copy">Ao continuar, os dados preenchidos serão incluídos em uma mensagem para o WhatsApp +55 (19) 97154-1730. Você confirma o envio no aplicativo. O conteúdo não é salvo em banco de dados por este site. Consulte a <a href="/privacidade">política de privacidade</a>.</p>
-<noscript><p>Ative o JavaScript para preparar a mensagem ou <a href="https://wa.me/5519971541730" target="_blank" rel="noopener noreferrer">converse diretamente pelo WhatsApp</a>.</p></noscript>
+<label class="marketing-choice"><input type="checkbox" id="marketing_consent" name="marketing_consent"> <span>Quero receber comunicações comerciais da Orkestria por e-mail. Esta opção é facultativa e pode ser cancelada pelo canal de contato da política.</span></label>
+<div class="hp" aria-hidden="true"><label for="website">Deixe este campo vazio</label><input id="website" name="website" tabindex="-1" autocomplete="off"></div>
+<div id="turnstile-widget"></div>
+<p id="form-status" class="form-status" role="status" aria-live="polite">Verificando disponibilidade do formulário…</p>
+<button class="btn btn-primary" id="lead-submit" type="submit" disabled>Solicitar avaliação do projeto</button>
+<p class="privacy-copy">Usaremos seus dados para avaliar a solicitação e responder pelo e-mail informado. O recebimento de marketing é opcional. Consulte a <a href="/privacidade">política de privacidade</a>.</p>
+<p class="small">Prefere conversar? <a class="text-link" href="https://wa.me/5519971541730" target="_blank" rel="noopener noreferrer">Contato alternativo por WhatsApp ↗</a></p>
+<noscript><p>Ative o JavaScript para validar a proteção e enviar o formulário. O contato alternativo por WhatsApp continua disponível.</p></noscript>
 </form>
 </div>
 </section>
