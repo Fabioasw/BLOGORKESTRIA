@@ -9,8 +9,9 @@ workers_dev = true
 preview_urls = true
 
 [vars]
-# Simulated Ads: no Google network; official conversion label intentionally absent.
+# Simulated Ads: official identifiers, no Google network or real conversions.
 GOOGLE_ADS_ENABLED = "true"
+GOOGLE_ADS_CONVERSION_LABEL = "ceC1CO-Vk58dEPW_4v1E"
 AUTOMATION_MODE = "preview"
 EMAIL_PROVIDER = "cloudflare"
 EMAIL_FROM_NAME = "Fabio Nunes | ORKESTRIA CONSULT"

@@ -7,8 +7,9 @@ workers_dev = true
 preview_urls = true
 
 [vars]
-# Keep real Google requests disabled until the official conversion label is reviewed.
-GOOGLE_ADS_ENABLED = "false"
+# Prepared for the authorized next release; no deployment is performed by editing this file.
+GOOGLE_ADS_ENABLED = "true"
+GOOGLE_ADS_CONVERSION_LABEL = "ceC1CO-Vk58dEPW_4v1E"
 AUTOMATION_MODE = "production"
 EMAIL_CUSTOMER_CONFIRMATIONS = "false"
 EMAIL_PROVIDER = "cloudflare"
@@ -48,8 +49,9 @@ remote = false
 
 # Native Workers Previews: production variables, secrets and DB are not inherited.
 [previews.vars]
-# Simulated Ads: no Google network; official conversion label intentionally absent.
+# Simulated Ads: official identifiers, no Google network or real conversions.
 GOOGLE_ADS_ENABLED = "true"
+GOOGLE_ADS_CONVERSION_LABEL = "ceC1CO-Vk58dEPW_4v1E"
 AUTOMATION_MODE = "preview"
 EMAIL_PROVIDER = "cloudflare"
 EMAIL_FROM_NAME = "Fabio Nunes | ORKESTRIA CONSULT"

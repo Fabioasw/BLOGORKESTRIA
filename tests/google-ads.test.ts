@@ -12,6 +12,13 @@ const leadId=crypto.randomUUID(),conversionId=crypto.randomUUID();
 const confirmed={ok:true,data:{id:leadId,conversionId}};
 const ok={ok:true,status:201};
 const tick=()=>new Promise(resolve=>setImmediate(resolve));
+const officialLabel='ceC1CO-Vk58dEPW_4v1E';
+const officialTarget='AW-18517368821/'+officialLabel;
+function releaseAdsConfig() {
+  const vars=readFileSync(new URL('../wrangler.toml',import.meta.url),'utf8').split('[vars]')[1].split('[triggers]')[0];
+  const read=(key:string)=>vars.match(new RegExp('^'+key+' = "([^"]*)"','m'))?.[1];
+  return adsConfig({AUTOMATION_MODE:read('AUTOMATION_MODE'),GOOGLE_ADS_ENABLED:read('GOOGLE_ADS_ENABLED'),GOOGLE_ADS_CONVERSION_LABEL:read('GOOGLE_ADS_CONVERSION_LABEL')} as any);
+}
 function browser(shared=new Map<string,string>(),opts:{blocked?:boolean;delayed?:boolean;failed?:boolean;existingTag?:boolean}={}) {
   const scripts:any[]=[],events:any[]=[],listeners=new Map<string,Function[]>();let reloads=0,address='';
   const storage={getItem(key:string){if(opts.blocked)throw Error('blocked');return shared.get(key)||null;},setItem(key:string,v:string){if(opts.blocked)throw Error('blocked');shared.set(key,v);},removeItem(key:string){shared.delete(key);}};
@@ -153,7 +160,7 @@ test('Ads: actual form handler → simulated Turnstile → Worker → isolated D
     b.s.location.search='?utm_source=google';
     let apiCalls=0;
     b.s.fetch=async(path:string,options:any)=>{
-      if(path==='/api/leads/config')return Response.json({ok:true,data:{available:true,siteKey:'local-fixture',privacyNoticeVersion:'2026-10-15',ads:{...config,testMode:true,conversionLabel:mode==='no-label'?null:'MOCK_ONLY'}}});
+      if(path==='/api/leads/config')return Response.json({ok:true,data:{available:true,siteKey:'local-fixture',privacyNoticeVersion:'2026-10-15',ads:{...releaseAdsConfig(),testMode:true,conversionLabel:mode==='no-label'?null:officialLabel}}});
       apiCalls++;if(mode==='network')throw Error('network failure');s.db.failBatch=mode==='database';
       return s.app.fetch(request(path,{method:'POST',key:options.headers['Idempotency-Key'],data:JSON.parse(options.body)}),s.env);
     };
@@ -169,4 +176,44 @@ test('Ads: actual form handler → simulated Turnstile → Worker → isolated D
       assert.equal(b.scripts.length,0);assert.ok(!JSON.stringify(b.events).includes('private@example.com'));
     }finally{s.db.sqlite.close();}
   }
+});
+
+test('Ads: official release configuration generates exact send_to once, including after reload; SDK is stubbed',async()=>{
+  const release=releaseAdsConfig();assert.equal(release.enabled,true);assert.equal(release.testMode,false);
+  assert.equal(release.tagId,'AW-18517368821');assert.equal(release.conversionLabel,officialLabel);
+  const shared=new Map<string,string>(),b=browser(shared);b.ads.configure(release);
+  assert.equal(await b.ads.acceptLead(ok,confirmed),false);assert.equal(b.scripts.length,0);
+  b.ads.setConsent(true);await tick();
+  assert.deepEqual(await Promise.all([b.ads.acceptLead(ok,confirmed),b.ads.acceptLead(ok,confirmed)]),[true,false]);
+  const conversions=b.s.dataLayer.map((a:any)=>Array.from(a)).filter((a:any)=>a[1]==='conversion');
+  assert.equal(conversions.length,1);assert.equal(conversions[0][2].send_to,officialTarget);
+  assert.equal(conversions[0][2].transaction_id,conversionId);
+  assert.ok(!JSON.stringify(conversions).includes(leadId));
+  assert.deepEqual(Object.keys(conversions[0][2]).sort(),['page_location','page_referrer','send_to','transaction_id']);
+  const refreshed=browser(shared);refreshed.ads.configure(release);await tick();
+  assert.equal(await refreshed.ads.acceptLead({ok:true,status:200},confirmed),false);
+  assert.equal(refreshed.s.dataLayer.map((a:any)=>Array.from(a)).filter((a:any)=>a[1]==='conversion').length,0);
+  const preview=browser();preview.ads.configure({...release,testMode:true});preview.ads.setConsent(true);
+  assert.equal(await preview.ads.acceptLead(ok,confirmed),true);assert.equal(preview.scripts.length,0);assert.equal(preview.s.dataLayer,undefined);
+});
+
+test('Ads: CSP allows documented script/collection/frame endpoints and Turnstile only on public page',()=>{
+  const text=readFileSync(new URL('../_headers',import.meta.url),'utf8');
+  const csp=text.match(/Content-Security-Policy: ([^\r\n]+)/)![1];
+  const directives=new Map(csp.split(';').filter(s=>s.trim()).map(s=>{const [key,...values]=s.trim().split(/\s+/);return [key,values];}));
+  const required={
+    'script-src':['https://www.googletagmanager.com','https://www.googleadservices.com','https://www.google.com','https://challenges.cloudflare.com'],
+    'connect-src':['https://www.googletagmanager.com','https://www.googleadservices.com','https://googleads.g.doubleclick.net','https://pagead2.googlesyndication.com','https://www.google.com','https://www.google.com.br','https://ad.doubleclick.net','https://challenges.cloudflare.com'],
+    'img-src':['https://www.googletagmanager.com','https://www.googleadservices.com','https://googleads.g.doubleclick.net','https://pagead2.googlesyndication.com','https://www.google.com','https://www.google.com.br'],
+    'frame-src':['https://www.googletagmanager.com','https://challenges.cloudflare.com'],
+  };
+  for(const [directive,origins] of Object.entries(required))for(const origin of origins)assert.ok(directives.get(directive)?.includes(origin),directive+': '+origin);
+  assert.ok(!csp.includes('unsafe-inline'));assert.ok(!csp.includes('unsafe-eval'));assert.ok(!csp.includes('*'));
+  assert.deepEqual(directives.get('form-action'),["'self'"]);assert.deepEqual(directives.get('frame-ancestors'),["'none'"]);
+  const index=readFileSync(new URL('../src/worker/index.ts',import.meta.url),'utf8');
+  const adminPolicy=index.match(/headers.set\('Content-Security-Policy',"([^"]+)"\)/)![1];
+  assert.ok(!adminPolicy.includes('googletagmanager'));assert.ok(adminPolicy.includes("script-src 'self';"));
+  const html=readFileSync(new URL('../totvs-rm.html',import.meta.url),'utf8');
+  assert.equal(html.split('src="/assets/google-ads.js"').length-1,1);
+  assert.ok(!html.includes('googletagmanager.com/gtag'));assert.ok(!html.includes(officialLabel));
 });
