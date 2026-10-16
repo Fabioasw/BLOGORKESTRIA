@@ -10,7 +10,8 @@
     set(storage, key, value) { try { window[storage].setItem(key, value); } catch { /* Storage is optional. */ } },
     remove(storage, key) { try { window[storage].removeItem(key); } catch { /* Storage is optional. */ } },
   };
-  let consent = store.get('localStorage', 'orkestria-measurement') === 'granted';
+  const ads = window.OrkestriaAds;
+  let consent = ads?.granted() === true;
   let campaign = {};
   let busy = false, complete = false, available = false, token = '', widgetId, noticeVersion = '';
   let requestKey = crypto.randomUUID(), lastPayload = null;
@@ -20,10 +21,8 @@
   function track(event, parameters = {}, once = false) {
     if (!consent || (once && emitted.has(event))) return;
     if (once) emitted.add(event);
-    // Integration point for a future consent-configured GTM container. No tags are installed.
-    window.dataLayer = window.dataLayer || [];
+    // Local events only: advertising conversions use the explicit API success gate below.
     const detail = { event, page_path: '/totvs-rm', page_location: 'https://orkestriaplatform.com/totvs-rm', ...parameters };
-    window.dataLayer.push(detail);
     window.dispatchEvent(new CustomEvent('orkestria:analytics', { detail }));
   }
   function captureCampaign() {
@@ -38,19 +37,26 @@
   }
   function showConsent() {
     document.getElementById('consent-description').textContent = consent
-      ? 'Medição opcional permitida. Você pode revogar a escolha a qualquer momento; isso não altera sua solicitação.'
-      : 'A medição opcional está desativada. Você pode permitir eventos de navegação e atribuição de campanhas. O formulário funciona independentemente dessa escolha.';
+      ? 'Medição de publicidade permitida. Google Ads pode usar cookies e identificadores técnicos. Os campos do formulário não são enviados ao Google. Você pode revogar abaixo sem alterar sua solicitação.'
+      : 'Publicidade opcional desativada. Você pode permitir o Google Ads para medir campanhas e cadastros, com cookies e identificadores técnicos. Não enviamos os campos do formulário ao Google. Recusar não impede seu contato.';
   }
   document.getElementById('consent-accept').addEventListener('click', () => {
-    consent = true;
-    store.set('localStorage', 'orkestria-measurement', 'granted');
-    captureCampaign(); showConsent();
+    consent = !!ads;
+    // Capture campaign before the SDK loader sanitizes the URL.
+    captureCampaign();
+    ads?.setConsent(true);
+    showConsent();
     track('page_view', {}, true); track('view_totvs_rm', {}, true);
   });
   document.getElementById('consent-reject').addEventListener('click', () => {
     consent = false; campaign = {};
-    store.set('localStorage', 'orkestria-measurement', 'denied');
+    ads?.setConsent(false);
     store.remove('sessionStorage', 'orkestria-rm-campaign');
+    showConsent();
+  });
+  window.addEventListener('orkestria:ads-consent', () => {
+    consent = ads?.granted() === true;
+    if (!consent) { campaign = {}; store.remove('sessionStorage', 'orkestria-rm-campaign'); }
     showConsent();
   });
   captureCampaign(); showConsent();
@@ -95,7 +101,10 @@
     const values = Object.fromEntries(new FormData(form));
     const payload = Object.fromEntries(Object.entries(names).map(([local,remote]) => [remote, String(values[local] || '').trim()]));
     payload.marketing_consent = form.elements.marketing_consent.checked;
+    consent = ads?.granted() === true;
     payload.measurement_consent = consent;
+    payload.advertising_consent = consent;
+    payload.advertising_consent_version = consent ? ads.version : null;
     payload.privacy_notice_version = noticeVersion;
     payload.website = values.website || '';
     payload.campaign = consent ? campaign : {};
@@ -117,6 +126,8 @@
       }
       complete = true;
       track('generate_lead',{},true);
+      // Ads failures never invalidate an already confirmed lead.
+      void ads?.acceptLead(response,result).catch(() => {});
       form.querySelectorAll('input,select,textarea').forEach(input => { input.disabled = true; });
       message('Recebemos sua solicitação! Nossa equipe analisará as informações e entrará em contato pelo e-mail informado.');
       status.tabIndex = -1; status.focus();
@@ -138,6 +149,7 @@
         message('O formulário ainda não está disponível. Tente mais tarde ou use o contato alternativo por WhatsApp.',true); return;
       }
       noticeVersion = config.privacyNoticeVersion;
+      ads?.configure(config.ads);
       window.orkestriaTurnstileReady = () => {
         widgetId = window.turnstile.render('#turnstile-widget',{
           sitekey:config.siteKey, action:'totvs_rm_lead', theme:'dark', size:matchMedia('(max-width:520px)').matches?'compact':'flexible',

@@ -1,3 +1,4 @@
+import { adsConfig } from './ads.ts';
 import type { Env } from './types.ts';
 import { HttpError, json, method } from './http.ts';
 import { authorize, captureReady, verifyTurnstile } from './security.ts';
@@ -25,7 +26,7 @@ export function createWorker(deps: { authorize?: typeof authorize; verifyTurnsti
         } catch {throw new HttpError(400,'invalid_path','Caminho inválido.');}
         if(path==='/api/leads/config') {
           method(request,['GET']);
-          return json({ok:true,data:{available:captureReady(env),siteKey:captureReady(env)?env.TURNSTILE_SITE_KEY:null,privacyNoticeVersion:env.PRIVACY_NOTICE_VERSION},requestId});
+          return json({ok:true,data:{available:captureReady(env),siteKey:captureReady(env)?env.TURNSTILE_SITE_KEY:null,privacyNoticeVersion:env.PRIVACY_NOTICE_VERSION,ads:adsConfig(env)},requestId});
         }
         if(path==='/api/leads/totvs-rm') return await capture(request,env,requestId,deps.verifyTurnstile||verifyTurnstile);
         const adminAPIPath=path==='/api/admin'||path.startsWith('/api/admin/');

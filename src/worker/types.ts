@@ -1,4 +1,6 @@
 export interface Env {
+  GOOGLE_ADS_ENABLED?: string;
+  GOOGLE_ADS_CONVERSION_LABEL?: string;
   ASSETS: Fetcher;
   DB: D1Database;
   TURNSTILE_SITE_KEY?: string;

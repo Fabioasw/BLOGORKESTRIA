@@ -1,3 +1,4 @@
+import { ADS_CONSENT_VERSION } from './ads.ts';
 import type { Env } from './types.ts';
 import { body, HttpError, json, method, sameOrigin, sha256, text, uuid } from './http.ts';
 import { captureReady, rateLimit, verifyTurnstile } from './security.ts';
@@ -36,11 +37,15 @@ export async function capture(request: Request, env: Env, requestId: string, ver
     if (value !== undefined && (typeof value !== 'string' || value.length>250 || /[\u0000-\u001f\u007f]/.test(value))) throw new HttpError(400,'invalid_campaign','Parâmetros de campanha inválidos.');
     campaign[name] = data.measurement_consent && typeof value === 'string' ? value : null;
   }
-  const hash = await sha256(JSON.stringify({...fields,campaign,marketing_consent:data.marketing_consent,privacy:env.PRIVACY_NOTICE_VERSION}));
-  const prior = await env.DB.prepare('SELECT id,payload_hash FROM leads WHERE idempotency_key=?').bind(key).first<{id:string;payload_hash:string}>();
+  if(data.advertising_consent !== undefined && typeof data.advertising_consent !== 'boolean') throw new HttpError(400,'invalid_consent','Preferências inválidas.');
+  const advertisingConsent=data.advertising_consent===true;
+  if(advertisingConsent && (data.advertising_consent_version!==ADS_CONSENT_VERSION || !data.measurement_consent)) throw new HttpError(400,'invalid_consent','Atualize sua preferência de publicidade.');
+  const adsHash=advertisingConsent?{advertising_consent:true,advertising_consent_version:ADS_CONSENT_VERSION}:{};
+  const hash = await sha256(JSON.stringify({...fields,campaign,marketing_consent:data.marketing_consent,privacy:env.PRIVACY_NOTICE_VERSION,...adsHash}));
+  const prior = await env.DB.prepare('SELECT id,payload_hash,ads_conversion_id FROM leads WHERE idempotency_key=?').bind(key).first<{id:string;payload_hash:string;ads_conversion_id:string|null}>();
   if (prior) {
     if (prior.payload_hash !== hash) throw new HttpError(409,'idempotency_conflict','Este identificador já foi usado para outra solicitação. Recarregue a página.');
-    return json({ok:true,data:{id:prior.id,duplicate:true},requestId},200);
+    return json({ok:true,data:{id:prior.id,duplicate:true,conversionId:prior.ads_conversion_id},requestId},200);
   }
   const tokenHash=await sha256(data.token);
   const challengeUsed=()=>env.DB.prepare('SELECT token_hash FROM used_challenges WHERE token_hash=?').bind(tokenHash).first();
@@ -50,22 +55,22 @@ export async function capture(request: Request, env: Env, requestId: string, ver
   try {
     await env.DB.batch([
       env.DB.prepare('INSERT INTO used_challenges(token_hash,expires_at) VALUES (?,?)').bind(tokenHash,Math.floor(Date.now()/1000)+600),
-      env.DB.prepare(`INSERT INTO leads(id,idempotency_key,payload_hash,name,email,company,job_title,service_type,description,utm_source,utm_medium,utm_campaign,utm_content,utm_term,gclid,privacy_notice_version,marketing_consent) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`).bind(id,key,hash,fields.name,fields.email,fields.company,fields.job_title,fields.service_type,fields.description,...CAMPAIGN_KEYS.map(name=>campaign[name]),env.PRIVACY_NOTICE_VERSION!,Number(data.marketing_consent)),
+      env.DB.prepare(`INSERT INTO leads(id,idempotency_key,payload_hash,name,email,company,job_title,service_type,description,utm_source,utm_medium,utm_campaign,utm_content,utm_term,gclid,privacy_notice_version,marketing_consent,advertising_consent,advertising_consent_version,ads_conversion_id) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`).bind(id,key,hash,fields.name,fields.email,fields.company,fields.job_title,fields.service_type,fields.description,...CAMPAIGN_KEYS.map(name=>campaign[name]),env.PRIVACY_NOTICE_VERSION!,Number(data.marketing_consent),Number(advertisingConsent),advertisingConsent?ADS_CONSENT_VERSION:null,advertisingConsent?crypto.randomUUID():null),
       ...queueStatements(env,{id,name:fields.name,email:fields.email,company:fields.company,service_type:fields.service_type}),
     ]);
   } catch(error) {
     // Concurrent retries may race after the initial lookup. D1 rolls back both
     // statements; resolve the original idempotency key before reporting replay.
-    const raced=await env.DB.prepare('SELECT id,payload_hash FROM leads WHERE idempotency_key=?').bind(key).first<{id:string;payload_hash:string}>();
+    const raced=await env.DB.prepare('SELECT id,payload_hash,ads_conversion_id FROM leads WHERE idempotency_key=?').bind(key).first<{id:string;payload_hash:string;ads_conversion_id:string|null}>();
     if(raced){
       if(raced.payload_hash!==hash)throw new HttpError(409,'idempotency_conflict','Solicitação conflitante. Recarregue a página.');
-      return json({ok:true,data:{id:raced.id,duplicate:true},requestId},200);
+      return json({ok:true,data:{id:raced.id,duplicate:true,conversionId:raced.ads_conversion_id},requestId},200);
     }
     if(await challengeUsed())throw new HttpError(400,'invalid_challenge','Verificação já utilizada. Conclua uma nova verificação.');
     throw error;
   }
-  const saved = await env.DB.prepare('SELECT id,payload_hash FROM leads WHERE idempotency_key=?').bind(key).first<{id:string;payload_hash:string}>();
+  const saved = await env.DB.prepare('SELECT id,payload_hash,ads_conversion_id FROM leads WHERE idempotency_key=?').bind(key).first<{id:string;payload_hash:string;ads_conversion_id:string|null}>();
   if (!saved) throw new Error('storage_confirmation_failed');
   if (saved.payload_hash !== hash) throw new HttpError(409,'idempotency_conflict','Solicitação conflitante. Recarregue a página.');
-  return json({ok:true,data:{id:saved.id,duplicate:saved.id!==id},requestId},saved.id===id?201:200);
+  return json({ok:true,data:{id:saved.id,duplicate:saved.id!==id,conversionId:saved.ads_conversion_id},requestId},saved.id===id?201:200);
 }
