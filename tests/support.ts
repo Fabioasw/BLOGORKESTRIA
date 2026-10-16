@@ -16,6 +16,7 @@ export function database(path=':memory:') {
   const migration=readFileSync(new URL('../migrations/0001_commercial_leads.sql',import.meta.url),'utf8');
   if(!sqlite.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name='leads'").get()) sqlite.exec(migration);
   if(!sqlite.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name='used_challenges'").get())sqlite.exec(readFileSync(new URL('../migrations/0002_challenge_replay.sql',import.meta.url),'utf8'));
+  if(!sqlite.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name='automation_settings'").get())sqlite.exec(readFileSync(new URL('../migrations/0003_commercial_automation.sql',import.meta.url),'utf8'));
   const db={
     sqlite,
     failBatch:false,

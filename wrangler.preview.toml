@@ -1,12 +1,21 @@
 # Dedicated preview Worker; no production routes, database or scheduled tasks.
-# Template intentionally cannot be deployed until the isolated D1 ID is supplied.
+# Optional dedicated staging Worker, distinct from native Workers Previews.
+# Keep disabled until origin, Access, Turnstile and inbound replies are checked.
 name = "orkestriaplatform-preview"
+account_id = "050967fd65bf47c8f473b0ac81edc7d0"
 main = "src/worker/index.ts"
 compatibility_date = "2026-05-17"
 workers_dev = true
 preview_urls = true
 
 [vars]
+AUTOMATION_MODE = "preview"
+EMAIL_PROVIDER = "cloudflare"
+EMAIL_FROM_NAME = "Fabio Nunes | ORKESTRIA CONSULT"
+EMAIL_FROM = "contato@orkestriaplatform.com"
+EMAIL_REPLY_TO = "contato@orkestriaplatform.com"
+EMAIL_ADMIN_TO = "fabioasw01@gmail.com"
+EMAIL_TEST_RECIPIENTS = "fabioasw01@gmail.com"
 ADMIN_EMAILS = "fabioasw01@gmail.com"
 RETENTION_DAYS = "180"
 PRIVACY_NOTICE_VERSION = "2026-10-15"
@@ -24,5 +33,10 @@ run_worker_first = true
 [[d1_databases]]
 binding = "DB"
 database_name = "orkestria-leads-preview"
-database_id = "CONFIGURAR_ID_D1_EXCLUSIVO_DO_PREVIEW"
+database_id = "fde6d7c1-919e-4d04-8f26-946f5b9f03d0"
 migrations_dir = "migrations"
+
+[[send_email]]
+name = "EMAIL"
+allowed_destination_addresses = ["fabioasw01@gmail.com"]
+remote = false

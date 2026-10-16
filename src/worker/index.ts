@@ -3,8 +3,10 @@ import { HttpError, json, method } from './http.ts';
 import { authorize, captureReady, verifyTurnstile } from './security.ts';
 import { capture } from './leads.ts';
 import { adminAPI } from './admin.ts';
+import { runAutomations } from './automation.ts';
+import type { EmailSender } from './email.ts';
 
-export function createWorker(deps: { authorize?: typeof authorize; verifyTurnstile?: typeof verifyTurnstile } = {}) {
+export function createWorker(deps: { authorize?: typeof authorize; verifyTurnstile?: typeof verifyTurnstile; sendEmail?:EmailSender } = {}) {
   return {
     async fetch(request: Request, env: Env): Promise<Response> {
       const requestId=crypto.randomUUID();
@@ -58,8 +60,10 @@ export function createWorker(deps: { authorize?: typeof authorize; verifyTurnsti
         await env.DB.batch([
           env.DB.prepare('DELETE FROM request_limits WHERE expires_at<?').bind(Math.floor(Date.now()/1000)),
           env.DB.prepare('DELETE FROM used_challenges WHERE expires_at<?').bind(Math.floor(Date.now()/1000)),
-          env.DB.prepare("DELETE FROM leads WHERE status IN ('novo','convertido','descartado') AND datetime(updated_at)<datetime('now',?)").bind(`-${days} days`),
         ]);
+        // Commercial history is preserved. Data erasure remains an explicit,
+        // authenticated operation, separate from routine technical cleanup.
+        await runAutomations(env,deps.sendEmail);
       } catch {console.error('retention_failed');}
     },
   };

@@ -1,4 +1,5 @@
 name = "orkestriaplatform"
+account_id = "050967fd65bf47c8f473b0ac81edc7d0"
 compatibility_date = "2026-05-17"
 main = "src/worker/index.ts"
 # Keep the currently enabled alternate URLs. Disabling them needs authorization.
@@ -6,8 +7,16 @@ workers_dev = true
 preview_urls = true
 
 [vars]
+AUTOMATION_MODE = "production"
+EMAIL_CUSTOMER_CONFIRMATIONS = "false"
+EMAIL_PROVIDER = "cloudflare"
+EMAIL_FROM_NAME = "Fabio Nunes | ORKESTRIA CONSULT"
+EMAIL_FROM = "contato@orkestriaplatform.com"
+EMAIL_REPLY_TO = "contato@orkestriaplatform.com"
+EMAIL_ADMIN_TO = "orkestriaplatform@outlook.com"
+CRM_PUBLIC_ORIGIN = "https://orkestriaplatform.com"
 RETENTION_DAYS = "180"
-PRIVACY_NOTICE_VERSION = "2026-10-15"
+PRIVACY_NOTICE_VERSION = "2026-10-16"
 ADMIN_EMAILS = "fabioasw01@gmail.com"
 TURNSTILE_SITE_KEY = "0x4AAAAAAFYAVXdns4_TqXWF"
 TURNSTILE_HOSTNAMES = "orkestriaplatform.com"
@@ -15,7 +24,8 @@ ACCESS_TEAM_DOMAIN = "https://holy-recipe-3741.cloudflareaccess.com"
 ACCESS_AUD = "8152140b4a1cc9f20f4421005945a7fde623b6bd2f12be5371c0ed7ccbb9b5c3"
 
 [triggers]
-crons = ["17 3 * * *"]
+# Dispatch alerts and the daily summary; dates are presented in Sao Paulo time.
+crons = ["*/5 * * * *"]
 
 [assets]
 directory = "."
@@ -28,3 +38,39 @@ binding = "DB"
 database_name = "orkestria-leads"
 database_id = "ed13b097-dc98-4800-97dd-04a75c4107b4"
 migrations_dir = "migrations"
+
+[[send_email]]
+name = "EMAIL"
+allowed_destination_addresses = ["orkestriaplatform@outlook.com"]
+remote = false
+
+# Native Workers Previews: production variables, secrets and DB are not inherited.
+[previews.vars]
+AUTOMATION_MODE = "preview"
+EMAIL_PROVIDER = "cloudflare"
+EMAIL_FROM_NAME = "Fabio Nunes | ORKESTRIA CONSULT"
+EMAIL_FROM = "contato@orkestriaplatform.com"
+EMAIL_REPLY_TO = "contato@orkestriaplatform.com"
+EMAIL_ADMIN_TO = "fabioasw01@gmail.com"
+EMAIL_TEST_RECIPIENTS = "fabioasw01@gmail.com"
+ADMIN_EMAILS = "fabioasw01@gmail.com"
+RETENTION_DAYS = "180"
+PRIVACY_NOTICE_VERSION = "2026-10-15"
+# Set CRM_PUBLIC_ORIGIN to the exact approved preview origin.
+# Configure preview Access AUD/team and Turnstile widget/hostname separately.
+# Empty settings fail closed; never copy production secrets into previews.
+ACCESS_TEAM_DOMAIN = ""
+ACCESS_AUD = ""
+TURNSTILE_SITE_KEY = ""
+TURNSTILE_HOSTNAMES = ""
+
+[[previews.d1_databases]]
+binding = "DB"
+database_name = "orkestria-leads-preview"
+database_id = "fde6d7c1-919e-4d04-8f26-946f5b9f03d0"
+migrations_dir = "migrations"
+
+[[previews.send_email]]
+name = "EMAIL"
+allowed_destination_addresses = ["fabioasw01@gmail.com"]
+remote = false

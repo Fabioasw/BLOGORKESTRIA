@@ -6,6 +6,7 @@
     "dev": "wrangler dev --local",
     "check": "tsc --noEmit",
     "test": "node --experimental-strip-types --test tests/*.test.ts",
+    "test:automation-runtime": "node tests/automation-runtime.mjs",
     "test:runtime": "node tests/runtime-smoke.mjs",
     "build": "wrangler deploy --dry-run --outdir work/build",
     "db:local": "wrangler d1 migrations apply DB --local",

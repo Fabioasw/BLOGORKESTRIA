@@ -43,3 +43,7 @@ dialog::backdrop { background:#000B; } .dialog-heading { display:flex; justify-c
 @media(max-width:900px) { .filters { grid-template-columns:1fr 1fr; } .metrics { grid-template-columns:repeat(2,1fr); } .admin-header>.admin-wrap>span { display:none; } }
 @media(max-width:520px) { .admin-wrap { padding:0 18px; } .page-heading { align-items:start; flex-direction:column; } .filters,.details,.edit-grid { grid-template-columns:1fr; } .metric { padding:15px; } .pagination { flex-direction:column; } dialog { padding:22px; } .dialog-heading { flex-direction:column-reverse; } }
 @media(prefers-reduced-motion:reduce) { html { scroll-behavior:auto; } }
+
+.edit-grid input[type="checkbox"] { width:auto; margin-right:8px; accent-color:var(--gold); }
+.automation-panel summary { cursor:pointer; font-weight:600; }
+.automation-panel p { margin:16px 0; }

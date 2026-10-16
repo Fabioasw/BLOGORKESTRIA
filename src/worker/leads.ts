@@ -1,6 +1,7 @@
 import type { Env } from './types.ts';
 import { body, HttpError, json, method, sameOrigin, sha256, text, uuid } from './http.ts';
 import { captureReady, rateLimit, verifyTurnstile } from './security.ts';
+import { queueStatements } from './automation.ts';
 
 export const SERVICES = ['Customização TOTVS RM','Fórmula Visual','Integração de sistemas','Automação financeira / CNAB','Compras e recebimento','Relatórios / Power BI','Desenvolvimento web integrado','Outros'];
 export const STATUSES = ['novo','em_analise','qualificado','reuniao_agendada','proposta_enviada','convertido','descartado'];
@@ -50,6 +51,7 @@ export async function capture(request: Request, env: Env, requestId: string, ver
     await env.DB.batch([
       env.DB.prepare('INSERT INTO used_challenges(token_hash,expires_at) VALUES (?,?)').bind(tokenHash,Math.floor(Date.now()/1000)+600),
       env.DB.prepare(`INSERT INTO leads(id,idempotency_key,payload_hash,name,email,company,job_title,service_type,description,utm_source,utm_medium,utm_campaign,utm_content,utm_term,gclid,privacy_notice_version,marketing_consent) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`).bind(id,key,hash,fields.name,fields.email,fields.company,fields.job_title,fields.service_type,fields.description,...CAMPAIGN_KEYS.map(name=>campaign[name]),env.PRIVACY_NOTICE_VERSION!,Number(data.marketing_consent)),
+      ...queueStatements(env,{id,name:fields.name,email:fields.email,company:fields.company,service_type:fields.service_type}),
     ]);
   } catch(error) {
     // Concurrent retries may race after the initial lookup. D1 rolls back both

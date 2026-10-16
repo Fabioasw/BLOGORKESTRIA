@@ -12,7 +12,10 @@ import type { Env } from '../src/worker/types.ts';
 
 const root=fileURLToPath(new URL('..',import.meta.url));
 await mkdir(resolve(root,'work'),{recursive:true});
-const db=database(resolve(root,'work/admin-qa.sqlite'));
+const port=Number(process.env.CRM_PREVIEW_PORT||8790);
+if(!Number.isInteger(port)||port<1024||port>65535)throw new Error('Invalid local port');
+const base=`http://127.0.0.1:${port}`;
+const db=database(resolve(root,`work/crm-qa-${port}.sqlite`));
 let mode='normal';
 const mime: Record<string,string>={'.html':'text/html; charset=utf-8','.css':'text/css; charset=utf-8','.js':'text/javascript; charset=utf-8','.xml':'application/xml','.txt':'text/plain'};
 async function assets(request:Request) {
@@ -31,12 +34,12 @@ const env={DB:db,ASSETS:{fetch:assets},TURNSTILE_SITE_KEY:'local-public-fixture'
 const app=createWorker({authorize:(request,env)=>authorize(request,env,localKeys),verifyTurnstile:async()=>{}});
 if(db.sqlite.prepare('SELECT count(*) n FROM leads').get()!.n===0){
   for(const company of ['Instituição Demonstração','Indústria Exemplo','Serviços Modelo']) {
-    await app.fetch(new Request('http://127.0.0.1:8790/api/leads/totvs-rm',{method:'POST',headers:{Origin:'http://127.0.0.1:8790','Content-Type':'application/json','Idempotency-Key':crypto.randomUUID(),'CF-Connecting-IP':company},body:JSON.stringify({...payload(),company})}),env);
+    await app.fetch(new Request(base+'/api/leads/totvs-rm',{method:'POST',headers:{Origin:base,'Content-Type':'application/json','Idempotency-Key':crypto.randomUUID(),'CF-Connecting-IP':company},body:JSON.stringify({...payload(),company})}),env);
   }
 }
 http.createServer(async(req,res)=>{
   try {
-    const url=new URL(req.url!,'http://127.0.0.1:8790');
+    const url=new URL(req.url!,base);
     if(url.pathname==='/__fixtures/mode'){mode=url.searchParams.get('value')||'normal';res.end('ok');return;}
     if(url.pathname==='/__fixtures/recorder.js'){res.setHeader('Content-Type','text/javascript');res.end(`(()=>{const events=[];let output;function render(){if(output)output.textContent=JSON.stringify(events);}addEventListener('orkestria:analytics',e=>{events.push(e.detail);render();});addEventListener('DOMContentLoaded',()=>{output=document.createElement('output');output.id='fixture-events';output.hidden=true;document.body.append(output);render();});})();`);return;}
     if(url.pathname==='/__fixtures/turnstile.js'){res.setHeader('Content-Type','text/javascript');res.end(`window.turnstile={render(selector,options){document.querySelector(selector).textContent='Verificação simulada somente para teste local.';setTimeout(()=>options.callback('local-token-'+crypto.randomUUID()),0);window.fixtureOptions=options;return 'fixture';},reset(){setTimeout(()=>window.fixtureOptions.callback('local-token-'+crypto.randomUUID()),0);}};window.orkestriaTurnstileReady();`);return;}
@@ -52,4 +55,4 @@ http.createServer(async(req,res)=>{
     if(url.pathname==='/api/leads/totvs-rm'&&mode==='lost-response'){req.socket.destroy();return;}
     res.writeHead(response.status,Object.fromEntries(response.headers));res.end(Buffer.from(await response.arrayBuffer()));
   }catch{res.writeHead(500);res.end('Erro no ambiente de teste');}
-}).listen(8790,'127.0.0.1',()=>console.log('Local QA only: http://127.0.0.1:8790/totvs-rm and /admin/leads'));
+}).listen(port,'127.0.0.1',()=>console.log('Local QA only: '+base+'/admin/leads'));

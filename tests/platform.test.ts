@@ -109,9 +109,9 @@ test('exclusão autenticada requer confirmação, usa versão e remove históric
   assert.equal((await s.app.fetch(request(path,{method:'DELETE',token,data:{version:0,confirmation:id}}),s.env)).status,200);
   assert.equal(s.db.sqlite.prepare('SELECT count(*) n FROM leads').get()!.n,0);assert.equal(s.db.sqlite.prepare('SELECT count(*) n FROM lead_events').get()!.n,0);s.db.sqlite.close();
 });
-test('retenção configurável apaga registros inativos e histórico; preserva oportunidades em acompanhamento',async()=>{
+test('rotina limpa controles técnicos e preserva leads antigos e histórico comercial',async()=>{
   const s=setup();const old=await addLead(s),active=await addLead(s);s.db.sqlite.prepare("UPDATE leads SET updated_at='2020-01-01T00:00:00.000Z' WHERE id=?").run(old);s.db.sqlite.prepare("UPDATE leads SET status='em_analise',updated_at='2020-01-01T00:00:00.000Z' WHERE id=?").run(active);s.db.sqlite.exec("INSERT INTO request_limits VALUES ('expired',1,0)");
-  await s.app.scheduled({} as any,s.env);assert.equal(s.db.sqlite.prepare('SELECT count(*) n FROM leads').get()!.n,1);assert.equal(s.db.sqlite.prepare('SELECT count(*) n FROM lead_events').get()!.n,1);assert.equal(s.db.sqlite.prepare("SELECT count(*) n FROM request_limits WHERE bucket='expired'").get()!.n,0);s.db.sqlite.close();
+  await s.app.scheduled({} as any,s.env);assert.equal(s.db.sqlite.prepare('SELECT count(*) n FROM leads').get()!.n,2);assert.equal(s.db.sqlite.prepare('SELECT count(*) n FROM lead_events').get()!.n,2);assert.equal(s.db.sqlite.prepare("SELECT count(*) n FROM request_limits WHERE bucket='expired'").get()!.n,0);s.db.sqlite.close();
 });
 test('rotas estáticas preservadas, APIs desconhecidas 404 JSON e painel sem cache/indexação',async()=>{
   const s=setup();for(const path of ['/','/totvs-rm','/totvs-rm/','/processos.html','/blog/','/assets/bpmn.js','/nao-existe'])assert.equal(await(await s.app.fetch(request(path),s.env)).text(),`asset:${path}`);

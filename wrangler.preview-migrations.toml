@@ -1,0 +1,9 @@
+# Migration-only configuration. Never run with the production configuration.
+name = "orkestriaplatform-preview-migrations"
+account_id = "050967fd65bf47c8f473b0ac81edc7d0"
+compatibility_date = "2026-05-17"
+[[d1_databases]]
+binding = "PREVIEW_DB"
+database_name = "orkestria-leads-preview"
+database_id = "fde6d7c1-919e-4d04-8f26-946f5b9f03d0"
+migrations_dir = "migrations"
