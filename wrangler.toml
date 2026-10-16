@@ -1,12 +1,18 @@
 name = "orkestriaplatform"
 compatibility_date = "2026-05-17"
 main = "src/worker/index.ts"
+# Keep the currently enabled alternate URLs. Disabling them needs authorization.
+workers_dev = true
+preview_urls = true
 
 [vars]
 RETENTION_DAYS = "180"
 PRIVACY_NOTICE_VERSION = "2026-10-15"
 ADMIN_EMAILS = "fabioasw01@gmail.com"
-# Configure TURNSTILE_SITE_KEY, ACCESS_TEAM_DOMAIN and ACCESS_AUD
+TURNSTILE_SITE_KEY = "0x4AAAAAAFYAVXdns4_TqXWF"
+TURNSTILE_HOSTNAMES = "orkestriaplatform.com"
+ACCESS_TEAM_DOMAIN = "https://holy-recipe-3741.cloudflareaccess.com"
+# Configure ACCESS_AUD
 # with real values before publishing. See DEPLOY.md.
 
 [triggers]
@@ -15,7 +21,8 @@ crons = ["17 3 * * *"]
 [assets]
 directory = "."
 binding = "ASSETS"
-run_worker_first = ["/api/*", "/admin", "/admin/*"]
+# Every request reaches the security gate, including encoded asset aliases.
+run_worker_first = true
 
 [[d1_databases]]
 binding = "DB"

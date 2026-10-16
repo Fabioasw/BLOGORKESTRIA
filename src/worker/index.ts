@@ -7,16 +7,29 @@ import { adminAPI } from './admin.ts';
 export function createWorker(deps: { authorize?: typeof authorize; verifyTurnstile?: typeof verifyTurnstile } = {}) {
   return {
     async fetch(request: Request, env: Env): Promise<Response> {
-      const requestId=crypto.randomUUID(), path=new URL(request.url).pathname;
+      const requestId=crypto.randomUUID();
       try {
+        // Guard encoded/slash aliases before ASSETS can canonicalize them.
+        let path=new URL(request.url).pathname;
+        try {
+          for(let depth=0;depth<4;depth++){
+            const decoded=decodeURIComponent(path).replace(/\\/g,'/').replace(/\/{2,}/g,'/');
+            if(decoded===path)break;
+            path=decoded;
+            if(depth===3&&decodeURIComponent(path)!==path)throw new Error();
+          }
+          // Resolve dot segments after decoding without treating // as a host.
+          path=new URL('https://route.invalid'+path).pathname;
+        } catch {throw new HttpError(400,'invalid_path','Caminho inválido.');}
         if(path==='/api/leads/config') {
           method(request,['GET']);
           return json({ok:true,data:{available:captureReady(env),siteKey:captureReady(env)?env.TURNSTILE_SITE_KEY:null,privacyNoticeVersion:env.PRIVACY_NOTICE_VERSION},requestId});
         }
         if(path==='/api/leads/totvs-rm') return await capture(request,env,requestId,deps.verifyTurnstile||verifyTurnstile);
-        if(path==='/admin'||path.startsWith('/admin/')||path.startsWith('/api/admin/')) {
+        const adminAPIPath=path==='/api/admin'||path.startsWith('/api/admin/');
+        if(path==='/admin'||path.startsWith('/admin/')||adminAPIPath) {
           const admin=await (deps.authorize||authorize)(request,env);
-          if(path.startsWith('/api/admin/')) return await adminAPI(request,env,admin,requestId);
+          if(adminAPIPath) return await adminAPI(request,env,admin,requestId);
           if(!['/admin/leads','/admin/leads/','/admin/leads.html'].includes(path)) throw new HttpError(404,'not_found','Página não encontrada.');
           method(request,['GET','HEAD']);
           // ASSETS uses clean-URL canonicalization. Fetch its canonical path so
@@ -44,6 +57,7 @@ export function createWorker(deps: { authorize?: typeof authorize; verifyTurnsti
       try {
         await env.DB.batch([
           env.DB.prepare('DELETE FROM request_limits WHERE expires_at<?').bind(Math.floor(Date.now()/1000)),
+          env.DB.prepare('DELETE FROM used_challenges WHERE expires_at<?').bind(Math.floor(Date.now()/1000)),
           env.DB.prepare("DELETE FROM leads WHERE status IN ('novo','convertido','descartado') AND datetime(updated_at)<datetime('now',?)").bind(`-${days} days`),
         ]);
       } catch {console.error('retention_failed');}

@@ -50,12 +50,14 @@ test('recusa de medição descarta campanha no backend mesmo se cliente enviar p
 test('validação Turnstile real exige success, hostname e action; falha de rede não confirma',async()=>{
   const s=setup(),original=globalThis.fetch;
   try {
-    for(const result of [{success:false},{success:true,hostname:'outro.example',action:'totvs_rm_lead'},{success:true,hostname:'orkestriaplatform.com',action:'outro'}]) {
+    for(const result of [{success:false},{success:'true',hostname:'orkestriaplatform.com',action:'totvs_rm_lead'},{success:true,hostname:'outro.example',action:'totvs_rm_lead'},{success:true,hostname:'orkestriaplatform.com',action:'outro'}]) {
       globalThis.fetch=async()=>Response.json(result);
       await assert.rejects(()=>verifyTurnstile('token',crypto.randomUUID(),request('/'),s.env),(error:any)=>error.status===400);
     }
     globalThis.fetch=async(url,options)=>{assert.equal(url,'https://challenges.cloudflare.com/turnstile/v0/siteverify');const body=JSON.parse(options!.body as string);assert.equal(body.secret,s.env.TURNSTILE_SECRET_KEY);assert.ok(body.idempotency_key);return Response.json({success:true,hostname:'orkestriaplatform.com',action:'totvs_rm_lead'});};
     await verifyTurnstile('token',crypto.randomUUID(),request('/'),s.env);
+    await assert.rejects(()=>verifyTurnstile('token',crypto.randomUUID(),request('/'),{...s.env,TURNSTILE_HOSTNAMES:undefined}),(error:any)=>error.status===400);
+    await assert.rejects(()=>verifyTurnstile('token',crypto.randomUUID(),request('/'),{...s.env,TURNSTILE_HOSTNAMES:'localhost,127.0.0.1'}),(error:any)=>error.status===400);
     globalThis.fetch=async()=>{throw new Error('network');};await assert.rejects(()=>verifyTurnstile('token',crypto.randomUUID(),request('/'),s.env),(error:any)=>error.status===503);
     const app=createWorker({verifyTurnstile});const r=await app.fetch(request('/api/leads/totvs-rm',{method:'POST',data:payload(),key:crypto.randomUUID()}),s.env);assert.equal(r.status,503);assert.equal(s.db.sqlite.prepare('SELECT count(*) n FROM leads').get()!.n,0);
   }finally{globalThis.fetch=original;s.db.sqlite.close();}

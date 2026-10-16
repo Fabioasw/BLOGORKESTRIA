@@ -41,9 +41,27 @@ export async function capture(request: Request, env: Env, requestId: string, ver
     if (prior.payload_hash !== hash) throw new HttpError(409,'idempotency_conflict','Este identificador já foi usado para outra solicitação. Recarregue a página.');
     return json({ok:true,data:{id:prior.id,duplicate:true},requestId},200);
   }
+  const tokenHash=await sha256(data.token);
+  const challengeUsed=()=>env.DB.prepare('SELECT token_hash FROM used_challenges WHERE token_hash=?').bind(tokenHash).first();
+  if(await challengeUsed()) throw new HttpError(400,'invalid_challenge','Verificação já utilizada. Conclua uma nova verificação.');
   await verify(data.token,key,request,env);
   const id = crypto.randomUUID();
-  await env.DB.prepare(`INSERT INTO leads(id,idempotency_key,payload_hash,name,email,company,job_title,service_type,description,utm_source,utm_medium,utm_campaign,utm_content,utm_term,gclid,privacy_notice_version,marketing_consent) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ON CONFLICT(idempotency_key) DO NOTHING`).bind(id,key,hash,fields.name,fields.email,fields.company,fields.job_title,fields.service_type,fields.description,...CAMPAIGN_KEYS.map(name=>campaign[name]),env.PRIVACY_NOTICE_VERSION!,Number(data.marketing_consent)).run();
+  try {
+    await env.DB.batch([
+      env.DB.prepare('INSERT INTO used_challenges(token_hash,expires_at) VALUES (?,?)').bind(tokenHash,Math.floor(Date.now()/1000)+600),
+      env.DB.prepare(`INSERT INTO leads(id,idempotency_key,payload_hash,name,email,company,job_title,service_type,description,utm_source,utm_medium,utm_campaign,utm_content,utm_term,gclid,privacy_notice_version,marketing_consent) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`).bind(id,key,hash,fields.name,fields.email,fields.company,fields.job_title,fields.service_type,fields.description,...CAMPAIGN_KEYS.map(name=>campaign[name]),env.PRIVACY_NOTICE_VERSION!,Number(data.marketing_consent)),
+    ]);
+  } catch(error) {
+    // Concurrent retries may race after the initial lookup. D1 rolls back both
+    // statements; resolve the original idempotency key before reporting replay.
+    const raced=await env.DB.prepare('SELECT id,payload_hash FROM leads WHERE idempotency_key=?').bind(key).first<{id:string;payload_hash:string}>();
+    if(raced){
+      if(raced.payload_hash!==hash)throw new HttpError(409,'idempotency_conflict','Solicitação conflitante. Recarregue a página.');
+      return json({ok:true,data:{id:raced.id,duplicate:true},requestId},200);
+    }
+    if(await challengeUsed())throw new HttpError(400,'invalid_challenge','Verificação já utilizada. Conclua uma nova verificação.');
+    throw error;
+  }
   const saved = await env.DB.prepare('SELECT id,payload_hash FROM leads WHERE idempotency_key=?').bind(key).first<{id:string;payload_hash:string}>();
   if (!saved) throw new Error('storage_confirmation_failed');
   if (saved.payload_hash !== hash) throw new HttpError(409,'idempotency_conflict','Solicitação conflitante. Recarregue a página.');

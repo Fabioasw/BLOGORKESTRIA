@@ -27,7 +27,7 @@ async function assets(request:Request) {
   if(path.endsWith('.html'))content=content.replace('<body>','<body><div class="qa-banner">PRÉVIA DE TESTE LOCAL · dados fictícios · sem acesso ao banco de produção</div>');
   return new Response(content,{headers:{'Content-Type':mime[extname(file)]||'application/octet-stream','Cache-Control':'no-store'}});
 }
-const env={DB:db,ASSETS:{fetch:assets},TURNSTILE_SITE_KEY:'local-public-fixture',TURNSTILE_SECRET_KEY:'local-secret-fixture',RATE_LIMIT_SECRET:'local-rate-fixture',PRIVACY_NOTICE_VERSION:'2026-10-15',RETENTION_DAYS:'180',ACCESS_TEAM_DOMAIN:'https://unit-test.cloudflareaccess.com',ACCESS_AUD:'test-audience',ADMIN_EMAILS:'admin@example.com'} as unknown as Env;
+const env={DB:db,ASSETS:{fetch:assets},TURNSTILE_SITE_KEY:'local-public-fixture',TURNSTILE_SECRET_KEY:'local-secret-fixture',TURNSTILE_HOSTNAMES:'127.0.0.1',RATE_LIMIT_SECRET:'local-rate-fixture',PRIVACY_NOTICE_VERSION:'2026-10-15',RETENTION_DAYS:'180',ACCESS_TEAM_DOMAIN:'https://unit-test.cloudflareaccess.com',ACCESS_AUD:'test-audience',ADMIN_EMAILS:'admin@example.com'} as unknown as Env;
 const app=createWorker({authorize:(request,env)=>authorize(request,env,localKeys),verifyTurnstile:async()=>{}});
 if(db.sqlite.prepare('SELECT count(*) n FROM leads').get()!.n===0){
   for(const company of ['Instituição Demonstração','Indústria Exemplo','Serviços Modelo']) {
@@ -39,7 +39,7 @@ http.createServer(async(req,res)=>{
     const url=new URL(req.url!,'http://127.0.0.1:8790');
     if(url.pathname==='/__fixtures/mode'){mode=url.searchParams.get('value')||'normal';res.end('ok');return;}
     if(url.pathname==='/__fixtures/recorder.js'){res.setHeader('Content-Type','text/javascript');res.end(`(()=>{const events=[];let output;function render(){if(output)output.textContent=JSON.stringify(events);}addEventListener('orkestria:analytics',e=>{events.push(e.detail);render();});addEventListener('DOMContentLoaded',()=>{output=document.createElement('output');output.id='fixture-events';output.hidden=true;document.body.append(output);render();});})();`);return;}
-    if(url.pathname==='/__fixtures/turnstile.js'){res.setHeader('Content-Type','text/javascript');res.end(`window.turnstile={render(selector,options){document.querySelector(selector).textContent='Verificação simulada somente para teste local.';setTimeout(()=>options.callback('local-token'),0);window.fixtureOptions=options;return 'fixture';},reset(){setTimeout(()=>window.fixtureOptions.callback('local-token'),0);}};window.orkestriaTurnstileReady();`);return;}
+    if(url.pathname==='/__fixtures/turnstile.js'){res.setHeader('Content-Type','text/javascript');res.end(`window.turnstile={render(selector,options){document.querySelector(selector).textContent='Verificação simulada somente para teste local.';setTimeout(()=>options.callback('local-token-'+crypto.randomUUID()),0);window.fixtureOptions=options;return 'fixture';},reset(){setTimeout(()=>window.fixtureOptions.callback('local-token-'+crypto.randomUUID()),0);}};window.orkestriaTurnstileReady();`);return;}
     if(url.pathname==='/api/leads/totvs-rm'&&mode==='network'){req.socket.destroy();return;}
     if(url.pathname==='/api/leads/totvs-rm'&&mode==='delay')await new Promise(resolve=>setTimeout(resolve,1500));
     const chunks=[];for await(const part of req)chunks.push(part);const data=Buffer.concat(chunks);

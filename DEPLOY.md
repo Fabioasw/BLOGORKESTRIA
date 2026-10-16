@@ -4,7 +4,7 @@
 
 Implementação na branch `feature/totvs-rm-leads-admin`, baseada no commit de produção `1fd8ea9d987ebfd7b3a20c5dbba19f915d1eeaad`. Nenhum push, merge, deploy ou migração remota foi executado nesta etapa. Publicar e migrar o banco exigem autorização expressa do usuário.
 
-O site é HTML/CSS/JavaScript estático, sem React, SPA ou diretório de build de frontend. Não há fallback SPA configurado; seu comportamento continua o padrão de Static Assets. O Worker agora usa `src/worker/index.ts`, TypeScript, o binding `ASSETS` e o binding D1 `DB`. Apenas `/api/*`, `/admin` e `/admin/*` passam primeiro no Worker. Os demais assets mantêm o fluxo e cache da Cloudflare. APIs desconhecidas retornam 404 JSON.
+O site é HTML/CSS/JavaScript estático, sem React, SPA ou diretório de build de frontend. Não há fallback SPA configurado. O Worker usa `src/worker/index.ts`, TypeScript e os bindings `ASSETS` e D1 `DB`. Todos os requests passam primeiro pelo Worker para impedir que aliases codificados sejam servidos como assets antes da autorização. Assets públicos continuam delegados ao binding `ASSETS`, com uma invocação adicional do Worker por request. APIs desconhecidas retornam 404 JSON.
 
 O banco fornecido foi configurado no TOML: `orkestria-leads`, ID `ed13b097-dc98-4800-97dd-04a75c4107b4`. A existência e o conteúdo remotos não foram consultados nem alterados. O nome e o domínio do Worker continuam os existentes. A home não foi modificada.
 
@@ -12,6 +12,7 @@ O banco fornecido foi configurado no TOML: `orkestria-leads`, ID `ed13b097-dc98-
 
 - `src/worker/`: roteamento, tipos de ambiente, HTTP, validação, segurança, captação e APIs administrativas.
 - `migrations/0001_commercial_leads.sql`: tabelas `leads`, `lead_events`, `request_limits`, índices, FK com cascade e trigger de criação do histórico.
+- `migrations/0002_challenge_replay.sql`: trava atômica de reutilização por hash SHA-256 do token; nunca armazena o token original.
 - `assets/totvs-rm.js`, `totvs-rm.html`: formulário original adaptado; WhatsApp como alternativa secundária.
 - `admin/leads.html`, `assets/admin.js`, `assets/admin.css`: painel protegido.
 - `wrangler.toml`, `.assetsignore`, `_headers`, `robots.txt`: bindings, roteamento, proteção e indexação.
@@ -20,6 +21,36 @@ O banco fornecido foi configurado no TOML: `orkestria-leads`, ID `ed13b097-dc98-
 - `package.json`, `package-lock.json`, `tsconfig.json`: ferramentas e versões reproduzíveis.
 
 Única dependência de produção adicionada: `jose`, para validação criptográfica de JWT do Access. Wrangler, TypeScript, tipos Workers e tipos Node são ferramentas de desenvolvimento. O frontend não ganhou framework ou dependências visuais.
+
+## Teste final com Turnstile real — 15/10/2026
+
+Execute `node tests/preview-real.mjs` (ou `npm run preview:real`) e abra `http://127.0.0.1:8792/totvs-rm#avaliacao`. Essa prévia usa o entrypoint real com um observador de QA, Workerd/Miniflare, Siteverify oficial e D1 **local**, com ID `orkestria-development-local-only` e armazenamento exclusivo por execução em `work/q<identificador>/db`. Não é um D1 remoto de homologação. Nenhum ID de produção ou credencial da conta Cloudflare é carregado. O script lê somente os dois bindings do arquivo ignorado `.dev.vars` para o backend local, sem executar Wrangler nem imprimir valores. Não publique esse script ou seu observador de QA.
+
+O hostname `127.0.0.1` foi aceito pelo widget existente e confirmado pelo backend em um envio com token real. Não foi necessário alterar o widget no painel. O allowlist local existe somente na prévia; produção continua restrita a `orkestriaplatform.com`.
+
+Resultados finais: token inválido → 400 e zero inserções; envio real → 201; repetição da mesma chave/payload → 200; mesma chave com payload alterado → 409; mesmo token com nova chave → 400. O banco da execução final ficou com exatamente um lead e um evento de criação. O usuário completou manualmente o desafio no navegador. O observador executa os retries/replays pelo mesmo handler, sem simular Siteverify e sem salvar tokens.
+
+O primeiro teste real revelou reutilização aceita com nova chave; a migração 0002 e a transação entre consumo do hash e criação do lead corrigem o caso independentemente da resposta de Siteverify. O cron limpa hashes após dez minutos (tokens Turnstile expiram em cinco). Falhas de gravação revertem o consumo do hash. Ambas as migrações devem ser aplicadas no destino autorizado antes de ativar esta versão.
+
+Os 19 testes automatizados passaram, incluindo JWT RSA com emissor/AUD/expiração, identidade forjada, e-mail sem autorização, replay, rollback e acesso por hostname workers.dev. O teste `node tests/admin-runtime.mjs` também passou em 48 verificações com Workerd e seu roteador real de assets. Esses testes usam chaves RSA locais; nomes de preview são sintéticos, não destinos remotos existentes. Não comprovam uma sessão Access real no ambiente remoto.
+
+As cinco rotas remotas `/admin/leads`, `/admin/leads.html`, `/api/admin/leads`, `/api/admin/stats` e `/api/admin/leads/search` retornaram 302 para Access em consulta anônima, sem enviar formulários à produção. Isso comprova a proteção de borda nessas rotas, não a execução do backend novo. O endpoint de listagem da aplicação usa POST em `/api/admin/leads/search`; GET `/api/admin/leads` não lista registros.
+
+O workers.dev informado é `orkestriaplatform.fabioasw01.workers.dev`: seis rotas administrativas retornaram 404 vazio sem redirecionamento Access, enquanto as mesmas rotas no domínio próprio retornaram 302 para Access. Não foi observado painel ou JSON de leads nesses GETs; isso não comprova uma camada Access ativa no workers.dev nem a segurança de versões futuras. Não foi fornecida URL remota concreta de preview para testar.
+
+O usuário informou que workers.dev e URLs de preview estão habilitados e proibiu desativação sem autorização. O TOML local agora mantém explicitamente `workers_dev=true` e `preview_urls=true`; o bloqueio administrativo acontece no backend por assinatura, emissor, audience, validade e lista de administradores, independentemente de hostname. Nenhuma configuração remota foi alterada. O AUD real ainda falta; sem ele, o backend fecha o acesso com 503. Referências: [validação JWT](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/authorization-cookie/validating-json/) e [Version URLs](https://developers.cloudflare.com/workers/versions-and-deployments/version-urls/).
+
+## Preparação do preview remoto — ainda não executado
+
+A branch `feature/totvs-rm-leads-admin` existe localmente. A consulta `git ls-remote --heads origin` mostrou somente `main` no GitHub. O código novo, portanto, ainda não está disponível para um build dessa branch no GitHub. Nenhum push foi feito: ele poderia disparar um comando de preview ainda não inspecionado.
+
+Não foi possível confirmar a configuração Cloudflare de preview builds: não há credencial de API local nem sessão do painel acessível pelas ferramentas. No painel, conferir Worker → Settings → Build/Builds → Branch control, branch de produção `main`, opção Enable Preview Builds e comando efetivo de Preview. URLs de versões habilitadas não comprovam preview builds de branches. A documentação atual distingue Worker Previews do modelo antigo, que pode usar configurações de produção; não efetuar troca de modelo ou build antes de revisar o isolamento. [Build branches](https://developers.cloudflare.com/workers/ci-cd/builds/build-branches/).
+
+O arquivo `wrangler.preview.toml` prepara como alternativa um Worker separado chamado `orkestriaplatform-preview`, sem rotas de produção ou cron e com banco `orkestria-leads-preview`. É um template incompleto, não uma infraestrutura criada: seu database_id inválido intencionalmente impede deployment acidental. Antes de usar, criar um D1 exclusivo, aplicar somente nele ambas as migrações e preencher o ID real, distinto de `ed13b097-dc98-4800-97dd-04a75c4107b4`. Configurar secrets exclusivos (novo RATE_LIMIT_SECRET e secret de widget Turnstile de preview), site key/hostname próprios e Access para o preview com seu AUD confirmado. Não copiar `.dev.vars` de produção para esse destino.
+
+Não houve criação de D1 remoto de teste, provisionamento de secrets de preview, confirmação do hostname no widget ou geração de URL Cloudflare. A prévia local com o widget original não comprova essas configurações remotas. A URL somente poderá ser informada como gerada após a Cloudflare retornar um deployment isolado. Recursos D1 compartilham dados quando o database_id é igual, mesmo em previews; o isolamento exige IDs diferentes. [Resources and isolation](https://developers.cloudflare.com/workers/previews/resources/).
+
+Não houve push, merge, deploy, alteração remota do widget ou gravação de dados de teste em produção. A publicação continua aguardando autorização expressa.
 
 ## Instalação e testes locais
 
@@ -54,13 +85,14 @@ Para revisar visualmente com dados fictícios, use `npm run preview:fixtures` e 
 
 A prévia liga apenas em loopback, usa `work/admin-qa.sqlite`, mostra aviso de teste e assina JWTs locais. Nunca usa o D1 remoto. Os modos `/__fixtures/mode?value=database`, `network`, `lost-response`, `delay`, `anonymous` e `unauthorized` permitem reproduzir falhas. Restaure com `value=normal`. Os caminhos de fixture não existem na aplicação de produção. Não publique `tests/` ou arquivos de `work/`.
 
-## Variáveis e secrets pendentes
+## Variáveis e secrets
 
 Configure valores reais antes de publicar:
 
 | Nome | Tipo | Finalidade |
 | --- | --- | --- |
-| `TURNSTILE_SITE_KEY` | Variável pública | Widget do formulário; liberada por `/api/leads/config` |
+| `TURNSTILE_SITE_KEY` | Variável pública | Widget existente configurado; liberada por `/api/leads/config` |
+| `TURNSTILE_HOSTNAMES` | Variável | Produção: `orkestriaplatform.com`; exige correspondência com a origem e o Siteverify |
 | `TURNSTILE_SECRET_KEY` | Secret | Validação no Siteverify; nunca exposta ao frontend |
 | `RATE_LIMIT_SECRET` | Secret aleatório forte | Derivação diária do identificador de IP para proteção de abuso |
 | `ACCESS_TEAM_DOMAIN` | Variável | `https://SEU-TIME.cloudflareaccess.com`, sem barra final |
@@ -68,6 +100,10 @@ Configure valores reais antes de publicar:
 | `ADMIN_EMAILS` | Variável | Já configurada com `fabioasw01@gmail.com`, escolhido pelo usuário |
 | `RETENTION_DAYS` | Variável | 180 por padrão; inteiro entre 1 e 3650 |
 | `PRIVACY_NOTICE_VERSION` | Variável | `2026-10-15`; atualizar junto com a política de privacidade |
+
+O widget existente foi conectado seguindo o [fluxo oficial de widget existente](https://developers.cloudflare.com/turnstile/spin/prompt.md). A site key está no TOML. Após autorização do usuário, a secret fornecida foi validada no Siteverify oficial com um token de prova inválido e armazenada somente em `.dev.vars`, ignorado pelo Git. `RATE_LIMIT_SECRET` também foi gerado localmente. Nenhum secret foi enviado ao Worker remoto. Essa prova confirma que a credencial é aceita, mas não substitui um token real ou a conferência dos domínios do widget.
+
+Produção permite apenas `orkestriaplatform.com`. Para desenvolvimento com o widget real, use um widget/domínio local autorizado e uma sobrescrita explícita de `TURNSTILE_HOSTNAMES` no ambiente local; não acrescente localhost ao TOML de produção. Não há hostnames locais implicitamente autorizados.
 
 Os nomes acima estão nos tipos TypeScript. O endpoint público não revela secrets ou configurações administrativas. Não envie secrets pelo chat nem faça commit de arquivos com credenciais. `.dev.vars*` e `.env*` são ignorados pelo Git; a lista de assets permite apenas o site.
 
@@ -121,7 +157,7 @@ A página mantém HTML indexável, um H1, canonical, Open Graph, JSON-LD Service
 8. Integrar a branch a `main` apenas se o merge também tiver sido autorizado. O GitHub pode acionar novo deploy do mesmo código; mantenha o comando de deploy e as variáveis coerentes com o TOML. Secrets existentes são preservados por deploys posteriores. Sem o cuidado com as variáveis, Wrangler pode substituir vars definidas somente no painel.
 9. Validar a URL pública, disponibilidade, Turnstile real, criação de um lead de homologação autorizado, registro no painel, repetição idempotente, histórico, bloqueio de usuário não autorizado e funcionamento das páginas antigas. Verificar também CSP, cache, cron e exclusões de assets.
 
-Não foi criado um ambiente remoto de homologação com binding de produção. Se for necessário, configure um D1 separado antes de testar ali. As chaves padrão de teste Turnstile podem retornar hostname fictício e são rejeitadas pela checagem estrita; use uma fixture local ou um widget separado para desenvolvimento. A validação do serviço Turnstile real e do Access real ainda depende da configuração externa.
+Não foi criado ambiente remoto de homologação. Se for necessário, configure um D1 separado antes de testar ali. As chaves padrão de teste Turnstile podem retornar hostname fictício e são rejeitadas pela checagem estrita. A validação ponta a ponta com token real passou na prévia local descrita acima; a validação de sessão Access real depende de configuração externa. Repetir a MESMA chave de idempotência de uma solicitação já gravada retorna a confirmação anterior sem revalidar o token; isso não permite criar outro lead. As fixtures não leem `.dev.vars`. Depois de guardar secrets reais, não use o Wrangler do projeto para operações com credenciais seguindo o [fluxo Spin](https://developers.cloudflare.com/turnstile/spin/prompt.md): aprove antes um executável canônico externo ao projeto e sua versão exata. Os comandos Wrangler abaixo e acima são referências operacionais: na presença de secrets reais, substitua qualquer `npx wrangler` pelo executável externo aprovado antes de executá-los. Os testes finais usaram Node/Miniflare diretamente e não executaram Wrangler.
 
 ## Rollback
 

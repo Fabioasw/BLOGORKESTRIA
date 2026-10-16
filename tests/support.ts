@@ -15,6 +15,7 @@ export function database(path=':memory:') {
   const sqlite=new DatabaseSync(path);sqlite.exec('PRAGMA foreign_keys=ON');
   const migration=readFileSync(new URL('../migrations/0001_commercial_leads.sql',import.meta.url),'utf8');
   if(!sqlite.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name='leads'").get()) sqlite.exec(migration);
+  if(!sqlite.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name='used_challenges'").get())sqlite.exec(readFileSync(new URL('../migrations/0002_challenge_replay.sql',import.meta.url),'utf8'));
   const db={
     sqlite,
     failBatch:false,
@@ -57,11 +58,11 @@ export function database(path=':memory:') {
 }
 export function setup() {
   const db=database();
-  const env={DB:db,ASSETS:{fetch:async(request:Request)=>new Response(`asset:${new URL(request.url).pathname}`)},TURNSTILE_SITE_KEY:'local-public-fixture',TURNSTILE_SECRET_KEY:'local-secret-fixture',RATE_LIMIT_SECRET:'local-rate-fixture',PRIVACY_NOTICE_VERSION:'2026-10-15',RETENTION_DAYS:'180',ACCESS_TEAM_DOMAIN:'https://unit-test.cloudflareaccess.com',ACCESS_AUD:'test-audience',ADMIN_EMAILS:'admin@example.com'} as unknown as Env;
+  const env={DB:db,ASSETS:{fetch:async(request:Request)=>new Response(`asset:${new URL(request.url).pathname}`)},TURNSTILE_SITE_KEY:'local-public-fixture',TURNSTILE_SECRET_KEY:'local-secret-fixture',TURNSTILE_HOSTNAMES:'orkestriaplatform.com',RATE_LIMIT_SECRET:'local-rate-fixture',PRIVACY_NOTICE_VERSION:'2026-10-15',RETENTION_DAYS:'180',ACCESS_TEAM_DOMAIN:'https://unit-test.cloudflareaccess.com',ACCESS_AUD:'test-audience',ADMIN_EMAILS:'admin@example.com'} as unknown as Env;
   const app=createWorker({authorize:(request,env)=>authorize(request,env,localKeys),verifyTurnstile:async()=>{}});
   return {db,env,app};
 }
-export function payload() {return {name:'Pessoa Teste',email:'teste@example.com',company:'Empresa Teste',job_title:'TI',service_type:'Integração de sistemas',description:'Precisamos integrar os processos financeiros ao ERP.',marketing_consent:false,measurement_consent:true,privacy_notice_version:'2026-10-15',campaign:{utm_source:'google',utm_medium:'cpc',utm_campaign:'rm',utm_content:'teste',utm_term:'consultoria',gclid:'test-click'},token:'local-token',website:''};}
+export function payload() {return {name:'Pessoa Teste',email:'teste@example.com',company:'Empresa Teste',job_title:'TI',service_type:'Integração de sistemas',description:'Precisamos integrar os processos financeiros ao ERP.',marketing_consent:false,measurement_consent:true,privacy_notice_version:'2026-10-15',campaign:{utm_source:'google',utm_medium:'cpc',utm_campaign:'rm',utm_content:'teste',utm_term:'consultoria',gclid:'test-click'},token:'local-token-'+crypto.randomUUID(),website:''};}
 export function request(path:string,options: {method?:string;data?:unknown;key?:string;token?:string;origin?:string;headers?:Record<string,string>}={}) {
   return new Request('https://orkestriaplatform.com'+path,{method:options.method||'GET',headers:{Origin:options.origin||'https://orkestriaplatform.com','Content-Type':'application/json','CF-Connecting-IP':'192.0.2.123',...(options.key?{'Idempotency-Key':options.key}:{}),...(options.token?{'Cf-Access-Jwt-Assertion':options.token}:{}),...options.headers},...(options.data===undefined?{}:{body:JSON.stringify(options.data)})});
 }

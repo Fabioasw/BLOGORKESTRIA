@@ -19,7 +19,7 @@ export async function authorize(request: Request, env: Env, testKeys?: JWTVerify
   return { id:claims.sub, email:claims.email };
 }
 export function captureReady(env: Env): boolean {
-  return Boolean(env.DB && env.TURNSTILE_SITE_KEY && env.TURNSTILE_SECRET_KEY && env.RATE_LIMIT_SECRET && env.PRIVACY_NOTICE_VERSION);
+  return Boolean(env.DB && env.TURNSTILE_SITE_KEY && env.TURNSTILE_SECRET_KEY && env.TURNSTILE_HOSTNAMES?.trim() && env.RATE_LIMIT_SECRET && env.PRIVACY_NOTICE_VERSION);
 }
 export async function rateLimit(request: Request, env: Env): Promise<void> {
   const now = Math.floor(Date.now()/1000), window = Math.floor(now/600);
@@ -28,6 +28,9 @@ export async function rateLimit(request: Request, env: Env): Promise<void> {
   if (!row || row.attempts > 8) throw new HttpError(429,'rate_limited','Muitas tentativas. Aguarde alguns minutos antes de tentar novamente.');
 }
 export async function verifyTurnstile(token: string, key: string, request: Request, env: Env): Promise<void> {
+  const expectedHostnames = new Set((env.TURNSTILE_HOSTNAMES || '').split(',').map(hostname => hostname.trim()).filter(Boolean));
+  const requestHostname = new URL(request.url).hostname;
+  if (!expectedHostnames.has(requestHostname) || typeof token !== 'string' || token.length === 0 || token.length > 2048) throw new HttpError(400,'invalid_challenge','Não foi possível validar a origem ou a verificação de segurança.');
   let data: { success?: boolean; hostname?: string; action?: string };
   try {
     const response = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
@@ -37,5 +40,5 @@ export async function verifyTurnstile(token: string, key: string, request: Reque
     if (!response.ok) throw new Error();
     data = await response.json();
   } catch { throw new HttpError(503,'verification_unavailable','Verificação indisponível. Tente novamente.'); }
-  if (!data.success || data.hostname !== new URL(request.url).hostname || data.action !== 'totvs_rm_lead') throw new HttpError(400,'invalid_challenge','A verificação de segurança expirou ou é inválida. Tente novamente.');
+  if (data.success !== true || data.hostname !== requestHostname || !expectedHostnames.has(data.hostname) || data.action !== 'totvs_rm_lead') throw new HttpError(400,'invalid_challenge','A verificação de segurança expirou ou é inválida. Tente novamente.');
 }

@@ -1,0 +1,28 @@
+# Dedicated preview Worker; no production routes, database or scheduled tasks.
+# Template intentionally cannot be deployed until the isolated D1 ID is supplied.
+name = "orkestriaplatform-preview"
+main = "src/worker/index.ts"
+compatibility_date = "2026-05-17"
+workers_dev = true
+preview_urls = true
+
+[vars]
+ADMIN_EMAILS = "fabioasw01@gmail.com"
+RETENTION_DAYS = "180"
+PRIVACY_NOTICE_VERSION = "2026-10-15"
+ACCESS_TEAM_DOMAIN = "https://holy-recipe-3741.cloudflareaccess.com"
+# Set ACCESS_AUD for the Access application protecting the preview hostname.
+# Set TURNSTILE_SITE_KEY for the preview widget and TURNSTILE_HOSTNAMES to
+# the exact hostname confirmed by Cloudflare. Never add production here.
+# Store TURNSTILE_SECRET_KEY and a NEW RATE_LIMIT_SECRET in this Worker only.
+
+[assets]
+directory = "."
+binding = "ASSETS"
+run_worker_first = true
+
+[[d1_databases]]
+binding = "DB"
+database_name = "orkestria-leads-preview"
+database_id = "CONFIGURAR_ID_D1_EXCLUSIVO_DO_PREVIEW"
+migrations_dir = "migrations"
