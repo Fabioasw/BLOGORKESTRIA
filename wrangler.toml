@@ -12,8 +12,7 @@ ADMIN_EMAILS = "fabioasw01@gmail.com"
 TURNSTILE_SITE_KEY = "0x4AAAAAAFYAVXdns4_TqXWF"
 TURNSTILE_HOSTNAMES = "orkestriaplatform.com"
 ACCESS_TEAM_DOMAIN = "https://holy-recipe-3741.cloudflareaccess.com"
-# Configure ACCESS_AUD
-# with real values before publishing. See DEPLOY.md.
+ACCESS_AUD = "8152140b4a1cc9f20f4421005945a7fde623b6bd2f12be5371c0ed7ccbb9b5c3"
 
 [triggers]
 crons = ["17 3 * * *"]
