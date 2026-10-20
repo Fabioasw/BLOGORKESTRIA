@@ -62,9 +62,22 @@
   captureCampaign(); showConsent();
   track('page_view', {}, true); track('view_totvs_rm', {}, true);
   form.addEventListener('focusin', () => { if (!began) { began = true; track('begin_lead_form', {}, true); } });
-  document.querySelectorAll('[data-service]').forEach(link => link.addEventListener('click', () => {
-    if (!busy && !complete) form.elements.necessidade.value = link.dataset.service;
-    track('select_service', { service: link.dataset.service });
+  document.querySelectorAll('a[href="#avaliacao"]').forEach(link => link.addEventListener('click', event => {
+    if (busy || complete || event.defaultPrevented || event.button > 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    event.preventDefault();
+    const service = link.dataset.service;
+    if (service) {
+      form.elements.necessidade.value = service;
+      form.elements.necessidade.removeAttribute('aria-invalid');
+      document.getElementById('necessidade-error').textContent = '';
+      const selection = document.getElementById('service-selection');
+      if (selection) selection.textContent = `Necessidade selecionada: ${service}. Você pode alterar abaixo.`;
+      track('select_service', { service });
+    }
+    const target = service ? form.elements.necessidade : form.elements.nome;
+    target.focus({ preventScroll: true });
+    target.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'center' });
+    // Same-document navigation leaves campaign parameters and consent untouched.
   }));
 
   function message(text, error = false) {
@@ -129,14 +142,14 @@
       // Ads failures never invalidate an already confirmed lead.
       void ads?.acceptLead(response,result).catch(() => {});
       form.querySelectorAll('input,select,textarea').forEach(input => { input.disabled = true; });
-      message('Recebemos sua solicitação! Nossa equipe analisará as informações e entrará em contato pelo e-mail informado.');
+      message('Recebemos sua solicitação! Analisaremos as informações e entraremos em contato pelo e-mail informado.');
       status.tabIndex = -1; status.focus();
     } catch {
       message('Não conseguimos confirmar o recebimento. Verifique sua conexão e tente novamente. Repetir o mesmo envio não duplica o registro.',true);
       resetChallenge();
     } finally {
       busy = false; form.removeAttribute('aria-busy');
-      submit.textContent = complete ? 'Solicitação recebida ✓' : 'Solicitar avaliação do projeto';
+      submit.textContent = complete ? 'Solicitação recebida ✓' : 'Solicitar avaliação técnica';
       updateSubmit();
     }
   });
