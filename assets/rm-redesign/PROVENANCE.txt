@@ -1,0 +1,5 @@
+Imagens ilustrativas geradas com a ferramenta integrada Imagegen em 21/10/2026. Nao representam funcionarios, clientes ou telas reais do TOTVS. Sem marcas de terceiros. Fontes PNG preservadas fora do repositorio. Variantes WebP redimensionadas proporcionalmente com Pillow; nenhuma alteracao semantica.
+hero: exec-8e6c2acb-bf09-400e-a553-1b0b175a1c7f.png
+team: exec-cb41a872-0a8e-4a48-aa1d-d6ea2e6f105e.png
+integration: exec-351d5a0c-fa6f-4bb1-b0ee-b106a1143650.png
+finance: exec-8850bccf-38cb-4203-80d1-3ed4ba0a2402.png

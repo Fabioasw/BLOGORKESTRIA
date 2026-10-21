@@ -94,6 +94,8 @@
     const hint = document.getElementById(`${input.name}-error`);
     if (hint) hint.textContent = '';
   });
+  // Reveal an invalid optional field before the browser attempts to focus it.
+  form.addEventListener('invalid', event => event.target.closest('details')?.setAttribute('open', ''), true);
   const names = { nome: 'name', email: 'email', empresa: 'company', cargo: 'job_title', necessidade: 'service_type', descricao: 'description' };
   function updateSubmit() { submit.disabled = !available || !token || busy || complete; }
   function resetChallenge() { token = ''; if (widgetId !== undefined) window.turnstile?.reset(widgetId); updateSubmit(); }
@@ -101,6 +103,7 @@
     for (const [local, remote] of Object.entries(names)) {
       if (typeof fields?.[remote] === 'string') {
         form.elements[local].setAttribute('aria-invalid', 'true');
+        form.elements[local].closest?.('details')?.setAttribute('open', '');
         document.getElementById(`${local}-error`).textContent = fields[remote];
       }
     }
@@ -149,7 +152,7 @@
       resetChallenge();
     } finally {
       busy = false; form.removeAttribute('aria-busy');
-      submit.textContent = complete ? 'Solicitação recebida ✓' : 'Solicitar avaliação técnica';
+      submit.textContent = complete ? 'Solicitação recebida ✓' : 'Solicitar análise técnica';
       updateSubmit();
     }
   });
@@ -165,7 +168,7 @@
       ads?.configure(config.ads);
       window.orkestriaTurnstileReady = () => {
         widgetId = window.turnstile.render('#turnstile-widget',{
-          sitekey:config.siteKey, action:'totvs_rm_lead', theme:'dark', size:matchMedia('(max-width:520px)').matches?'compact':'flexible',
+          sitekey:config.siteKey, action:'totvs_rm_lead', theme:form.dataset?.theme || 'dark', size:matchMedia('(max-width:520px)').matches?'compact':'flexible',
           callback(value) { token=value; if(status.dataset.error!=='true') message('Formulário pronto para envio.'); updateSubmit(); },
           'expired-callback'() { token=''; message('A verificação expirou. Conclua-a novamente.',true); updateSubmit(); },
           'error-callback'() { token=''; message('Falha ao carregar a verificação. Verifique sua conexão e recarregue a página.',true); updateSubmit(); },

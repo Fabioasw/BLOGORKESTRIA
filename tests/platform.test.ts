@@ -17,9 +17,26 @@ test('migração cria tabelas, índices, FK e trigger; armazenamento, UTM e idem
   assert.ok(s.db.sqlite.prepare("SELECT count(*) n FROM sqlite_master WHERE type='index'").get()!.n as number >= 7);
   s.db.sqlite.close();
 });
+test('cargo opcional preserva dados históricos e retry idempotente sem migração destrutiva',async()=>{
+  const s=setup();
+  await addLead(s,{job_title:'Diretor de TI'});
+  for (const role of [undefined,'','   ']) {
+    const data={...payload(),job_title:role},key=crypto.randomUUID();
+    const send=()=>s.app.fetch(request('/api/leads/totvs-rm',{method:'POST',key,data}),s.env);
+    assert.equal((await send()).status,201);
+    assert.equal((await send()).status,200);
+  }
+  const rows=s.db.sqlite.prepare('SELECT job_title FROM leads').all();
+  assert.equal(rows.length,4);
+  assert.equal(rows.filter(row=>row.job_title==='Não informado').length,3);
+  assert.equal(rows.filter(row=>row.job_title==='Diretor de TI').length,1);
+  assert.equal(s.db.sqlite.prepare('SELECT count(*) n FROM lead_events').get()!.n,4);
+  s.db.sqlite.close();
+});
+
 test('servidor rejeita campos inválidos e malformados sem gravar',async()=>{
   const s=setup();let i=0;
-  for(const patch of [{name:''},{name:'🙂'},{email:'email-invalido'},{company:''},{job_title:''},{service_type:'falso'},{description:'curto'},{marketing_consent:'sim'},{measurement_consent:null},{campaign:[]},{campaign:{utm_source:'x'.repeat(251)}},{name:'nome\u0000'},{token:''}]) {
+  for(const patch of [{name:''},{name:'🙂'},{email:'email-invalido'},{company:''},{job_title:'x'},{job_title:42},{service_type:'falso'},{description:'curto'},{marketing_consent:'sim'},{measurement_consent:null},{campaign:[]},{campaign:{utm_source:'x'.repeat(251)}},{name:'nome\u0000'},{token:''}]) {
     // Separate IP for each assertion so each test exercises validation, not rate limiting.
     const r=await s.app.fetch(request('/api/leads/totvs-rm',{method:'POST',key:crypto.randomUUID(),data:{...payload(),...patch},headers:{'CF-Connecting-IP':`192.0.2.${++i}`}}),s.env);assert.equal(r.status,400,JSON.stringify(patch));
   }

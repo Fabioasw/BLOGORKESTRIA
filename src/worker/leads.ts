@@ -20,7 +20,10 @@ export async function capture(request: Request, env: Env, requestId: string, ver
   const limits: Record<string,[number,number]> = { name:[2,120],email:[5,254],company:[2,160],job_title:[2,120],service_type:[2,80],description:[20,4000] };
   const fields: Record<string,string> = {}, errors: Record<string,string> = {};
   for (const [name,[min,max]] of Object.entries(limits)) {
-    const value = text(data[name],min,max);
+    // Keep the existing NOT NULL/length constraint and historic CRM contract.
+    // An omitted optional role is explicitly unknown, never a fabricated title.
+    const optionalRole = name === 'job_title' && (data[name] === undefined || (typeof data[name] === 'string' && !data[name].trim()));
+    const value = optionalRole ? 'Não informado' : text(data[name],min,max);
     if (value === null) errors[name] = `Use entre ${min} e ${max} caracteres.`;
     fields[name] = value || '';
   }
