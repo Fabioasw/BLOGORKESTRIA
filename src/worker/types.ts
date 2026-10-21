@@ -1,4 +1,6 @@
 export interface Env {
+  MEASUREMENT_ENABLED?: string;
+  MEASUREMENT_LIMITER?: {limit(options:{key:string}):Promise<{success:boolean}>};
   GOOGLE_ADS_ENABLED?: string;
   GOOGLE_ADS_CONVERSION_LABEL?: string;
   ASSETS: Fetcher;
@@ -25,6 +27,7 @@ export interface Env {
 }
 export interface AdminIdentity { id: string; email: string }
 export interface LeadRow {
+  is_test:number;
   id: string; name: string; email: string; company: string; job_title: string;
   service_type: string; description: string; status: string; source: string;
   utm_source: string | null; utm_medium: string | null; utm_campaign: string | null;

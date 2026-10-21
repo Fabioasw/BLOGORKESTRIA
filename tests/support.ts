@@ -18,6 +18,7 @@ export function database(path=':memory:') {
   if(!sqlite.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name='used_challenges'").get())sqlite.exec(readFileSync(new URL('../migrations/0002_challenge_replay.sql',import.meta.url),'utf8'));
   if(!sqlite.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name='automation_settings'").get())sqlite.exec(readFileSync(new URL('../migrations/0003_commercial_automation.sql',import.meta.url),'utf8'));
   if(!sqlite.prepare('PRAGMA table_info(leads)').all().some(c=>c.name==='ads_conversion_id'))sqlite.exec(readFileSync(new URL('../migrations/0004_google_ads_consent.sql',import.meta.url),'utf8'));
+  if(!sqlite.prepare('PRAGMA table_info(leads)').all().some(c=>c.name==='is_test'))sqlite.exec(readFileSync(new URL('../migrations/0005_commercial_readiness.sql',import.meta.url),'utf8'));
   const db={
     sqlite,
     failBatch:false,

@@ -6,6 +6,8 @@ import { capture } from './leads.ts';
 import { adminAPI } from './admin.ts';
 import { runAutomations } from './automation.ts';
 import type { EmailSender } from './email.ts';
+import { measurementAPI } from './measurement.ts';
+import { cleanMeasurement,operational } from './operations.ts';
 
 export function createWorker(deps: { authorize?: typeof authorize; verifyTurnstile?: typeof verifyTurnstile; sendEmail?:EmailSender } = {}) {
   return {
@@ -29,6 +31,7 @@ export function createWorker(deps: { authorize?: typeof authorize; verifyTurnsti
           return json({ok:true,data:{available:captureReady(env),siteKey:captureReady(env)?env.TURNSTILE_SITE_KEY:null,privacyNoticeVersion:env.PRIVACY_NOTICE_VERSION,ads:adsConfig(env)},requestId});
         }
         if(path==='/api/leads/totvs-rm') return await capture(request,env,requestId,deps.verifyTurnstile||verifyTurnstile);
+        if(['/api/measurement/session','/api/measurement/events'].includes(path))return await measurementAPI(request,env,requestId);
         const adminAPIPath=path==='/api/admin'||path.startsWith('/api/admin/');
         if(path==='/admin'||path.startsWith('/admin/')||adminAPIPath) {
           const admin=await (deps.authorize||authorize)(request,env);
@@ -48,9 +51,12 @@ export function createWorker(deps: { authorize?: typeof authorize; verifyTurnsti
         if(path==='/api'||path.startsWith('/api/')) throw new HttpError(404,'not_found','Endpoint não encontrado.');
         return env.ASSETS.fetch(request);
       } catch(error) {
-        if(error instanceof HttpError) return json({ok:false,error:{code:error.code,message:error.message,...(error.fields?{fields:error.fields}:{})},requestId},error.status,{...error.headers,...(error.status===429?{'Retry-After':'600'}:{})});
+        if(error instanceof HttpError) {
+          if(new URL(request.url).pathname==='/api/leads/totvs-rm'&&[400,409,503].includes(error.status))await operational(env,'form_request_rejected','capture',requestId,error.status);
+          return json({ok:false,error:{code:error.code,message:error.message,...(error.fields?{fields:error.fields}:{})},requestId},error.status,{...error.headers,...(error.status===429?{'Retry-After':'600'}:{})});
+        }
         // Never log paths, search strings, tokens, SQL errors, or lead content.
-        console.error(JSON.stringify({event:'request_failed',requestId}));
+        await operational(env,'worker_unexpected_error','request',requestId,500);
         return json({ok:false,error:{code:'internal_error',message:'Não foi possível concluir a solicitação. Tente novamente.'},requestId},500);
       }
     },
@@ -65,7 +71,8 @@ export function createWorker(deps: { authorize?: typeof authorize; verifyTurnsti
         // Commercial history is preserved. Data erasure remains an explicit,
         // authenticated operation, separate from routine technical cleanup.
         await runAutomations(env,deps.sendEmail);
-      } catch {console.error('retention_failed');}
+        await cleanMeasurement(env);
+      } catch {await operational(env,'maintenance_failed','maintenance');}
     },
   };
 }

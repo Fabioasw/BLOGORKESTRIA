@@ -62,7 +62,7 @@
   });
   captureCampaign(); showConsent();
   track('page_view', {}, true); track('view_totvs_rm', {}, true);
-  form.addEventListener('focusin', () => { if (!began) { began = true; track('begin_lead_form', {}, true); } });
+  form.addEventListener('focusin', () => { if (consent && !began) { began = true; track('begin_lead_form', {}, true); } });
   document.querySelectorAll('a[href="#avaliacao"]').forEach(link => link.addEventListener('click', event => {
     if (busy || complete || event.defaultPrevented || event.button > 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
     event.preventDefault();
@@ -126,6 +126,8 @@
     payload.privacy_notice_version = noticeVersion;
     payload.website = values.website || '';
     payload.campaign = consent ? campaign : {};
+    payload.funnel_consent = window.OrkestriaMeasure?.granted() === true;
+    payload.funnel_consent_version = payload.funnel_consent ? window.OrkestriaMeasure.version : null;
     const snapshot = JSON.stringify(payload);
     if (lastPayload !== null && lastPayload !== snapshot) requestKey = crypto.randomUUID();
     lastPayload = snapshot;
@@ -138,11 +140,15 @@
       });
       const result = await response.json();
       if (!response.ok || result.ok !== true || !result.data?.id) {
+        window.OrkestriaMeasure?.event('form_submit_failed',{code:response.status===503?'unavailable':'rejected'});
         renderErrors(result.error?.fields);
         message(result.error?.message || 'Não foi possível registrar sua solicitação. Tente novamente.', true);
         resetChallenge(); return;
       }
       complete = true;
+      // Correlate an API-confirmed receipt without retaining form contents.
+      form.setAttribute('data-confirmed-lead',result.data.id);
+      form.setAttribute('data-response-status',String(response.status));
       track('generate_lead',{},true);
       // Ads failures never invalidate an already confirmed lead.
       void ads?.acceptLead(response,result).catch(() => {});
@@ -150,7 +156,8 @@
       message('Recebemos sua solicitação! Analisaremos as informações e entraremos em contato pelo e-mail informado.');
       status.tabIndex = -1; status.focus();
     } catch {
-      message('Não conseguimos confirmar o recebimento. Verifique sua conexão e tente novamente. Repetir o mesmo envio não duplica o registro.',true);
+      window.OrkestriaMeasure?.event('form_submit_failed',{code:'network'});
+      message('Não conseguimos confirmar o recebimento. Verifique sua conexão. Tente novamente nesta página; se recarregar, confira antes com nosso atendimento.',true);
       resetChallenge();
     } finally {
       busy = false; form.removeAttribute('aria-busy');

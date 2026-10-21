@@ -3,6 +3,8 @@ import type { Env } from './types.ts';
 import { body, HttpError, json, method, sameOrigin, sha256, text, uuid } from './http.ts';
 import { captureReady, rateLimit, verifyTurnstile } from './security.ts';
 import { queueStatements } from './automation.ts';
+import { operational } from './operations.ts';
+import { MEASUREMENT_VERSION } from './measurement.ts';
 
 export const SERVICES = ['Customização TOTVS RM','Fórmula Visual','Integração de sistemas','Automação financeira / CNAB','Compras e recebimento','Relatórios / Power BI','Desenvolvimento web integrado','Outros'];
 export const STATUSES = ['novo','em_analise','qualificado','reuniao_agendada','proposta_enviada','convertido','descartado'];
@@ -70,10 +72,17 @@ export async function capture(request: Request, env: Env, requestId: string, ver
       return json({ok:true,data:{id:raced.id,duplicate:true,conversionId:raced.ads_conversion_id},requestId},200);
     }
     if(await challengeUsed())throw new HttpError(400,'invalid_challenge','Verificação já utilizada. Conclua uma nova verificação.');
+    await operational(env,'lead_storage_failed','capture',requestId,500);
     throw error;
   }
   const saved = await env.DB.prepare('SELECT id,payload_hash,ads_conversion_id FROM leads WHERE idempotency_key=?').bind(key).first<{id:string;payload_hash:string;ads_conversion_id:string|null}>();
   if (!saved) throw new Error('storage_confirmation_failed');
   if (saved.payload_hash !== hash) throw new HttpError(409,'idempotency_conflict','Solicitação conflitante. Recarregue a página.');
+  if(env.MEASUREMENT_ENABLED==='true'&&data.funnel_consent===true&&data.funnel_consent_version===MEASUREMENT_VERSION){
+    try{
+      const stamp=new Date().toISOString(),day=new Intl.DateTimeFormat('sv-SE',{timeZone:'America/Sao_Paulo'}).format(new Date());
+      await env.DB.prepare("INSERT OR IGNORE INTO measurement_events(id,page_id,event,day,created_at,consent_version) SELECT ?,'server','lead_confirmed',?,?,? WHERE (SELECT count(*) FROM measurement_events WHERE day=?)<2000").bind(await sha256('confirmed:'+saved.id),day,stamp,MEASUREMENT_VERSION,day).run();
+    }catch{await operational(env,'measurement_failed','measurement',requestId);}
+  }
   return json({ok:true,data:{id:saved.id,duplicate:saved.id!==id,conversionId:saved.ads_conversion_id},requestId},saved.id===id?201:200);
 }

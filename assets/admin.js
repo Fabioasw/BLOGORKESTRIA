@@ -3,6 +3,7 @@
   const statuses = {novo:'Novo',em_analise:'Em análise',qualificado:'Qualificado',reuniao_agendada:'Reunião agendada',proposta_enviada:'Proposta enviada',convertido:'Convertido',descartado:'Descartado'};
   const $ = id => document.getElementById(id);
   const dialog=$('lead-dialog'), filters=$('filters');
+  const testLabel=document.createElement('label'),testInput=document.createElement('input');testInput.type='checkbox';testInput.id='lead-is-test';testLabel.append(testInput,document.createTextNode(' Registro de TESTE — excluir dos indicadores comerciais'));$('update-lead').querySelector('.edit-grid').append(testLabel);
   let page=1,total=0,sequence=0,selected=null,saving=false,loading=false,ready=false;
   const date = value => new Date(value).toLocaleString('pt-BR',{timeZone:'America/Sao_Paulo'});
   let automationConfig=null,deepLinkOpened=false;
@@ -69,6 +70,7 @@
       const fields=[['Nome',selected.name],['E-mail',selected.email],['Empresa',selected.company],['Cargo ou área',selected.job_title],['Necessidade',selected.service_type],['Status',statuses[selected.status]],['Criado em',date(selected.created_at)],['Atualizado em',date(selected.updated_at)],['Origem',selected.source],['UTM source',selected.utm_source||'—'],['UTM medium',selected.utm_medium||'—'],['UTM campaign',selected.utm_campaign||'—'],['UTM content',selected.utm_content||'—'],['UTM term',selected.utm_term||'—'],['gclid',selected.gclid||'—'],['Landing page',selected.landing_page],['Aviso de privacidade',selected.privacy_notice_version],['Marketing opcional',selected.marketing_consent?'Autorizado':'Não autorizado'],['Descrição',selected.description]];
       for(const [label,value] of fields){const block=node('div',undefined,label==='Descrição'?'full':'');block.append(node('dt',label),node('dd',value));$('lead-details').append(block);}
       $('lead-status').value=selected.status;
+      testInput.checked=Boolean(selected.is_test);
       $('next-action').value=selected.next_action||'';$('next-action-at').value=localInput(selected.next_action_at);$('last-contact-at').value=localInput(selected.last_contact_at);$('record-contact').checked=false;$('lead-archived').checked=Boolean(selected.archived_at);
       const timeline=[...data.events.map(event=>({...event,commercial:true})),...(data.automationEvents||[])].sort((a,b)=>a.created_at.localeCompare(b.created_at));
       for(const event of timeline.filter(event=>event.commercial)){const item=node('li');item.dataset.createdAt=event.created_at;const title=event.event_type==='created'?'Solicitação recebida':event.event_type==='note'?'Observação interna':`${statuses[event.previous_status]} → ${statuses[event.new_status]}`;item.append(node('strong',title),node('small',`${date(event.created_at)}${event.admin_id?' · Administrador: '+event.admin_id:''}`));if(event.note)item.append(node('p',event.note));$('lead-history').append(item);}
@@ -89,7 +91,8 @@
     event.preventDefault();if(!selected||saving)return;
     const id=selected.id;saving=true;$('save-lead').disabled=true;message($('detail-status'),'Salvando acompanhamento…');
     try {
-      await api(`/api/admin/leads/${id}`,{method:'PATCH',body:JSON.stringify({version:selected.version,status:$('lead-status').value,note:$('lead-note').value,next_action:$('next-action').value,next_action_at:$('next-action-at').value===localInput(selected.next_action_at)?undefined:fromBrasilia($('next-action-at').value),last_contact_at:$('last-contact-at').value===localInput(selected.last_contact_at)?undefined:fromBrasilia($('last-contact-at').value),record_contact:$('record-contact').checked,archived:$('lead-archived').checked})});
+      await api(`/api/admin/leads/${id}`,{method:'PATCH',body:JSON.stringify({version:selected.version,is_test:testInput.checked,status:$('lead-status').value,note:$('lead-note').value,next_action:$('next-action').value,next_action_at:$('next-action-at').value===localInput(selected.next_action_at)?undefined:fromBrasilia($('next-action-at').value),last_contact_at:$('last-contact-at').value===localInput(selected.last_contact_at)?undefined:fromBrasilia($('last-contact-at').value),record_contact:$('record-contact').checked,archived:$('lead-archived').checked})});
+      document.dispatchEvent(new CustomEvent('orkestria:crm-updated'));
       saving=false;await open(id);message($('detail-status'),'Acompanhamento salvo.');await stats();await list();await crm();await loadAutomation();
     } catch(error){message($('detail-status'),error.message,true);}
     finally{saving=false;$('save-lead').disabled=false;}

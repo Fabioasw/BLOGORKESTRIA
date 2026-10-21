@@ -7,6 +7,7 @@ workers_dev = true
 preview_urls = true
 
 [vars]
+MEASUREMENT_ENABLED = "true"
 # Prepared for the authorized next release; no deployment is performed by editing this file.
 GOOGLE_ADS_ENABLED = "true"
 GOOGLE_ADS_CONVERSION_LABEL = "ceC1CO-Vk58dEPW_4v1E"
@@ -49,6 +50,7 @@ remote = false
 
 # Native Workers Previews: production variables, secrets and DB are not inherited.
 [previews.vars]
+MEASUREMENT_ENABLED = "true"
 # Simulated Ads: official identifiers, no Google network or real conversions.
 GOOGLE_ADS_ENABLED = "true"
 GOOGLE_ADS_CONVERSION_LABEL = "ceC1CO-Vk58dEPW_4v1E"
@@ -80,3 +82,20 @@ migrations_dir = "migrations"
 name = "EMAIL"
 allowed_destination_addresses = ["fabioasw01@gmail.com"]
 remote = false
+
+[[ratelimits]]
+name = "MEASUREMENT_LIMITER"
+namespace_id = "18517368821"
+simple = { limit = 120, period = 60 }
+
+[[previews.ratelimits]]
+name = "MEASUREMENT_LIMITER"
+namespace_id = "18517368822"
+simple = { limit = 120, period = 60 }
+
+[observability]
+enabled = true
+head_sampling_rate = 1
+[observability.logs]
+enabled = true
+invocation_logs = false

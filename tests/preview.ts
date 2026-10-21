@@ -33,6 +33,7 @@ async function assets(request:Request) {
 }
 const env={DB:db,ASSETS:{fetch:assets},AUTOMATION_MODE:'preview',GOOGLE_ADS_ENABLED:'true',GOOGLE_ADS_CONVERSION_LABEL:'ceC1CO-Vk58dEPW_4v1E',TURNSTILE_SITE_KEY:'local-public-fixture',TURNSTILE_SECRET_KEY:'local-secret-fixture',TURNSTILE_HOSTNAMES:'127.0.0.1',RATE_LIMIT_SECRET:'local-rate-fixture',PRIVACY_NOTICE_VERSION:'2026-10-15',RETENTION_DAYS:'180',ACCESS_TEAM_DOMAIN:'https://unit-test.cloudflareaccess.com',ACCESS_AUD:'test-audience',ADMIN_EMAILS:'admin@example.com'} as unknown as Env;
 const app=createWorker({authorize:(request,env)=>authorize(request,env,localKeys),verifyTurnstile:async()=>{}});
+env.MEASUREMENT_ENABLED='true';env.MEASUREMENT_LIMITER={limit:async()=>({success:true})};
 if(db.sqlite.prepare('SELECT count(*) n FROM leads').get()!.n===0){
   for(const company of ['Instituição Demonstração','Indústria Exemplo','Serviços Modelo']) {
     await app.fetch(new Request(base+'/api/leads/totvs-rm',{method:'POST',headers:{Origin:base,'Content-Type':'application/json','Idempotency-Key':crypto.randomUUID(),'CF-Connecting-IP':company},body:JSON.stringify({...payload(),company})}),env);

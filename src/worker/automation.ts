@@ -1,4 +1,5 @@
 import type { Env,LeadRow } from './types.ts';
+import { operational } from './operations.ts';
 import { cloudflareSender,DeliveryError,emailReady,validEmail,testRecipients,customerConfirmationsAvailable,type EmailSender,type CommercialMessage } from './email.ts';
 export interface AutomationSettings {enabled:number;notify_admin:number;confirm_customer:number;followup_alerts:number;daily_summary:number;daily_time:string;stale_days:number;version:number}
 export interface OutboxJob {id:string;lead_id:string|null;kind:'new_lead_admin'|'lead_confirmation'|'followup'|'daily_summary';recipient:string;payload_json:string;attempts:number;lock_token:string;status:string}
@@ -23,7 +24,7 @@ export function queueStatements(env:Env,lead:{id:string;name:string;email:string
 export async function scheduleAutomation(env:Env,now:number){
   const config=await settings(env);if(!config.enabled)return;
   if(config.followup_alerts){
-    const due=await env.DB.prepare(`SELECT id,name,company,next_action_at,followup_revision FROM leads WHERE archived_at IS NULL AND status NOT IN (${terminal}) AND next_action_at<=? AND NOT EXISTS(SELECT 1 FROM automation_outbox o WHERE o.dedupe_key='followup:'||leads.id||':'||leads.followup_revision) ORDER BY next_action_at LIMIT 100`).bind(stamp(now)).all<Pick<LeadRow,'id'|'name'|'company'|'next_action_at'|'followup_revision'>>();
+    const due=await env.DB.prepare(`SELECT id,name,company,next_action_at,followup_revision FROM leads WHERE is_test=0 AND archived_at IS NULL AND status NOT IN (${terminal}) AND next_action_at<=? AND NOT EXISTS(SELECT 1 FROM automation_outbox o WHERE o.dedupe_key='followup:'||leads.id||':'||leads.followup_revision) ORDER BY next_action_at LIMIT 100`).bind(stamp(now)).all<Pick<LeadRow,'id'|'name'|'company'|'next_action_at'|'followup_revision'>>();
     for(const lead of due.results){
       const id=crypto.randomUUID();
       await env.DB.batch([
@@ -32,14 +33,21 @@ export async function scheduleAutomation(env:Env,now:number){
       ]);
     }
   }
+  if(config.followup_alerts){
+    const due=await env.DB.prepare(`SELECT id,name,company,next_action_at FROM manual_contacts WHERE is_test=0 AND status NOT IN (${terminal}) AND next_action_at<=? AND NOT EXISTS(SELECT 1 FROM automation_outbox o WHERE o.dedupe_key='manual-followup:'||manual_contacts.id||':'||manual_contacts.next_action_at) ORDER BY next_action_at LIMIT 100`).bind(stamp(now)).all<{id:string;name:string;company:string;next_action_at:string}>();
+    for(const contact of due.results){const id=crypto.randomUUID();await env.DB.batch([
+      env.DB.prepare("INSERT INTO automation_outbox(id,dedupe_key,kind,recipient,payload_json,available_at) VALUES(?,?,'followup',?,?,?) ON CONFLICT(dedupe_key) DO NOTHING").bind(id,`manual-followup:${contact.id}:${contact.next_action_at}`,env.EMAIL_ADMIN_TO||'',JSON.stringify({...contact,manualContact:true}),now),
+      env.DB.prepare("INSERT INTO automation_events(id,job_id,event_type) SELECT ?,id,'email_queued' FROM automation_outbox WHERE id=?").bind(crypto.randomUUID(),id),
+    ]);}
+  }
   const clock=localClock(now);
   if(config.daily_summary&&clock.time>=config.daily_time){
     const previous=await env.DB.prepare("SELECT created_at FROM automation_outbox WHERE kind='daily_summary' AND status='accepted' ORDER BY created_at DESC LIMIT 1").first<{created_at:string}>();
     const since=previous?.created_at||stamp(now-86400);
     const rows=await env.DB.batch([
-      env.DB.prepare('SELECT count(*) n FROM leads WHERE created_at>=? AND created_at<?').bind(since,stamp(now)),
-      env.DB.prepare(`SELECT count(*) n FROM leads WHERE archived_at IS NULL AND status NOT IN (${terminal}) AND next_action_at<=?`).bind(stamp(now)),
-      env.DB.prepare(`SELECT count(*) n FROM leads WHERE archived_at IS NULL AND status NOT IN (${terminal}) AND COALESCE(last_contact_at,created_at)<=?`).bind(stamp(now-config.stale_days*86400)),
+      env.DB.prepare('SELECT (SELECT count(*) FROM leads WHERE is_test=0 AND created_at>=? AND created_at<?)+(SELECT count(*) FROM manual_contacts WHERE is_test=0 AND created_at>=? AND created_at<?) n').bind(since,stamp(now),since,stamp(now)),
+      env.DB.prepare(`SELECT (SELECT count(*) FROM leads WHERE is_test=0 AND archived_at IS NULL AND status NOT IN (${terminal}) AND next_action_at<=?)+(SELECT count(*) FROM manual_contacts WHERE is_test=0 AND status NOT IN (${terminal}) AND next_action_at<=?) n`).bind(stamp(now),stamp(now)),
+      env.DB.prepare(`SELECT (SELECT count(*) FROM leads WHERE is_test=0 AND archived_at IS NULL AND status NOT IN (${terminal}) AND COALESCE(last_contact_at,created_at)<=?)+(SELECT count(*) FROM manual_contacts WHERE is_test=0 AND status NOT IN (${terminal}) AND updated_at<=?) n`).bind(stamp(now-config.stale_days*86400),stamp(now-config.stale_days*86400)),
       env.DB.prepare("SELECT count(*) n FROM automation_outbox WHERE status IN ('failed','uncertain')"),
     ]);
     const count=(i:number)=>Number((rows[i].results[0] as {n:number}).n),id=crypto.randomUUID();
@@ -52,7 +60,7 @@ export async function scheduleAutomation(env:Env,now:number){
 export function renderMessage(job:OutboxJob,env:Env):CommercialMessage {
   const data=JSON.parse(job.payload_json),date=(value:string)=>new Date(value).toLocaleString('pt-BR',{timeZone:'America/Sao_Paulo'});
   const base=env.CRM_PUBLIC_ORIGIN!;
-  const link=job.lead_id?`${base}/admin/leads?lead=${encodeURIComponent(job.lead_id)}`:`${base}/admin/leads`;
+  const link=data.manualContact?`${base}/admin/leads?contact=${encodeURIComponent(data.id)}`:job.lead_id?`${base}/admin/leads?lead=${encodeURIComponent(job.lead_id)}`:`${base}/admin/leads`;
   const prefix=env.AUTOMATION_MODE==='preview'?'[HOMOLOGAÇÃO] ':'';
   if(job.kind==='lead_confirmation')return {to:job.recipient,subject:prefix+'Recebemos sua solicitação — Orkestria',text:`Olá, ${data.name}.\n\nRecebemos sua solicitação de avaliação de projeto TOTVS RM. Nossa equipe analisará as informações e poderá entrar em contato pelo e-mail informado para conversar sobre sua necessidade.\n\nEsta mensagem confirma o recebimento; não representa uma proposta ou compromisso de prazo.\n\nAtenciosamente,\nOrkestria Platform`};
   if(job.kind==='daily_summary')return {to:job.recipient,subject:prefix+`Resumo comercial Orkestria — ${data.day}`,text:`Resumo até ${date(data.until)} (Brasília).\nNovos leads desde ${date(data.since)}: ${data.newLeads}\nRetornos vencidos: ${data.overdue}\nOportunidades sem contato: ${data.stale}\nEnvios que precisam de revisão: ${data.failures}\n\nAbrir painel protegido: ${link}`};
@@ -64,6 +72,7 @@ async function releaseJob(env:Env,job:OutboxJob,state:string,code:string|null,no
     env.DB.prepare("UPDATE automation_outbox SET status=?,available_at=?,last_error_code=?,provider_message_id=?,accepted_at=?,locked_until=NULL WHERE id=? AND lock_token=? AND status='processing'").bind(state,state==='pending'?retryAt:now,code,messageId,state==='accepted'?stamp(now):null,job.id,job.lock_token),
     env.DB.prepare('INSERT INTO automation_events(id,lead_id,job_id,event_type,detail_json) SELECT ?,lead_id,id,?,? FROM automation_outbox WHERE id=? AND lock_token=? AND status=?').bind(crypto.randomUUID(),`email_${state}`,JSON.stringify({attempt:job.attempts,code}),job.id,job.lock_token,state),
   ]);
+  if(state==='failed'||state==='uncertain')await operational(env,state==='failed'?'notification_failed':'notification_uncertain','notification');
 }
 export async function processOutbox(env:Env,now:number,sender:EmailSender=cloudflareSender(env)){
   const config=await settings(env);
@@ -73,7 +82,7 @@ export async function processOutbox(env:Env,now:number,sender:EmailSender=cloudf
   for(const job of expired.results){const marker=crypto.randomUUID();await env.DB.batch([
     env.DB.prepare("UPDATE automation_outbox SET status='uncertain',last_error_code='lease_expired',locked_until=NULL,lock_token=? WHERE id=? AND status='processing' AND locked_until<=?").bind(marker,job.id,now),
     env.DB.prepare("INSERT INTO automation_events(id,lead_id,job_id,event_type,detail_json) SELECT ?,lead_id,id,'email_uncertain','{\"code\":\"lease_expired\"}' FROM automation_outbox WHERE id=? AND lock_token=? AND status='uncertain'").bind(crypto.randomUUID(),job.id,marker),
-  ]);}
+  ]);await operational(env,'notification_uncertain','notification');}
   for(let i=0;i<10;i++){
     const lease=crypto.randomUUID();
     const job=await env.DB.prepare("UPDATE automation_outbox SET status='processing',lock_token=?,locked_until=?,attempts=attempts+1 WHERE id=(SELECT id FROM automation_outbox WHERE status='pending' AND available_at<=? ORDER BY available_at,created_at LIMIT 1) AND status='pending' RETURNING *").bind(lease,now+180,now).first<OutboxJob>();
@@ -84,8 +93,12 @@ export async function processOutbox(env:Env,now:number,sender:EmailSender=cloudf
     if(!current.enabled){await releaseJob(env,job,'pending','automation_paused',now);break;}
     if(job.kind==='lead_confirmation'&&!customerConfirmationsAvailable(env)){await releaseJob(env,job,'cancelled','customer_confirmation_unavailable',now);continue;}
     if(job.lead_id){
-      const lead=await env.DB.prepare('SELECT status,archived_at,followup_revision FROM leads WHERE id=?').bind(job.lead_id).first<Pick<LeadRow,'status'|'archived_at'|'followup_revision'>>();
-      if(!lead||(job.kind==='followup'&&(lead.archived_at||['convertido','descartado'].includes(lead.status)||JSON.parse(job.payload_json).followup_revision!==lead.followup_revision))){await releaseJob(env,job,'cancelled','opportunity_changed',now);continue;}
+      const lead=await env.DB.prepare('SELECT status,archived_at,followup_revision,is_test FROM leads WHERE id=?').bind(job.lead_id).first<Pick<LeadRow,'status'|'archived_at'|'followup_revision'|'is_test'>>();
+      if(!lead||(job.kind==='followup'&&(lead.is_test||lead.archived_at||['convertido','descartado'].includes(lead.status)||JSON.parse(job.payload_json).followup_revision!==lead.followup_revision))){await releaseJob(env,job,'cancelled','opportunity_changed',now);continue;}
+    }
+    if(job.kind==='followup'&&!job.lead_id){
+      const data=JSON.parse(job.payload_json);
+      if(data.manualContact){const current=await env.DB.prepare('SELECT status,is_test,next_action_at FROM manual_contacts WHERE id=?').bind(data.id).first<{status:string;is_test:number;next_action_at:string}>();if(!current||current.is_test||['convertido','descartado'].includes(current.status)||current.next_action_at!==data.next_action_at){await releaseJob(env,job,'cancelled','opportunity_changed',now);continue;}}
     }
     if(!validEmail(job.recipient)){await releaseJob(env,job,'failed','invalid_recipient',now);continue;}
     if(env.AUTOMATION_MODE==='preview'&&!testRecipients(env).includes(job.recipient.toLowerCase())){await releaseJob(env,job,'failed','preview_recipient_blocked',now);continue;}

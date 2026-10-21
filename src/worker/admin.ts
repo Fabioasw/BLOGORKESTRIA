@@ -3,8 +3,9 @@ import { body, HttpError, json, method, sameOrigin, text, uuid } from './http.ts
 import { STATUSES } from './leads.ts';
 import { crmAPI } from './crm.ts';
 import { settings } from './automation.ts';
+import { commercialAPI } from './commercial.ts';
 
-const summary = 'id,name,email,company,job_title,service_type,status,source,utm_source,utm_campaign,created_at,updated_at,version,last_contact_at,next_action,next_action_at,followup_revision,archived_at';
+const summary = 'id,name,email,company,job_title,service_type,status,source,utm_source,utm_campaign,created_at,updated_at,version,last_contact_at,next_action,next_action_at,followup_revision,archived_at,is_test';
 const detail = `${summary},description,utm_medium,utm_content,utm_term,gclid,landing_page,privacy_notice_version,marketing_consent`;
 function invalid(message: string): never { throw new HttpError(400,'invalid_filter',message); }
 function date(value: unknown): string | null {
@@ -16,6 +17,7 @@ function date(value: unknown): string | null {
 export async function adminAPI(request: Request, env: Env, admin: AdminIdentity, requestId: string): Promise<Response> {
   const path = new URL(request.url).pathname;
   if (!env.DB) throw new HttpError(503,'database_unavailable','Banco administrativo indisponível.');
+  const commercial=await commercialAPI(request,env,admin,requestId);if(commercial)return commercial;
   const crm=await crmAPI(request,env,admin,requestId);if(crm)return crm;
   if (path==='/api/admin/session') { method(request,['GET']); return json({ok:true,data:{email:admin.email},requestId}); }
   if (path==='/api/admin/stats') {
@@ -97,12 +99,15 @@ export async function adminAPI(request: Request, env: Env, admin: AdminIdentity,
   const actionAt=input.next_action_at===undefined?lead.next_action_at:time(input.next_action_at);
   if(Boolean(action)!==Boolean(actionAt))throw new HttpError(400,'invalid_followup','Informe a próxima ação e sua data de retorno, ou limpe ambos.');
   if(input.archived!==undefined&&typeof input.archived!=='boolean')throw new HttpError(400,'invalid_followup','Preferência de arquivo inválida.');
+  if(input.is_test!==undefined&&typeof input.is_test!=='boolean')throw new HttpError(400,'invalid_followup','Classificação inválida.');
+  const isTest=input.is_test===undefined?Boolean(lead.is_test):input.is_test as boolean;
   const archived=input.archived===undefined?lead.archived_at:input.archived?(lead.archived_at||new Date().toISOString()):null;
   const followupChanged=action!==lead.next_action||actionAt!==lead.next_action_at,contactChanged=lastContact!==lead.last_contact_at,archiveChanged=archived!==lead.archived_at;
-  if(status===lead.status&&!note&&!followupChanged&&!contactChanged&&!archiveChanged) throw new HttpError(400,'empty_change','Informe uma observação ou altere o acompanhamento.');
+  if(status===lead.status&&!note&&!followupChanged&&!contactChanged&&!archiveChanged&&isTest===Boolean(lead.is_test)) throw new HttpError(400,'empty_change','Informe uma observação ou altere o acompanhamento.');
   const mutation=crypto.randomUUID();
   const revision=lead.followup_revision+Number(followupChanged||archiveChanged||(status!==lead.status&&['convertido','descartado'].includes(status)));
-  const statements=[env.DB.prepare("UPDATE leads SET status=?,last_contact_at=?,next_action=?,next_action_at=?,archived_at=?,followup_revision=?,updated_at=strftime('%Y-%m-%dT%H:%M:%fZ','now'),version=version+1,last_mutation_id=? WHERE id=? AND version=?").bind(status,lastContact,action,actionAt,archived,revision,mutation,id,lead.version)];
+  const statements=[env.DB.prepare("UPDATE leads SET status=?,last_contact_at=?,next_action=?,next_action_at=?,archived_at=?,followup_revision=?,is_test=?,updated_at=strftime('%Y-%m-%dT%H:%M:%fZ','now'),version=version+1,last_mutation_id=? WHERE id=? AND version=?").bind(status,lastContact,action,actionAt,archived,revision,Number(isTest),mutation,id,lead.version)];
+  if(isTest!==Boolean(lead.is_test))statements.push(env.DB.prepare("INSERT INTO lead_events(id,lead_id,event_type,note,admin_id) SELECT ?,id,'note',?,? FROM leads WHERE id=? AND last_mutation_id=?").bind(crypto.randomUUID(),isTest?'Classificado como TESTE; excluído dos indicadores comerciais.':'Classificado como contato comercial.',admin.id,id,mutation));
   if(status!==lead.status) statements.push(env.DB.prepare("INSERT INTO lead_events(id,lead_id,event_type,previous_status,new_status,admin_id) SELECT ?,id,'status_changed',?,?,? FROM leads WHERE id=? AND last_mutation_id=?").bind(crypto.randomUUID(),lead.status,status,admin.id,id,mutation));
   if(note) statements.push(env.DB.prepare("INSERT INTO lead_events(id,lead_id,event_type,note,admin_id) SELECT ?,id,'note',?,? FROM leads WHERE id=? AND last_mutation_id=?").bind(crypto.randomUUID(),note,admin.id,id,mutation));
   for(const event of [followupChanged?{type:'followup_updated',detail:{previousAction:lead.next_action,previousDate:lead.next_action_at,action,date:actionAt}}:null,contactChanged?{type:'contact_recorded',detail:{previousDate:lead.last_contact_at,date:lastContact}}:null,archiveChanged?{type:archived?'archived':'restored',detail:{}}:null].filter(Boolean)){
