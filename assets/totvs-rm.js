@@ -16,6 +16,7 @@
   let busy = false, complete = false, available = false, token = '', widgetId, noticeVersion = '';
   let requestKey = crypto.randomUUID(), lastPayload = null;
   let began = false;
+  let statusSource = 'form';
   const emitted = new Set();
 
   function track(event, parameters = {}, once = false) {
@@ -80,9 +81,10 @@
     // Same-document navigation leaves campaign parameters and consent untouched.
   }));
 
-  function message(text, error = false) {
+  function message(text, error = false, source = 'form') {
     status.textContent = text;
     status.dataset.error = String(error);
+    statusSource = source;
   }
   function clearErrors() {
     form.querySelectorAll('[aria-invalid]').forEach(input => input.removeAttribute('aria-invalid'));
@@ -169,9 +171,22 @@
       window.orkestriaTurnstileReady = () => {
         widgetId = window.turnstile.render('#turnstile-widget',{
           sitekey:config.siteKey, action:'totvs_rm_lead', theme:form.dataset?.theme || 'dark', size:matchMedia('(max-width:520px)').matches?'compact':'flexible',
-          callback(value) { token=value; if(status.dataset.error!=='true') message('Formulário pronto para envio.'); updateSubmit(); },
-          'expired-callback'() { token=''; message('A verificação expirou. Conclua-a novamente.',true); updateSubmit(); },
-          'error-callback'() { token=''; message('Falha ao carregar a verificação. Verifique sua conexão e recarregue a página.',true); updateSubmit(); },
+          callback(value) {
+            token=value;
+            // Renewed challenges clear only their own errors, never a submission result.
+            if(!busy && !complete && (statusSource==='challenge' || status.dataset.error!=='true')) message('Formulário pronto para envio.');
+            updateSubmit();
+          },
+          'expired-callback'() {
+            token='';
+            if(!busy && !complete) message('A verificação expirou. Conclua-a novamente.',true,'challenge');
+            updateSubmit();
+          },
+          'error-callback'() {
+            token='';
+            if(!busy && !complete) message('Falha ao carregar a verificação. Verifique sua conexão e recarregue a página.',true,'challenge');
+            updateSubmit();
+          },
         });
         available=true; updateSubmit();
       };

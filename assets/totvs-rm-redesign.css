@@ -49,16 +49,16 @@
 .rm-landing .hero-benefits p{color:#fff;font-size:12px;line-height:1.5;font-weight:500}
 .rm-landing .hero-benefits svg{width:22px;height:22px}
 .rm-landing .independence{color:#d3e2e9;font-size:11px;max-width:40ch}
-.rm-landing .analysis-card{background:white;color:var(--ink);padding:24px;border-radius:18px;box-shadow:0 18px 50px #00192b26;min-width:0}
+.rm-landing .analysis-card{background:white;color:var(--ink);padding:20px;border-radius:18px;box-shadow:0 18px 50px #00192b26;min-width:0}
 .rm-landing .card-badge{display:flex;align-items:center;gap:7px;color:#05687a;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.03em;margin-bottom:12px}
 .rm-landing .card-badge svg{width:19px;height:19px;color:#008f9b}
 .rm-landing .analysis-card h2{font-size:24px;line-height:1.2;letter-spacing:-.04em;text-wrap:pretty;margin:0 0 8px}
-.rm-landing .card-intro{font-size:13px;line-height:1.5;margin-bottom:19px}
-.rm-landing form{gap:13px}
+.rm-landing .card-intro{font-size:13px;line-height:1.5;margin-bottom:14px}
+.rm-landing form{gap:11px}
 .rm-landing .field{gap:5px;min-width:0}
 .rm-landing label{font-size:12px;font-weight:600;color:#17354b}
-.rm-landing input,.rm-landing select,.rm-landing textarea{background:#fbfcfd;color:#15374e;border:1px solid #cad7e1;border-radius:6px;font:13px var(--sans);padding:10px 11px;min-height:41px;max-width:100%}
-.rm-landing textarea{min-height:91px;resize:vertical;line-height:1.5}
+.rm-landing input,.rm-landing select,.rm-landing textarea{background:#fbfcfd;color:#15374e;border:1px solid #8195a3;border-radius:6px;font:13px var(--sans);padding:10px 11px;min-height:41px;max-width:100%}
+.rm-landing textarea{min-height:84px;resize:vertical;line-height:1.5}
 .rm-landing input::placeholder,.rm-landing textarea::placeholder{color:#657d90;opacity:1}
 .rm-landing input:focus,.rm-landing select:focus,.rm-landing textarea:focus{border-color:#007d83}
 .rm-landing .form-row{gap:12px;grid-template-columns:1.1fr 1fr}
@@ -73,7 +73,7 @@
 .rm-landing .marketing-choice{align-items:flex-start;font-size:11px;font-weight:400;gap:9px;margin:12px 0 5px}
 .rm-landing .marketing-choice input{width:17px;height:17px;min-height:17px;padding:0;margin:2px 0 0;accent-color:#007e75}
 .rm-landing #turnstile-widget{min-height:65px;max-width:100%;overflow:hidden}
-.rm-landing .form-status{font-size:11px;color:#006b5b;margin-top:-4px}
+.rm-landing .form-status{font-size:11px;color:#006b5b;margin-top:-4px;min-height:18px}
 .rm-landing #lead-submit{width:100%;font-size:14px;padding:12px 14px;min-height:48px}
 .rm-landing button:disabled{opacity:.65}
 .rm-landing .privacy-copy{font-size:10px;line-height:1.6;color:#526b7e}
@@ -86,7 +86,8 @@
 .rm-landing .section-kicker{font-size:11px;letter-spacing:.1em;font-weight:600;color:#126d80;text-transform:uppercase;margin-bottom:13px}
 .rm-landing .pain-section h2{max-width:31ch;margin-bottom:28px}
 .rm-landing .pain-grid{gap:17px;border:0;background:none;grid-template-columns:repeat(4,minmax(0,1fr))}
-.rm-landing .pain{background:white;border:1px solid #e0e8ed;border-radius:13px;padding:25px;box-shadow:0 4px 16px #23455d04}
+.rm-landing .pain{background:white;border:1px solid #e0e8ed;border-radius:13px;padding:25px;box-shadow:0 4px 16px #23455d04;transition:border-color .18s,box-shadow .18s}
+.rm-landing .pain:hover{border-color:#a7cbd1;box-shadow:0 5px 18px #23455d0b}
 .rm-landing .pain-icon{display:grid;place-items:center;width:43px;height:43px;border-radius:12px;background:#fff0de;color:#a75e17;margin-bottom:19px}
 .rm-landing .pain:nth-child(2) .pain-icon{background:#e4f4f6;color:#177b88}
 .rm-landing .pain:nth-child(3) .pain-icon{background:#eeebfb;color:#7650ba}
@@ -122,7 +123,9 @@
 .rm-landing .solution-body p{font-size:14px;line-height:1.6}
 .rm-landing .solution-body ul{padding:0;list-style:none;display:grid;gap:6px;margin:18px 0 10px;color:#4b6478;font-size:12px}
 .rm-landing .solution-body li:before{content:"✓";color:#007b70;margin-right:7px}
-.rm-landing .solution-body .text-link{margin-top:auto;padding-top:17px;font-size:12px;line-height:1.5}
+.rm-landing .solution-body .text-link{margin-top:auto;padding:12px 0 0;font-size:13px;line-height:1.5;min-height:48px;width:100%;border-top:1px solid #dde7ed}
+.rm-landing .solution-body .text-link svg{margin-left:auto}
+.rm-landing .solution-body .text-link:hover{color:#004c57}
 .rm-landing .method-section{padding:75px 0;background:#f1f7f9;border-block:1px solid #e0ebef}
 .rm-landing .steps{grid-template-columns:repeat(3,minmax(0,1fr));gap:45px;margin:40px 0 32px}
 .rm-landing .step-number{border-color:#bfd5df;color:#08797e;padding:15px 0;font:600 13px var(--sans)}
@@ -135,6 +138,11 @@
 .rm-landing .example .example-label{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:#196c78}
 .rm-landing .example h3{font:700 24px/1.2 var(--sans);margin:14px 0 18px;letter-spacing:-.04em}
 .rm-landing .example p{font-size:14px;margin-bottom:10px}
+.rm-landing .example-state{padding:13px 15px;margin-top:12px;border-left:3px solid #b78a53;background:#f7f2eb;border-radius:0 7px 7px 0}
+.rm-landing .example-state.possibility{border-color:#007e75;background:#eaf6f3}
+.rm-landing .example-state .state-label{display:block;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#73522d;margin-bottom:5px}
+.rm-landing .example-state.possibility .state-label{color:#00675f}
+.rm-landing .example-state p{margin:0}
 .rm-landing .about-section{padding:65px 0;border-block:1px solid #e0e9ee}
 .rm-landing .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:75px;align-items:center}
 .rm-landing .about-grid>div>p:not(.section-kicker){font-size:15px;margin-bottom:17px}
@@ -162,4 +170,8 @@
 @media(max-width:760px){.rm-landing .nav-inner{height:72px;gap:14px}.rm-landing .nav .nav-links.menu-open{top:72px;max-height:calc(100dvh - 72px)}.rm-landing .brand-name{font-size:23px}.rm-landing .brand-name span{font-size:9px}.rm-landing .brand-mark,.rm-landing .brand-mark svg{width:28px;height:28px}.rm-landing .nav-cta{display:none}.rm-landing .rm-hero{padding:107px 0 35px}.rm-landing .hero-grid{grid-template-columns:1fr;gap:35px}.rm-landing .hero-copy{padding:0;max-width:590px}.rm-landing .rm-hero h1{font-size:clamp(37px,7.5vw,53px);max-width:17ch;margin:22px 0}.rm-landing .hero-lead{font-size:15px;max-width:46ch}.rm-landing .hero-photo{inset:72px 0 auto 12%;height:570px}.rm-landing .hero-photo img{object-position:58% center;opacity:.45}.rm-landing .rm-hero:before{background:linear-gradient(90deg,#061e32f5,#061e32bd 70%,#061e3280),linear-gradient(0deg,#061e32 26%,transparent 100%)}.rm-landing .hero-benefits{grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.rm-landing .hero-benefits li{flex-direction:column;align-items:start}.rm-landing .hero-benefits p{font-size:11px;max-width:none}.rm-landing .hero-support{max-width:45ch}.rm-landing .analysis-card{max-width:560px;width:100%;justify-self:center;padding:27px}.rm-landing .analysis-card h2{font-size:26px}.rm-landing .card-intro{font-size:14px}.rm-landing .field{gap:7px}.rm-landing input,.rm-landing select,.rm-landing textarea{font-size:16px;min-height:46px}.rm-landing textarea{min-height:108px}.rm-landing label{font-size:13px}.rm-landing .small,.rm-landing .privacy-copy{font-size:11px}.rm-landing form{gap:16px}.rm-landing .form-status{font-size:12px}.rm-landing .optional-fields,.rm-landing .advertising-options{font-size:12px}.rm-landing .optional-fields summary,.rm-landing .advertising-options summary{min-height:44px}.rm-landing #lead-submit{min-height:52px;font-size:15px}.rm-landing .pain-section{padding:52px 0 35px}.rm-landing .desktop-break{display:none}.rm-landing .transformation-grid,.rm-landing .about-grid,.rm-landing .faq-grid,.rm-landing .closing-grid{grid-template-columns:1fr;gap:30px}.rm-landing .transformation{padding:20px 0 40px}.rm-landing .transformation figure img{height:auto;aspect-ratio:1.5}.rm-landing .capabilities div{flex-direction:row}.rm-landing .trust-section{padding-bottom:45px}.rm-landing .trust-strip{padding:25px 10px;gap:22px 0}.rm-landing .trust-strip>div{align-items:start;flex-direction:column;padding:0 15px}.rm-landing .trust-strip strong{font-size:13px}.rm-landing .trust-strip span{font-size:11px}.rm-landing .trust-strip svg{width:29px;height:29px}.rm-landing .solutions-section{padding-bottom:50px}.rm-landing .solution-card>img{aspect-ratio:1.7}.rm-landing .solution-body{padding:27px 20px 22px}.rm-landing .solution-body h3{font-size:22px}.rm-landing .method-section,.rm-landing .examples-section,.rm-landing .about-section,.rm-landing .faq-section{padding:50px 0}.rm-landing .steps{grid-template-columns:1fr;gap:18px;margin:28px 0}.rm-landing .step-number{padding:12px 0}.rm-landing .steps h3{font-size:21px}.rm-landing .examples{grid-template-columns:1fr;gap:18px}.rm-landing .example:last-child{grid-column:auto}.rm-landing .closing-section{padding:45px 0}.rm-landing .closing-actions{justify-self:stretch;max-width:none}.rm-landing .footer-top{grid-template-columns:1fr 1fr;gap:25px}.rm-landing .footer-top .brand{grid-column:1/-1}.rm-landing .footer-bottom{flex-direction:column;gap:12px}.rm-landing .faq-list summary{font-size:15px}}
 @media(max-width:520px){.rm-landing .wrap{padding-inline:20px}.rm-landing .hero-badge{font-size:9px;padding:6px 10px}.rm-landing .rm-hero h1{font-size:39px;line-height:1.1}.rm-landing .actions{align-items:stretch;gap:6px;max-width:350px}.rm-landing .hero-whatsapp{justify-content:center}.rm-landing .hero-benefits{gap:12px;margin-top:27px}.rm-landing .hero-benefits p{font-size:11px}.rm-landing .analysis-card{padding:22px 19px;border-radius:13px}.rm-landing .analysis-card h2{font-size:24px}.rm-landing .form-row{grid-template-columns:1fr;gap:16px}.rm-landing .pain-grid,.rm-landing .services-grid{grid-template-columns:1fr}.rm-landing .pain{padding:24px}.rm-landing .pain h3{font-size:19px}.rm-landing .pain-icon{margin-bottom:14px}.rm-landing .pain p{font-size:14px}.rm-landing .solution-card>img{aspect-ratio:2}.rm-landing .capabilities{grid-template-columns:1fr;gap:18px}.rm-landing .capabilities div{align-items:center}.rm-landing .transformation figcaption{bottom:13px;left:13px;font-size:12px;padding:10px 14px}.rm-landing .footer-top{grid-template-columns:1fr}.rm-landing .hero-photo{height:540px;inset-inline-start:0}.rm-landing .hero-photo img{object-position:65% center}.rm-landing h2{font-size:29px}}
 @media(max-width:360px){.rm-landing .rm-hero h1{font-size:35px}.rm-landing .wrap{padding-inline:16px}.rm-landing .analysis-card{padding:20px 14px}.rm-landing .hero-benefits{gap:8px}.rm-landing .hero-benefits p{font-size:10px}}
+/* Keep the face left of the form; mobile keeps its own quieter background. */
+@media(min-width:901px){.rm-landing .hero-photo{inset:0 7% 0 12%;mask-image:linear-gradient(90deg,transparent,#000 12%,#000 85%,transparent)}.rm-landing .hero-photo img{object-position:100% center}}
+@media(min-width:761px){.rm-landing .pain h3{min-height:2.4em}}
+@media(max-width:520px){.rm-landing #turnstile-widget{min-height:150px}}
 @media(prefers-reduced-motion:reduce){.rm-landing *,.rm-landing *:before,.rm-landing *:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}

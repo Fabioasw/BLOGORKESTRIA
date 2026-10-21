@@ -149,9 +149,10 @@ test('Ads: actual form handler → simulated Turnstile → Worker → isolated D
     for(const id of ['lead-submit','form-status','consent-description','consent-accept','consent-reject'])elements[id]={dataset:{},textContent:'',addEventListener(name:string,fn:Function){handlers.set(id+':'+name,fn);},focus(){}};
     b.s.document.getElementById=(id:string)=>elements[id];b.s.document.querySelectorAll=()=>[];
     const append=b.s.document.head.append;
+    let challenge:any;
     b.s.document.head.append=(script:any)=>{
       if(script.src.startsWith('https://challenges.cloudflare.com/')){
-        b.s.turnstile={render(_selector:string,options:any){options.callback('local-fixture-'+crypto.randomUUID());return 1;},reset(){}};
+        b.s.turnstile={render(_selector:string,options:any){challenge=options;options.callback('local-fixture-'+crypto.randomUUID());return 1;},reset(){}};
         b.s.orkestriaTurnstileReady();
       }else append(script);
     };
@@ -166,8 +167,31 @@ test('Ads: actual form handler → simulated Turnstile → Worker → isolated D
     };
     try{
       runInNewContext(formSource,b.s);await tick();
+      challenge['expired-callback']();
+      assert.equal(elements['lead-submit'].disabled,true);
+      assert.match(elements['form-status'].textContent,/expirou/);
+      challenge.callback('renewed-local-fixture');
+      assert.equal(elements['lead-submit'].disabled,false);
+      assert.equal(elements['form-status'].dataset.error,'false');
+      assert.match(elements['form-status'].textContent,/pronto/);
+      challenge['error-callback']();
+      assert.equal(elements['lead-submit'].disabled,true);
+      challenge.callback('recovered-local-fixture');
+      assert.equal(elements['lead-submit'].disabled,false);
+      assert.match(elements['form-status'].textContent,/pronto/);
       if(mode!=='declined')handlers.get('consent-accept:click')!();
-      await handlers.get('form:submit')!({preventDefault(){}});await tick();
+      const sending=handlers.get('form:submit')!({preventDefault(){}});
+      challenge['expired-callback']();
+      assert.match(elements['form-status'].textContent,/Registrando/);
+      await sending;await tick();
+      const submissionMessage=elements['form-status'].textContent;
+      challenge.callback('post-submit-local-fixture');
+      assert.equal(elements['form-status'].textContent,submissionMessage);
+      if(!['network','database'].includes(mode)) {
+        challenge['expired-callback']();
+        assert.equal(elements['form-status'].textContent,submissionMessage);
+        assert.equal(elements['lead-submit'].disabled,true);
+      }
       const expected=mode==='success';assert.equal(b.events.filter((e:any)=>e?.event==='conversion_simulated').length,Number(expected),mode);
       assert.equal(s.db.sqlite.prepare('SELECT count(*) n FROM leads').get()!.n,Number(!['network','database'].includes(mode)),mode);
       if(!['network','database'].includes(mode)){
