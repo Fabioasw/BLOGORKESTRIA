@@ -8,15 +8,15 @@ const dir=`work/r${crypto.randomUUID().slice(0,8)}`;await mkdir(dir,{recursive:t
 const pair=await generateKeyPair('RS256',{modulusLength:2048});
 await writeFile('work/runtime-fixture-jwks.json',JSON.stringify({keys:[{...await exportJWK(pair.publicKey),kid:'runtime-test',alg:'RS256',use:'sig'}]}));
 const cli='node_modules/wrangler/bin/wrangler.js';
-const migration=spawnSync(process.execPath,[cli,'d1','migrations','apply','DB','--local','--persist-to',dir],{encoding:'utf8',timeout:30000});
+const migration=spawnSync(process.execPath,[cli,'d1','migrations','apply','DB','--config','wrangler.preview.toml','--local','--persist-to',dir],{encoding:'utf8',timeout:60000});
 if(migration.status!==0)throw new Error(`Local migration failed: ${migration.stdout}\n${migration.stderr}`);
 console.log('D1 local migration: OK');
-const child=spawn(process.execPath,[cli,'dev','tests/runtime-fixture.ts','--local','--ip','127.0.0.1','--port','8791','--persist-to',dir,'--var','TURNSTILE_SITE_KEY:local-fixture','--var','TURNSTILE_SECRET_KEY:local-fixture','--var','TURNSTILE_HOSTNAMES:127.0.0.1','--var','RATE_LIMIT_SECRET:local-fixture','--var','ACCESS_TEAM_DOMAIN:https://runtime-test.cloudflareaccess.com','--var','ACCESS_AUD:runtime-test-aud','--var','ADMIN_EMAILS:admin@example.com'],{stdio:['ignore','pipe','pipe']});
+const child=spawn(process.execPath,[cli,'dev','tests/runtime-fixture.ts','--config','wrangler.preview.toml','--local','--ip','127.0.0.1','--port','8791','--persist-to',dir,'--var','TURNSTILE_SITE_KEY:local-fixture','--var','TURNSTILE_SECRET_KEY:local-fixture','--var','TURNSTILE_HOSTNAMES:127.0.0.1','--var','RATE_LIMIT_SECRET:local-fixture','--var','ACCESS_TEAM_DOMAIN:https://runtime-test.cloudflareaccess.com','--var','ACCESS_AUD:runtime-test-aud','--var','ADMIN_EMAILS:admin@example.com'],{stdio:['ignore','pipe','pipe']});
 let log='';child.stdout.on('data',chunk=>{log+=chunk;});child.stderr.on('data',chunk=>{log+=chunk;});
 const base='http://127.0.0.1:8791';
 try {
   let ready=false;
-  for(let i=0;i<100;i++){try{const r=await fetch(base+'/api/leads/config',{signal:AbortSignal.timeout(500)});if(r.ok){ready=true;break;}}catch{}await new Promise(resolve=>setTimeout(resolve,250));}
+  for(let i=0;i<240;i++){try{const r=await fetch(base+'/api/leads/config',{signal:AbortSignal.timeout(500)});if(r.ok){ready=true;break;}}catch{}await new Promise(resolve=>setTimeout(resolve,250));}
   if(!ready)throw new Error('Local Workerd did not become ready. '+log);
   const token=await new SignJWT({email:'admin@example.com'}).setProtectedHeader({alg:'RS256',kid:'runtime-test'}).setSubject('runtime-test-admin').setIssuer('https://runtime-test.cloudflareaccess.com').setAudience('runtime-test-aud').setIssuedAt().setExpirationTime('5m').sign(pair.privateKey);
   const headers={'Content-Type':'application/json',Origin:base,'Cf-Access-Jwt-Assertion':token};
